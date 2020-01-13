@@ -13,37 +13,33 @@ modLoader="javafml" #mandatory
 loaderVersion="[30,)" #mandatory
 
 # A URL to refer people to when problems occur with this mod
-issueTrackerURL="http://github.com/YourName/Your-Mod-Name/issues" #optional
+issueTrackerURL="http://github.com/iCrazyBlaze/TwitchVsMinecraft/issues" #optional
 
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 # The modid of the mod
-modId="examplemod" #mandatory
+modId="twitchmod" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
 version="${version}" #mandatory
 # A display name for the mod
-displayName="Example Mod" #mandatory
+displayName="Twitch Vs Minecraft" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="http://github.com/YourName/Your-Mod-Name/update.json" #optional
+updateJSONURL="https://www.dropbox.com/s/izmenudk6nh48vv/update.json?dl=0" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
-displayURL="http://github.com/YourName/Your-Mod-Name" #optional
+displayURL="http://github.com/iCrazyBlaze/TwitchVsMinecraft" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="examplemod.png" #optional
+logoFile="logo.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Java. The logo for this mod was taken from a post by DavidM on the Forge Forums" #optional
+credits="Idea from Kaze Emanuar. Thanks to iGoodie and MMD." #optional
 # A text field displayed in the mod UI
-authors="Love, Cheese and small house plants" #optional
+authors="iCrazyBlaze" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-This is a long form description of the mod. You can write whatever you want here
-
-Have some lorem ipsum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mollis lacinia magna. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed sagittis luctus odio eu tempus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque volutpat ligula eget lacus auctor sagittis. In hac habitasse platea dictumst. Nunc gravida elit vitae sem vehicula efficitur. Donec mattis ipsum et arcu lobortis, eleifend sagittis sem rutrum. Cras pharetra quam eget posuere fermentum. Sed id tincidunt justo. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Be at your viewers' mercy! Random commands are chosen from the Twitch chat.
 '''
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.examplemod]] #optional
+[[dependencies.twitchmod]] #optional
 # The modid of the dependency
 modId="forge" #mandatory
 # Does this dependency have to exist - if not, ordering below must be specified
@@ -56,7 +52,7 @@ ordering="NONE"
 side="BOTH"
 
 # Here's another dependency
-[[dependencies.examplemod]]
+[[dependencies.twitchmod]]
 modId="minecraft"
 mandatory=true
 versionRange="[1.15.1]"

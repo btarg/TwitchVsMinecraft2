@@ -1,6 +1,0 @@
-{
-	"parent": "block/furnace",
-	"textures": {
-		"front": "examplemod:block/electric_furnace_front"
-	}
-}
