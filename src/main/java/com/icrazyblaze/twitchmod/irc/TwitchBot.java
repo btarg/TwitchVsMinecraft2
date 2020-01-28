@@ -3,6 +3,7 @@ package com.icrazyblaze.twitchmod.irc;
 
 import com.google.common.collect.ImmutableMap;
 import com.icrazyblaze.twitchmod.BotCommands;
+import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -27,6 +28,8 @@ public class TwitchBot extends ListenerAdapter {
 
     @Override
     public void onMessage(MessageEvent event) {
+
+        Main.logger.info("Hello!");
 
         String message = event.getMessage();
         String sender = Objects.requireNonNull(event.getUser()).getNick();

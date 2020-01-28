@@ -1,6 +1,8 @@
 package com.icrazyblaze.twitchmod;
 
 import com.icrazyblaze.twitchmod.config.ConfigHolder;
+import com.icrazyblaze.twitchmod.irc.BotConnection;
+import com.icrazyblaze.twitchmod.irc.TwitchBot;
 import com.icrazyblaze.twitchmod.util.Reference;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -21,6 +23,8 @@ public final class Main {
 		// Register Configs
 		modLoadingContext.registerConfig(ModConfig.Type.CLIENT, ConfigHolder.CLIENT_SPEC);
 		//modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigHolder.SERVER_SPEC);
+
+		BotConnection.main();
 	}
 
 }

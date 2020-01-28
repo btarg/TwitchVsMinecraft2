@@ -41,6 +41,7 @@ minecraft {
 
 	// accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
+
 	// Default run configurations.
 	// These can be tweaked, removed, or duplicated as needed.
 	runs {
@@ -136,6 +137,10 @@ dependencies {
 
 	embed (group: 'org.pircbotx', name: 'pircbotx', version: '2.1') {
 		transitive = false
+	}
+
+	embed (group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30') {
+		transitive = true
 	}
 
 }
