@@ -29,6 +29,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.loot.LootTables;
 import net.minecraftforge.api.distmarker.Dist;
@@ -621,7 +622,8 @@ public class BotCommands {
             return;
         } else if (oresExplode) {
 
-            event.getWorld().createExplosion(null, event.getPos().getX(), event.getPos().getY(), event.getPos().getZ(), 4, true);
+            event.getWorld().getWorld().createExplosion(null, player().serverPosX, player().serverPosY, player().serverPosZ, 4.0F, Explosion.Mode.BREAK);
+            
             oresExplode = false;
 
         }

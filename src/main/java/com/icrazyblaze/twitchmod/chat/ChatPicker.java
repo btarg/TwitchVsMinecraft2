@@ -4,10 +4,10 @@ import com.icrazyblaze.twitchmod.BotCommands;
 import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.irc.BotConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.monster.*;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.EnumDifficulty;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.Difficulty;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -24,7 +24,7 @@ import java.util.*;
  */
 public class ChatPicker {
 
-    public static List<String> blacklist;
+    public static List<java.lang.String> blacklist;
     public static ArrayList<String> newChats = new ArrayList<>();
     public static ArrayList<String> newChatSenders = new ArrayList<>();
     public static boolean cooldownEnabled = false;
@@ -122,9 +122,9 @@ public class ChatPicker {
 
         if (!blacklist.isEmpty()) {
 
-            for (String str : blacklist) {
+            for (java.lang.String str : blacklist) {
 
-                if (str.contains(message)) {
+                if (str.contains((CharSequence) message)) {
                     Main.logger.info("Command not executed: command is blacklisted.");
                     break;
                 } else {
@@ -205,7 +205,7 @@ public class ChatPicker {
 
             } else if (BotConfig.showChatMessages && BotConfig.showCommands) {
 
-                BotCommands.player().sendMessage(new TextComponentString(TextFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
+                BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
 
             }
 
@@ -235,8 +235,7 @@ public class ChatPicker {
         Thank you gigaherz, very cool!
         */
         for (String key : keys) {
-            if (!commands.containsKey(key))
-                commands.put(key, runnable);
+            commands.put(key, runnable);
         }
 
     }
@@ -263,11 +262,11 @@ public class ChatPicker {
         registerCommand(BotCommands::deathTimer, "timer", "deathtimer");
         registerCommand(BotCommands::drainHealth, "drain", "halfhealth");
         registerCommand(BotCommands::spawnAnvil, "anvil"); // Gaiet's favourite command <3
-        registerCommand(() -> BotCommands.spawnMobBehind(new EntityCreeper(BotCommands.player().world)), "creeper", "awman");
-        registerCommand(() -> BotCommands.spawnMobBehind(new EntityZombie(BotCommands.player().world)), "zombie");
-        registerCommand(() -> BotCommands.spawnMob(new EntityEnderman(BotCommands.player().world)), "enderman");
-        registerCommand(() -> BotCommands.spawnMobBehind(new EntityWitch(BotCommands.player().world)), "witch");
-        registerCommand(() -> BotCommands.spawnMobBehind(new EntitySkeleton(BotCommands.player().world)), "skeleton");
+        registerCommand(() -> BotCommands.spawnMobBehind(EntityType.CREEPER.create(BotCommands.player().world)), "creeper", "awman");
+        registerCommand(() -> BotCommands.spawnMobBehind(EntityType.ZOMBIE.create(BotCommands.player().world)), "zombie");
+        registerCommand(() -> BotCommands.spawnMob(EntityType.ENDERMAN.create(BotCommands.player().world)), "enderman");
+        registerCommand(() -> BotCommands.spawnMobBehind(EntityType.WITCH.create(BotCommands.player().world)), "witch");
+        registerCommand(() -> BotCommands.spawnMobBehind(EntityType.SKELETON.create(BotCommands.player().world)), "skeleton");
         registerCommand(BotCommands::creeperScare, "creeperscare", "behindyou");
         registerCommand(BotCommands::zombieScare, "zombiescare", "bruh");
         registerCommand(BotCommands::skeletonScare, "skeletonscare", "spook");
@@ -282,8 +281,8 @@ public class ChatPicker {
         registerCommand(BotCommands::dropItem, "drop", "throw");
         registerCommand(BotCommands::monsterEgg, "silverfish");
         registerCommand(BotCommands::heavyRain, "rain", "shaun");
-        registerCommand(() -> BotCommands.setDifficulty(EnumDifficulty.HARD), "hardmode", "isthiseasymode");
-        registerCommand(() -> BotCommands.setDifficulty(EnumDifficulty.PEACEFUL), "peaceful", "peacefulmode");
+        registerCommand(() -> BotCommands.setDifficulty(Difficulty.HARD), "hardmode", "isthiseasymode");
+        registerCommand(() -> BotCommands.setDifficulty(Difficulty.PEACEFUL), "peaceful", "peacefulmode");
         registerCommand(BotCommands::placeChest, "chest", "lootbox");
         registerCommand(() -> BotCommands.setTime(1000), "day", "setday");
         registerCommand(() -> BotCommands.setTime(13000), "night", "setnight");
@@ -303,6 +302,9 @@ public class ChatPicker {
      * @return If the command doesn't run, then this method returns false.
      */
     public static boolean doCommand(String message, String sender) {
+
+        commands.clear();
+        initCommands();
 
         // Special commands below have extra arguments, so they are registered here.
         registerCommand(() -> BotCommands.messWithInventory(sender), "itemroulette", "roulette");

@@ -14,6 +14,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 // We use the version format MCVERSION-MAJOR.MINOR.PATCH
@@ -25,11 +26,7 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 
 repositories {
 	// Put remote maven repositories here
-}
-
-configurations {
-	shade
-	compile.extendsFrom shade
+	mavenCentral()
 }
 
 minecraft {
@@ -97,7 +94,7 @@ minecraft {
 			args '--mod', modId, '--all', '--output', file('src/generated/resources/')
 
 			mods {
-				examplemod {
+				twitchmod {
 					// Main sources (everything that goes in your final compiled mod. From /src/main/)
 					source sourceSets.main
 //					// Test sources (debugging, unit tests. From /src/test/)
@@ -106,10 +103,11 @@ minecraft {
 			}
 		}
 	}
+}
 
-//	replace "@VERSION@", modVersion
-//	replaceIn "Reference.java"
-
+configurations {
+	embed
+	compile.extendsFrom(embed)
 }
 
 dependencies {
@@ -136,13 +134,8 @@ dependencies {
 	// http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
 	// http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-	// Shade required jars when building
-	shade (group: 'org.pircbotx', name: 'pircbotx', version: '2.1') {
+	embed (group: 'org.pircbotx', name: 'pircbotx', version: '2.1') {
 		transitive = false
-	}
-
-	shade (group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30') {
-		transitive = true
 	}
 
 }
@@ -161,11 +154,7 @@ jar {
 		])
 	}
 
-	configurations.shade.each { dep ->
-		from(project.zipTree(dep)){
-			exclude 'META-INF', 'META-INF/**'
-		}
-	}
+	from configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
 }
 
 // Example configuration to allow publishing using the maven-publish task

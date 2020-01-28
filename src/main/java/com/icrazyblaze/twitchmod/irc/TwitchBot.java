@@ -4,7 +4,7 @@ package com.icrazyblaze.twitchmod.irc;
 import com.google.common.collect.ImmutableMap;
 import com.icrazyblaze.twitchmod.BotCommands;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
 import org.pircbotx.hooks.ListenerAdapter;
@@ -34,7 +34,7 @@ public class TwitchBot extends ListenerAdapter {
 
         TextFormatting format = TextFormatting.WHITE;
 
-        TextComponentString showText;
+        StringTextComponent showText;
         String role = null;
 
         if (BotConfig.showChatMessages) {
@@ -56,10 +56,10 @@ public class TwitchBot extends ListenerAdapter {
 
             if (!message.startsWith(BotConfig.prefix) || BotConfig.showCommands) {
 
-                showText = new TextComponentString(TextFormatting.WHITE + "<" + TextFormatting.DARK_PURPLE + "Twitch " + format + sender + TextFormatting.WHITE + "> " + message);
+                showText = new StringTextComponent(TextFormatting.WHITE + "<" + TextFormatting.DARK_PURPLE + "Twitch " + format + sender + TextFormatting.WHITE + "> " + message);
 
                 if (role != null) {
-                    showText.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(format + role)));
+                    showText.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(format + role)));
                 }
 
                 BotCommands.player().sendMessage(showText);
@@ -94,12 +94,12 @@ public class TwitchBot extends ListenerAdapter {
     }
 
     public void onConnect(ConnectEvent event) {
-        BotCommands.player().sendMessage(new TextComponentString(TextFormatting.DARK_GREEN + "Bot connected! Use /ttv to see details."));
+        BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Bot connected! Use /ttv to see details."));
     }
 
 
     public void onDisconnect(DisconnectEvent event) {
-        BotCommands.player().sendMessage(new TextComponentString(TextFormatting.DARK_RED + "Bot disconnected."));
+        BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_RED + "Bot disconnected."));
     }
 
 

@@ -10,7 +10,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
  *
  * @author Cadiboo
  */
-final class ClientConfig {
+public final class ClientConfig {
 
     public final ForgeConfigSpec.ConfigValue<String> keyProp;
     public final ForgeConfigSpec.ConfigValue<String> channelProp;
@@ -68,4 +68,5 @@ final class ClientConfig {
 
         builder.pop();
     }
+
 }
