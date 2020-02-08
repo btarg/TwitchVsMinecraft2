@@ -18,16 +18,6 @@ You should keep this key private and safe. This key is stored in the mod's confi
 
 Follow the instructions on the TwitchApps page for how to revoke access to the Twitch API if you want to stay extra safe.
 
-# Getting started
-To setup a modding workspace using eclipse, use
-```
-./gradlew setupDecompWorkspace
-```
-
-If you're using [IntelliJ IDEA](https://www.jetbrains.com/idea/), choose **"import project"** from the main screen and import the mod's `build.gradle` file.
-
-When moving over to IDEA from Eclipse, follow the above steps and then run `cleanEclipse` from the Gradle tab to remove all of Eclipse's files.
-
 # Building from source
 To build the project using a terminal, type
 ```
