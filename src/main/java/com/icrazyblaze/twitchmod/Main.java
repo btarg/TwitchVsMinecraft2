@@ -2,7 +2,7 @@ package com.icrazyblaze.twitchmod;
 
 import com.icrazyblaze.twitchmod.config.ConfigHelper;
 import com.icrazyblaze.twitchmod.irc.BotConfig;
-import com.icrazyblaze.twitchmod.irc.BotConnection;
+import com.icrazyblaze.twitchmod.network.PacketHandler;
 import com.icrazyblaze.twitchmod.util.Reference;
 import com.icrazyblaze.twitchmod.util.TickHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -26,6 +26,8 @@ public final class Main {
 
         MinecraftForge.EVENT_BUS.register(ForgeEventSubscriber.class);
         MinecraftForge.EVENT_BUS.register(TickHandler.class);
+
+        PacketHandler.registerMessages();
     }
 
 

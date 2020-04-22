@@ -1,40 +1,42 @@
 package com.icrazyblaze.twitchmod.network;
 
 import com.icrazyblaze.twitchmod.BotCommands;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
-import io.netty.util.internal.shaded.org.jctools.queues.MessagePassingQueue;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import java.util.function.Supplier;
+
 public class GuiMessage {
+
     public String toSend;
 
-    // A default constructor is always required
-    public GuiMessage() {
+    public GuiMessage(PacketBuffer buf) {
+        fromBytes(buf);
     }
 
-    public GuiMessage(String toSend) {
-        this.toSend = toSend;
+    public GuiMessage(String message) {
+        this.toSend = message;
     }
 
-    public static void handle(GuiMessage message, MessagePassingQueue.Supplier<NetworkEvent.Context> ctx) {
 
-        String display = message.toSend;
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+
+        String display = this.toSend;
 
         ctx.get().enqueueWork(() -> {
-            // Work that needs to be threadsafe (most work)
-            // Execute the action on the main server thread by adding it as a scheduled task
+
             BotCommands.showMessageBoxClient(display);
+
         });
         ctx.get().setPacketHandled(true);
     }
 
-    public void toBytes(ByteBuf buf) {
-        ByteBufUtil.writeUtf8(buf, toSend);
+    public void toBytes(PacketBuffer buf) {
+        buf.writeString(toSend);
     }
 
-    public void fromBytes(ByteBuf buf) {
-        toSend = ByteBufUtil.getBytes(buf).toString();
+    public void fromBytes(PacketBuffer buf) {
+        toSend = buf.readString(32767);
     }
 
 }

@@ -3,10 +3,12 @@ package com.icrazyblaze.twitchmod;
 import com.icrazyblaze.twitchmod.command.TTVCommand;
 import com.icrazyblaze.twitchmod.irc.BotConnection;
 import com.icrazyblaze.twitchmod.util.Reference;
+import com.icrazyblaze.twitchmod.util.TickHandler;
 import net.minecraft.command.Commands;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 
 public class ForgeEventSubscriber {
 
@@ -15,7 +17,7 @@ public class ForgeEventSubscriber {
 
         // Set the server reference for BotCommands (used to get player entity)
         BotCommands.defaultServer = event.getServer();
-        Main.logger.info("YEET Server version: " + event.getServer().getMinecraftVersion());
+        TickHandler.enabled = true;
 
         // Register commands
         event.getCommandDispatcher().register(Commands.literal(Reference.MOD_ID)
@@ -24,12 +26,18 @@ public class ForgeEventSubscriber {
 
     }
 
+//    @SubscribeEvent
+//    public static void init(FMLCommonSetupEvent event) {
+//        PacketHandler.registerMessages();
+//    }
+
     @SubscribeEvent
     public static void joinedGame(PlayerEvent.PlayerLoggedInEvent event) {
 
-        if (event.getPlayer() == null || event.getPlayer().getServer().getPlayerList().getPlayers().size() > 1)
+        // Only the first player joining will trigger this
+        if (event.getPlayer() == null || event.getPlayer().getServer().getPlayerList().getPlayers().size() > 1) {
             return;
-
+        }
 
         Main.updateConfig();
 
@@ -37,7 +45,13 @@ public class ForgeEventSubscriber {
             BotConnection.tryConnect();
         }
 
-
     }
+
+    @SubscribeEvent
+    public static void serverStopping(FMLServerStoppingEvent event) {
+        BotConnection.disconnectBot();
+        TickHandler.enabled = false;
+    }
+
 
 }

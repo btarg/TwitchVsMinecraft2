@@ -37,6 +37,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
@@ -177,7 +178,7 @@ public class BotCommands {
 
     public static void setSpawn() {
 
-        BlockPos bpos = new BlockPos(player().serverPosX, player().serverPosY, player().serverPosZ);
+        BlockPos bpos = new BlockPos(player().getPosX(), player().getPosY(), player().getPosZ());
 
         player().setSpawnPoint(bpos, true, false, player().getSpawnDimension());
 
@@ -200,7 +201,7 @@ public class BotCommands {
 
     public static void floorIsLava() {
 
-        BlockPos bpos = new BlockPos(player().serverPosX, player().serverPosY - 1, player().serverPosZ);
+        BlockPos bpos = new BlockPos(player().getPosX(), player().getPosY() - 1, player().getPosZ());
 
         player().world.setBlockState(bpos, Blocks.LAVA.getDefaultState());
 
@@ -216,7 +217,7 @@ public class BotCommands {
 
     public static void spawnAnvil() {
 
-        BlockPos bpos = new BlockPos(player().serverPosX, player().serverPosY + 16, player().serverPosZ);
+        BlockPos bpos = new BlockPos(player().getPosX(), player().getPosY() + 16, player().getPosZ());
 
         player().world.setBlockState(bpos, Blocks.ANVIL.getDefaultState());
 
@@ -224,8 +225,8 @@ public class BotCommands {
 
     public static void spawnCobweb() {
 
-        player().world.setBlockState(new BlockPos(player().serverPosX, player().serverPosY + 1, player().serverPosZ), Blocks.COBWEB.getDefaultState());
-        player().world.setBlockState(new BlockPos(player().serverPosX, player().serverPosY - 1, player().serverPosZ), Blocks.COBWEB.getDefaultState());
+        player().world.setBlockState(new BlockPos(player().getPosX(), player().getPosY() + 1, player().getPosZ()), Blocks.COBWEB.getDefaultState());
+        player().world.setBlockState(new BlockPos(player().getPosX(), player().getPosY() - 1, player().getPosZ()), Blocks.COBWEB.getDefaultState());
 
     }
 
@@ -233,10 +234,10 @@ public class BotCommands {
 
         Vec3d lookVector = player().getLookVec();
 
-        double dx = player().serverPosX - (lookVector.x * 4);
-        double dz = player().serverPosZ - (lookVector.z * 4);
+        double dx = player().getPosX() - (lookVector.x * 4);
+        double dz = player().getPosZ() - (lookVector.z * 4);
 
-        ent.setPosition(dx, player().serverPosY, dz);
+        ent.setPosition(dx, player().getPosY(), dz);
 
         player().world.addEntity(ent);
 
@@ -246,10 +247,10 @@ public class BotCommands {
 
         Vec3d lookVector = player().getLookVec();
 
-        double dx = player().serverPosX + (lookVector.x * 4);
-        double dz = player().serverPosZ + (lookVector.z * 4);
+        double dx = player().getPosX() + (lookVector.x * 4);
+        double dz = player().getPosZ() + (lookVector.z * 4);
 
-        ent.setPosition(dx, player().serverPosY, dz);
+        ent.setPosition(dx, player().getPosY(), dz);
 
         player().world.addEntity(ent);
 
@@ -257,31 +258,31 @@ public class BotCommands {
 
     public static void creeperScare() {
 
-        player().world.playSound(null, player().serverPosX, player().serverPosY, player().serverPosZ, SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.HOSTILE, 1.0F, 1.0F);
+        player().world.playSound(null, player().getPosX(), player().getPosY(), player().getPosZ(), SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.HOSTILE, 1.0F, 1.0F);
 
     }
 
     public static void zombieScare() {
 
-        player().world.playSound(null, player().serverPosX, player().serverPosY, player().serverPosZ, SoundEvents.ENTITY_ZOMBIE_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
+        player().world.playSound(null, player().getPosX(), player().getPosY(), player().getPosZ(), SoundEvents.ENTITY_ZOMBIE_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
 
     }
 
     public static void skeletonScare() {
 
-        player().world.playSound(null, player().serverPosX, player().serverPosY, player().serverPosZ, SoundEvents.ENTITY_SKELETON_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
+        player().world.playSound(null, player().getPosX(), player().getPosY(), player().getPosZ(), SoundEvents.ENTITY_SKELETON_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
 
     }
 
     public static void witchScare() {
 
-        player().world.playSound(null, player().serverPosX, player().serverPosY, player().serverPosZ, SoundEvents.ENTITY_WITCH_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
+        player().world.playSound(null, player().getPosX(), player().getPosY(), player().getPosZ(), SoundEvents.ENTITY_WITCH_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
 
     }
 
     public static void anvilScare() {
 
-        player().world.playSound(null, player().serverPosX, player().serverPosY, player().serverPosZ, SoundEvents.BLOCK_ANVIL_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        player().world.playSound(null, player().getPosX(), player().getPosY(), player().getPosZ(), SoundEvents.BLOCK_ANVIL_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
     }
 
@@ -289,11 +290,11 @@ public class BotCommands {
 
         Vec3d lookVector = player().getLookVec();
 
-        double dx = player().serverPosX + (lookVector.x * 2);
-        double dz = player().serverPosZ + (lookVector.z * 2);
+        double dx = player().getPosX() + (lookVector.x * 2);
+        double dz = player().getPosZ() + (lookVector.z * 2);
 
         Entity ent = new FireballEntity(EntityType.FIREBALL, player().world);
-        ent.setPosition(dx, player().serverPosY + player().getEyeHeight(), dz);
+        ent.setPosition(dx, player().getPosY() + player().getEyeHeight(), dz);
 
         ent.setVelocity(lookVector.x * 2, lookVector.y * 2, lookVector.z * 2);
 
@@ -303,7 +304,7 @@ public class BotCommands {
 
     public static void spawnLightning() {
 
-        player().world.addEntity(new LightningBoltEntity(player().world, player().serverPosX, player().serverPosY, player().serverPosZ, false));
+        player().world.addEntity(new LightningBoltEntity(player().world, player().getPosX(), player().getPosY(), player().getPosZ(), false));
 
     }
 
@@ -314,7 +315,7 @@ public class BotCommands {
         BlockPos bpos;
 
         Vec3d lookVector = player().getLookVec();
-        Vec3d posVector = new Vec3d(player().serverPosX, player().serverPosY + player().getEyeHeight(), player().serverPosZ);
+        Vec3d posVector = new Vec3d(player().getPosX(), player().getPosY() + player().getEyeHeight(), player().getPosZ());
 
         RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player());
         RayTraceResult rayTrace = player().world.rayTraceBlocks(context);
@@ -335,7 +336,7 @@ public class BotCommands {
         BlockPos bpos;
 
         Vec3d lookVector = player().getLookVec();
-        Vec3d posVector = new Vec3d(player().serverPosX, player().serverPosY + player().getEyeHeight(), player().serverPosZ);
+        Vec3d posVector = new Vec3d(player().getPosX(), player().getPosY() + player().getEyeHeight(), player().getPosZ());
 
         RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player());
         RayTraceResult rayTrace = player().world.rayTraceBlocks(context);
@@ -364,9 +365,9 @@ public class BotCommands {
 
     public static void spawnGlass() {
 
-        double dx = player().serverPosX;
-        double dy = player().serverPosY;
-        double dz = player().serverPosZ;
+        double dx = player().getPosX();
+        double dy = player().getPosY();
+        double dz = player().getPosZ();
 
         BlockPos[] positions = {new BlockPos(dx, dy + 2, dz), new BlockPos(dx, dy, dz - 1), new BlockPos(dx, dy + 1, dz - 1), new BlockPos(dx, dy, dz + 1), new BlockPos(dx, dy + 1, dz + 1), new BlockPos(dx - 1, dy, dz), new BlockPos(dx - 1, dy + 1, dz), new BlockPos(dx + 1, dy, dz), new BlockPos(dx + 1, dy + 1, dz), new BlockPos(dx, dy - 2, dz)};
 
@@ -509,7 +510,8 @@ public class BotCommands {
         // Then trim the string to the proper length (324 chars max)
         message = message.substring(0, Math.min(message.length(), 324));
 
-        PacketHandler.INSTANCE.sendToServer(new GuiMessage(message));
+        //PacketHandler.INSTANCE.sendToServer(new GuiMessage(message));
+        PacketHandler.INSTANCE.sendTo(new GuiMessage(message), player().connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
 
     }
 
@@ -535,9 +537,9 @@ public class BotCommands {
 
         BlockPos bpos = player().getPosition();
 
-        double xpos = player().serverPosX;
-        double ypos = player().serverPosY;
-        double zpos = player().serverPosZ;
+        double xpos = player().getPosX();
+        double ypos = player().getPosY();
+        double zpos = player().getPosZ();
 
         BlockPos bposBelow = new BlockPos(xpos, ypos - 1, zpos);
 
@@ -625,7 +627,7 @@ public class BotCommands {
             return;
         } else if (oresExplode) {
 
-            event.getWorld().getWorld().createExplosion(null, player().serverPosX, player().serverPosY, player().serverPosZ, 4.0F, Explosion.Mode.BREAK);
+            event.getWorld().getWorld().createExplosion(null, player().getPosX(), player().getPosY(), player().getPosZ(), 4.0F, Explosion.Mode.BREAK);
 
             oresExplode = false;
 

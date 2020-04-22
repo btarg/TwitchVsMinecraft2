@@ -14,5 +14,20 @@ public class PacketHandler {
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals
     );
+    private static int ID = 0;
+
+    public static int nextID() {
+        return ID++;
+    }
+
+    public static void registerMessages() {
+
+        INSTANCE.registerMessage(nextID(),
+                GuiMessage.class,
+                GuiMessage::toBytes,
+                GuiMessage::new,
+                GuiMessage::handle);
+
+    }
 
 }
