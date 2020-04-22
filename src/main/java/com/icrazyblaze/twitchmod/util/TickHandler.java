@@ -55,7 +55,7 @@ public class TickHandler {
      * @param event Ignore this
      */
     @SubscribeEvent
-    public void tickTimer(TickEvent.ServerTickEvent event) {
+    public static void tickTimer(TickEvent.ServerTickEvent event) {
 
         if (event.phase == TickEvent.Phase.END && enabled) {
 

@@ -17,11 +17,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.SignTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -57,10 +58,12 @@ public class BotCommands {
     public static boolean placeBedrock = false;
     public static ArrayList<String> messagesList = new ArrayList<>();
 
+    public static MinecraftServer defaultServer = null;
+
 
     public static ServerPlayerEntity player() {
 
-        PlayerList playerList = Minecraft.getInstance().world.getServer().getPlayerList();
+        PlayerList playerList = defaultServer.getPlayerList();
         ServerPlayerEntity player = playerList.getPlayerByUsername(username);
 
         if (player == null) {
@@ -153,7 +156,7 @@ public class BotCommands {
 
         Iterable<ServerWorld> worlds = player().server.getWorlds();
 
-        for (ServerWorld world :worlds) {
+        for (ServerWorld world : worlds) {
             world.setDayTime(time);
         }
 
@@ -176,7 +179,7 @@ public class BotCommands {
 
         BlockPos bpos = new BlockPos(player().serverPosX, player().serverPosY, player().serverPosZ);
 
-        player().setSpawnPoint(bpos, true, false, null);
+        player().setSpawnPoint(bpos, true, false, player().getSpawnDimension());
 
     }
 
@@ -623,7 +626,7 @@ public class BotCommands {
         } else if (oresExplode) {
 
             event.getWorld().getWorld().createExplosion(null, player().serverPosX, player().serverPosY, player().serverPosZ, 4.0F, Explosion.Mode.BREAK);
-            
+
             oresExplode = false;
 
         }

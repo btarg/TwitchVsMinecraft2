@@ -1,5 +1,8 @@
 package com.icrazyblaze.twitchmod.irc;
 
+import com.icrazyblaze.twitchmod.BotCommands;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.pircbotx.cap.EnableCapHandler;
@@ -10,7 +13,9 @@ public class BotConnection {
     public static PircBotX bot = null;
     private static Thread botThread = null;
 
-    public static void main() {
+    public static void tryConnect() {
+
+        BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Connecting..."));
 
         try {
 

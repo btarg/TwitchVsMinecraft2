@@ -17,14 +17,6 @@ public class GuiMessage {
         this.toSend = toSend;
     }
 
-    public void toBytes(ByteBuf buf) {
-        ByteBufUtil.writeUtf8(buf, toSend);
-    }
-
-    public void fromBytes(ByteBuf buf) {
-        toSend = ByteBufUtil.getBytes(buf).toString();
-    }
-
     public static void handle(GuiMessage message, MessagePassingQueue.Supplier<NetworkEvent.Context> ctx) {
 
         String display = message.toSend;
@@ -35,6 +27,14 @@ public class GuiMessage {
             BotCommands.showMessageBoxClient(display);
         });
         ctx.get().setPacketHandled(true);
+    }
+
+    public void toBytes(ByteBuf buf) {
+        ByteBufUtil.writeUtf8(buf, toSend);
+    }
+
+    public void fromBytes(ByteBuf buf) {
+        toSend = ByteBufUtil.getBytes(buf).toString();
     }
 
 }

@@ -5,8 +5,8 @@ import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.irc.BotConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Difficulty;
 
 import java.io.File;
@@ -124,7 +124,7 @@ public class ChatPicker {
 
             for (java.lang.String str : blacklist) {
 
-                if (str.contains((CharSequence) message)) {
+                if (str.contains(message)) {
                     Main.logger.info("Command not executed: command is blacklisted.");
                     break;
                 } else {
@@ -241,7 +241,7 @@ public class ChatPicker {
     }
 
     /**
-     * Commands are registered here from init. (Moved from doCommands for performance reasons)
+     * Commands are registered here from doCommands.
      */
     public static void initCommands() {
 
@@ -303,6 +303,9 @@ public class ChatPicker {
      */
     public static boolean doCommand(String message, String sender) {
 
+        Main.logger.info("Running command: " + message);
+
+        // Re-register all commands (this is done because some commands rely on realtime information, e.g. the sender's name)
         commands.clear();
         initCommands();
 

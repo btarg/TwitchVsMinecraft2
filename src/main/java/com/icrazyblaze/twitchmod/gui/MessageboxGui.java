@@ -1,7 +1,7 @@
 package com.icrazyblaze.twitchmod.gui;
 
 import com.icrazyblaze.twitchmod.util.Reference;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -14,8 +14,8 @@ public class MessageboxGui extends Screen {
 
     private static final ResourceLocation BG_TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/gui/messagebox_background.png");
     public static String message = null;
-    private boolean displayGUI = true;
     private static Minecraft mc;
+    private boolean displayGUI = true;
 
     public MessageboxGui(String message) {
         super(new StringTextComponent("Message Box"));
@@ -40,7 +40,7 @@ public class MessageboxGui extends Screen {
 
         this.renderBackground();
 
-        GlStateManager.color4f(1f, 1f, 1f, 1f);
+        RenderSystem.color4f(1f, 1f, 1f, 1f);
         mc.getTextureManager().bindTexture(BG_TEXTURE);
         int x = (width / 2) - 88;
         int y = (height / 2) - 83;

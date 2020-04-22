@@ -30,7 +30,7 @@ displayURL="http://github.com/iCrazyBlaze/TwitchVsMinecraft" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="logo.png" #optional
 # A text field displayed in the mod UI
-credits="Idea from Kaze Emanuar. Thanks to iGoodie and MMD." #optional
+credits="Idea from Kaze Emanuar. Thanks to iGoodie, Commoble and MMD." #optional
 # A text field displayed in the mod UI
 authors="iCrazyBlaze" #optional
 # The description text for the mod (multi line!) (#mandatory)

@@ -19,8 +19,6 @@ import java.util.Objects;
 
 public class TwitchBot extends ListenerAdapter {
 
-    private static boolean forceCommands = false;
-
     public TwitchBot() {
         ChatPicker.loadBlacklistFile();
     }
@@ -28,8 +26,6 @@ public class TwitchBot extends ListenerAdapter {
 
     @Override
     public void onMessage(MessageEvent event) {
-
-        Main.logger.info("Hello!");
 
         String message = event.getMessage();
         String sender = Objects.requireNonNull(event.getUser()).getNick();
@@ -43,10 +39,11 @@ public class TwitchBot extends ListenerAdapter {
         if (BotConfig.showChatMessages) {
 
             if (tags != null) {
+                ChatPicker.forceCommands = false;
 
                 if (tags.get("badges").contains("broadcaster/1")) {
                     format = TextFormatting.GOLD;
-                    forceCommands = true; // Force commands to execute instantly for broadcaster testing
+                    ChatPicker.forceCommands = true; // Force commands to execute instantly for broadcaster testing
                     role = "Broadcaster";
                 } else if (tags.get("badges").contains("subscriber/1")) {
                     format = TextFormatting.AQUA;
@@ -89,8 +86,7 @@ public class TwitchBot extends ListenerAdapter {
             message = message.substring(BotConfig.prefix.length());
 
             // Add command to queue
-            ChatPicker.newChats.add(message);
-            ChatPicker.newChatSenders.add(sender);
+            ChatPicker.checkChat(message, sender);
 
         }
 
@@ -98,11 +94,13 @@ public class TwitchBot extends ListenerAdapter {
 
     public void onConnect(ConnectEvent event) {
         BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Bot connected! Use /ttv to see details."));
+        Main.logger.info("IRC Bot connected.");
     }
 
 
     public void onDisconnect(DisconnectEvent event) {
         BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_RED + "Bot disconnected."));
+        Main.logger.info("IRC Bot disconnected.");
     }
 
 

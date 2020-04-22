@@ -27,6 +27,7 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 repositories {
 	// Put remote maven repositories here
 	mavenCentral()
+	maven { url 'https://jitpack.io' }
 }
 
 minecraft {
@@ -135,7 +136,7 @@ dependencies {
 	// http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
 	// http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-	embed (group: 'org.pircbotx', name: 'pircbotx', version: '2.1') {
+	embed (group: 'com.github.pircbotx', name: 'pircbotx', version: '2.2') {
 		transitive = false
 	}
 
