@@ -464,7 +464,7 @@ public class BotCommands {
 
             if (currentitem != ItemStack.EMPTY) {
 
-                currentitem.setDisplayName(null);
+                currentitem.setDisplayName(new StringTextComponent(newname));
 
             } else {
 
@@ -477,9 +477,8 @@ public class BotCommands {
                     randomItem.setDisplayName(new StringTextComponent(newname));
 
                 } else {
-
+                    // Try again
                     renameItem(name);
-
                 }
 
             }
