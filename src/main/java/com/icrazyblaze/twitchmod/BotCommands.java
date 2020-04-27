@@ -25,6 +25,7 @@ import net.minecraft.tileentity.SignTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.StringTextComponent;
@@ -140,7 +141,7 @@ public class BotCommands {
             player.world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
         }
 
-        player().setFire(10);
+        player.setFire(10);
 
     }
 
@@ -256,7 +257,7 @@ public class BotCommands {
 
         ent.setPosition(dx, player.getPosY(), dz);
 
-        player().world.addEntity(ent);
+        player.world.addEntity(ent);
 
     }
 
@@ -276,32 +277,29 @@ public class BotCommands {
     }
 
     public static void creeperScare() {
-
-        player().world.playSound(null, player().getPosX(), player().getPosY(), player().getPosZ(), SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.HOSTILE, 1.0F, 1.0F);
-
+        playSound(SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.HOSTILE, 1.0F, 1.0F);
     }
 
     public static void zombieScare() {
-
-        player().world.playSound(null, player().getPosX(), player().getPosY(), player().getPosZ(), SoundEvents.ENTITY_ZOMBIE_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
-
+        playSound(SoundEvents.ENTITY_ZOMBIE_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
     }
 
     public static void skeletonScare() {
-
-        player().world.playSound(null, player().getPosX(), player().getPosY(), player().getPosZ(), SoundEvents.ENTITY_SKELETON_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
-
+        playSound(SoundEvents.ENTITY_SKELETON_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
     }
 
     public static void witchScare() {
-
-        player().world.playSound(null, player().getPosX(), player().getPosY(), player().getPosZ(), SoundEvents.ENTITY_WITCH_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
-
+        playSound(SoundEvents.ENTITY_WITCH_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
     }
 
     public static void anvilScare() {
+        playSound(SoundEvents.BLOCK_ANVIL_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+    }
 
-        player().world.playSound(null, player().getPosX(), player().getPosY(), player().getPosZ(), SoundEvents.BLOCK_ANVIL_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+    public static void playSound(SoundEvent sound, SoundCategory category, float volume, float pitch) {
+
+        ServerPlayerEntity player = player();
+        player.world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), sound, category, volume, pitch);
 
     }
 
@@ -309,7 +307,7 @@ public class BotCommands {
 
         ServerPlayerEntity player = player();
 
-        Vec3d lookVector = player().getLookVec();
+        Vec3d lookVector = player.getLookVec();
 
         double dx = player.getPosX() + (lookVector.x * 2);
         double dz = player.getPosZ() + (lookVector.z * 2);
@@ -507,7 +505,7 @@ public class BotCommands {
                 int r = rand.nextInt(player.inventory.getSizeInventory());
                 ItemStack randomItem = player.inventory.getStackInSlot(r);
 
-                if (randomItem != ItemStack.EMPTY && !randomItem.getDisplayName().equals(newname)) {
+                if (randomItem != ItemStack.EMPTY && !randomItem.getDisplayName().toString().equals(newname)) {
 
                     randomItem.setDisplayName(new StringTextComponent(newname));
 
