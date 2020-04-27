@@ -49,6 +49,7 @@ public class BotConnection {
 
         } catch (Exception e) {
             e.printStackTrace();
+            BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.RED + "Could not connect: " + e.toString()));
         }
     }
 

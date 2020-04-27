@@ -5,6 +5,7 @@ import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.command.TTVCommand;
 import com.icrazyblaze.twitchmod.irc.BotConnection;
 import net.minecraft.command.Commands;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
@@ -23,6 +24,15 @@ public class ForgeEventSubscriber {
         event.getCommandDispatcher().register(Commands.literal(Reference.MOD_ID)
                 .then(TTVCommand.register())
         );
+
+    }
+
+    @SubscribeEvent
+    public static void worldTick(TickEvent.WorldTickEvent event) {
+
+        if (!event.world.isRemote && BotCommands.defaultServer == null) {
+            BotCommands.defaultServer = event.world.getServer();
+        }
 
     }
 

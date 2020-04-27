@@ -118,8 +118,10 @@ public class BotCommands {
 
     public static void addRegen() {
 
-        player().addPotionEffect(new EffectInstance(Effects.HEALTH_BOOST, 400, 1));
-        player().addPotionEffect(new EffectInstance(Effects.REGENERATION, 400, 1));
+        ServerPlayerEntity player = player();
+
+        player.addPotionEffect(new EffectInstance(Effects.HEALTH_BOOST, 400, 1));
+        player.addPotionEffect(new EffectInstance(Effects.REGENERATION, 400, 1));
 
     }
 
@@ -129,11 +131,13 @@ public class BotCommands {
 
     public static void setOnFire() {
 
-        BlockPos bpos = player().getPosition();
-        BlockState bposState = player().world.getBlockState(bpos);
+        ServerPlayerEntity player = player();
+
+        BlockPos bpos = player.getPosition();
+        BlockState bposState = player.world.getBlockState(bpos);
 
         if (bposState == Blocks.AIR.getDefaultState()) {
-            player().world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
+            player.world.setBlockState(bpos, Blocks.FIRE.getDefaultState());
         }
 
         player().setFire(10);
@@ -142,8 +146,10 @@ public class BotCommands {
 
     public static void heavyRain() {
 
-        player().world.getWorldInfo().setRaining(true);
-        player().world.getWorldInfo().setThundering(true);
+        ServerPlayerEntity player = player();
+
+        player.world.getWorldInfo().setRaining(true);
+        player.world.getWorldInfo().setThundering(true);
 
     }
 
@@ -165,22 +171,25 @@ public class BotCommands {
 
     public static void drainHealth() {
 
+        ServerPlayerEntity player = player();
+
         // Half the player's health
-        float halfhealth = player().getHealth() / 2;
+        float halfhealth = player.getHealth() / 2;
 
         if (halfhealth == 0) {
             killPlayer();
         } else {
-            player().setHealth(halfhealth);
+            player.setHealth(halfhealth);
         }
 
     }
 
     public static void setSpawn() {
 
-        BlockPos bpos = new BlockPos(player().getPosX(), player().getPosY(), player().getPosZ());
+        ServerPlayerEntity player = player();
 
-        player().setSpawnPoint(bpos, true, false, player().getSpawnDimension());
+        BlockPos bpos = new BlockPos(player.getPosX(), player.getPosY(), player.getPosZ());
+        player.setSpawnPoint(bpos, true, false, player().getSpawnDimension());
 
     }
 
@@ -201,43 +210,51 @@ public class BotCommands {
 
     public static void floorIsLava() {
 
-        BlockPos bpos = new BlockPos(player().getPosX(), player().getPosY() - 1, player().getPosZ());
+        ServerPlayerEntity player = player();
 
-        player().world.setBlockState(bpos, Blocks.LAVA.getDefaultState());
+        BlockPos bpos = new BlockPos(player.getPosX(), player.getPosY() - 1, player.getPosZ());
+        player.world.setBlockState(bpos, Blocks.LAVA.getDefaultState());
 
     }
 
     public static void waterBucket() {
 
-        BlockPos bpos = player().getPosition();
+        ServerPlayerEntity player = player();
 
-        player().world.setBlockState(bpos, Blocks.WATER.getDefaultState());
+        BlockPos bpos = player.getPosition();
+        player.world.setBlockState(bpos, Blocks.WATER.getDefaultState());
 
     }
 
     public static void spawnAnvil() {
 
-        BlockPos bpos = new BlockPos(player().getPosX(), player().getPosY() + 16, player().getPosZ());
+        ServerPlayerEntity player = player();
 
-        player().world.setBlockState(bpos, Blocks.ANVIL.getDefaultState());
+        BlockPos bpos = new BlockPos(player.getPosX(), player.getPosY() + 16, player.getPosZ());
+
+        player.world.setBlockState(bpos, Blocks.ANVIL.getDefaultState());
 
     }
 
     public static void spawnCobweb() {
 
-        player().world.setBlockState(new BlockPos(player().getPosX(), player().getPosY() + 1, player().getPosZ()), Blocks.COBWEB.getDefaultState());
-        player().world.setBlockState(new BlockPos(player().getPosX(), player().getPosY() - 1, player().getPosZ()), Blocks.COBWEB.getDefaultState());
+        ServerPlayerEntity player = player();
+
+        player.world.setBlockState(new BlockPos(player().getPosX(), player().getPosY() + 1, player().getPosZ()), Blocks.COBWEB.getDefaultState());
+        player.world.setBlockState(new BlockPos(player().getPosX(), player().getPosY() - 1, player().getPosZ()), Blocks.COBWEB.getDefaultState());
 
     }
 
     public static void spawnMobBehind(Entity ent) {
 
-        Vec3d lookVector = player().getLookVec();
+        ServerPlayerEntity player = player();
 
-        double dx = player().getPosX() - (lookVector.x * 4);
-        double dz = player().getPosZ() - (lookVector.z * 4);
+        Vec3d lookVector = player.getLookVec();
 
-        ent.setPosition(dx, player().getPosY(), dz);
+        double dx = player.getPosX() - (lookVector.x * 4);
+        double dz = player.getPosZ() - (lookVector.z * 4);
+
+        ent.setPosition(dx, player.getPosY(), dz);
 
         player().world.addEntity(ent);
 
@@ -245,14 +262,16 @@ public class BotCommands {
 
     public static void spawnMob(Entity ent) {
 
-        Vec3d lookVector = player().getLookVec();
+        ServerPlayerEntity player = player();
 
-        double dx = player().getPosX() + (lookVector.x * 4);
-        double dz = player().getPosZ() + (lookVector.z * 4);
+        Vec3d lookVector = player.getLookVec();
 
-        ent.setPosition(dx, player().getPosY(), dz);
+        double dx = player.getPosX() + (lookVector.x * 4);
+        double dz = player.getPosZ() + (lookVector.z * 4);
 
-        player().world.addEntity(ent);
+        ent.setPosition(dx, player.getPosY(), dz);
+
+        player.world.addEntity(ent);
 
     }
 
@@ -288,17 +307,19 @@ public class BotCommands {
 
     public static void spawnFireball() {
 
+        ServerPlayerEntity player = player();
+
         Vec3d lookVector = player().getLookVec();
 
-        double dx = player().getPosX() + (lookVector.x * 2);
-        double dz = player().getPosZ() + (lookVector.z * 2);
+        double dx = player.getPosX() + (lookVector.x * 2);
+        double dz = player.getPosZ() + (lookVector.z * 2);
 
-        Entity ent = new FireballEntity(EntityType.FIREBALL, player().world);
-        ent.setPosition(dx, player().getPosY() + player().getEyeHeight(), dz);
+        Entity ent = new FireballEntity(EntityType.FIREBALL, player.world);
+        ent.setPosition(dx, player.getPosY() + player.getEyeHeight(), dz);
 
         ent.setVelocity(lookVector.x * 2, lookVector.y * 2, lookVector.z * 2);
 
-        player().world.addEntity(ent);
+        player.world.addEntity(ent);
 
     }
 
@@ -311,14 +332,16 @@ public class BotCommands {
 
     public static void breakBlock() {
 
+        ServerPlayerEntity player = player();
+
         int range = 50;
         BlockPos bpos;
 
-        Vec3d lookVector = player().getLookVec();
-        Vec3d posVector = new Vec3d(player().getPosX(), player().getPosY() + player().getEyeHeight(), player().getPosZ());
+        Vec3d lookVector = player.getLookVec();
+        Vec3d posVector = new Vec3d(player.getPosX(), player.getPosY() + player.getEyeHeight(), player.getPosZ());
 
-        RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player());
-        RayTraceResult rayTrace = player().world.rayTraceBlocks(context);
+        RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player);
+        RayTraceResult rayTrace = player.world.rayTraceBlocks(context);
 
         if (rayTrace == null || rayTrace.getType() == RayTraceResult.Type.MISS) {
             return;
@@ -326,7 +349,7 @@ public class BotCommands {
 
         bpos = new BlockPos(rayTrace.getHitVec());
 
-        player().world.destroyBlock(bpos, false);
+        player.world.destroyBlock(bpos, false);
 
     }
 
@@ -571,8 +594,6 @@ public class BotCommands {
         // Get tile entity
         TileEntity tileEntity = player.world.getTileEntity(bpos);
 
-        // This returns true but the tileentity is null? What the fuck?
-        Main.logger.info(player.world.getBlockState(bpos).hasTileEntity());
 
         if (tileEntity instanceof SignTileEntity) {
 
