@@ -589,18 +589,19 @@ public class BotCommands {
         // Place the sign with rotation
         player.world.setBlockState(bpos, Blocks.OAK_SIGN.getDefaultState().with(BlockStateProperties.ROTATION_0_15, playerFace), 11);
 
-        // Get tile entity
         TileEntity tileEntity = player.world.getTileEntity(bpos);
 
-
+        // Thanks for the new code Commoble!
         if (tileEntity instanceof SignTileEntity) {
 
             SignTileEntity sign = (SignTileEntity) tileEntity;
 
-            sign.setText(0, new StringTextComponent(splitMessage[0]));
-            sign.setText(1, new StringTextComponent(splitMessage[1]));
-            sign.setText(2, new StringTextComponent(splitMessage[2]));
-            sign.setText(3, new StringTextComponent(splitMessage[3]));
+            int lines = splitMessage.length;
+
+            for (int i = 0; i < lines; i++)
+            {
+                sign.setText(i, new StringTextComponent(splitMessage[i]));
+            }
 
         }
 

@@ -12,7 +12,7 @@ public class TTVCommand {
     public static LiteralArgumentBuilder<CommandSource> register() {
         return Commands.literal("ttv")
                 .requires((source) -> source.hasPermissionLevel(2))
-                        .executes(TTVCommand::checkArgs
+                .executes(TTVCommand::checkArgs
                 );
     }
 

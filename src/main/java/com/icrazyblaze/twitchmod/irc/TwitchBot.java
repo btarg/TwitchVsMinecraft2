@@ -39,6 +39,7 @@ public class TwitchBot extends ListenerAdapter {
         if (BotConfig.showChatMessages) {
 
             if (tags != null) {
+
                 ChatPicker.forceCommands = false;
 
                 if (tags.get("badges").contains("broadcaster/1")) {
@@ -52,6 +53,7 @@ public class TwitchBot extends ListenerAdapter {
                     format = TextFormatting.GREEN;
                     role = "Moderator";
                 }
+
             }
 
             if (!message.startsWith(BotConfig.prefix) || BotConfig.showCommands) {
@@ -78,6 +80,20 @@ public class TwitchBot extends ListenerAdapter {
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "blacklist")) {
 
+            // Moved adding to and clearing blacklist to the Twitch chat (only for mods and broadcasters)
+            if (message.length() > 10) {
+
+                if (role.equals("Moderator") || role.equals("Broadcaster")) {
+
+                    if (message.substring(10).startsWith("add ")) {
+                        ChatPicker.addToBlacklist(message.substring(14));
+                    } else if (message.substring(10).equalsIgnoreCase("clear")) {
+                        ChatPicker.clearBlacklist();
+                    }
+
+                }
+
+            }
             event.respond("Blacklisted commands: " + ChatPicker.blacklist.toString());
 
         } else if (message.startsWith(BotConfig.prefix)) {

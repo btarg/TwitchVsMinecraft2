@@ -24,14 +24,14 @@ import java.util.*;
  */
 public class ChatPicker {
 
+    private static final Path path = Paths.get(Minecraft.getInstance().gameDir.getPath(), "config/twitch-blacklist.txt");
+    private static final Map<String, Runnable> commands = new HashMap<>();
     public static List<java.lang.String> blacklist;
     public static ArrayList<String> newChats = new ArrayList<>();
     public static ArrayList<String> newChatSenders = new ArrayList<>();
     public static boolean cooldownEnabled = false;
     public static boolean forceCommands = false;
-    private static final Path path = Paths.get(Minecraft.getInstance().gameDir.getPath(), "config/twitch-blacklist.txt");
     private static File textfile;
-    private static final Map<String, Runnable> commands = new HashMap<>();
     private static boolean hasExecuted = false;
     private static String lastCommand = null;
 
