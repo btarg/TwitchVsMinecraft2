@@ -56,7 +56,7 @@ public class TwitchBot extends ListenerAdapter {
 
             if (!message.startsWith(BotConfig.prefix) || BotConfig.showCommands) {
 
-                showText = new StringTextComponent(TextFormatting.WHITE + "<" + TextFormatting.DARK_PURPLE + "Twitch " + format + sender + TextFormatting.WHITE + "> " + message);
+                showText = new StringTextComponent(String.format("%s<%sTwitch %s%s%s> %s", TextFormatting.WHITE, TextFormatting.DARK_PURPLE, format, sender, TextFormatting.WHITE, message));
 
                 if (role != null) {
                     showText.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(format + role)));

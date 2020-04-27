@@ -1,9 +1,9 @@
-package com.icrazyblaze.twitchmod;
+package com.icrazyblaze.twitchmod.util;
 
+import com.icrazyblaze.twitchmod.BotCommands;
+import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.command.TTVCommand;
 import com.icrazyblaze.twitchmod.irc.BotConnection;
-import com.icrazyblaze.twitchmod.util.Reference;
-import com.icrazyblaze.twitchmod.util.TickHandler;
 import net.minecraft.command.Commands;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,10 +26,6 @@ public class ForgeEventSubscriber {
 
     }
 
-//    @SubscribeEvent
-//    public static void init(FMLCommonSetupEvent event) {
-//        PacketHandler.registerMessages();
-//    }
 
     @SubscribeEvent
     public static void joinedGame(PlayerEvent.PlayerLoggedInEvent event) {
@@ -39,6 +35,7 @@ public class ForgeEventSubscriber {
             return;
         }
 
+        // Update settings before connecting
         Main.updateConfig();
 
         if (!BotConnection.isConnected()) {

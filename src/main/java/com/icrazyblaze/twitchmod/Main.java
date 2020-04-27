@@ -3,6 +3,7 @@ package com.icrazyblaze.twitchmod;
 import com.icrazyblaze.twitchmod.config.ConfigHelper;
 import com.icrazyblaze.twitchmod.irc.BotConfig;
 import com.icrazyblaze.twitchmod.network.PacketHandler;
+import com.icrazyblaze.twitchmod.util.ForgeEventSubscriber;
 import com.icrazyblaze.twitchmod.util.Reference;
 import com.icrazyblaze.twitchmod.util.TickHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -22,12 +23,18 @@ public final class Main {
     public static ConfigImplementation config;
 
     public Main() {
-        config = ConfigHelper.register(ModConfig.Type.SERVER, ConfigImplementation::new); // instantiate and subscribe our config instance
 
+        // Instantiate and subscribe our config instance
+        config = ConfigHelper.register(ModConfig.Type.SERVER, ConfigImplementation::new);
+
+        // Register event subscribers
         MinecraftForge.EVENT_BUS.register(ForgeEventSubscriber.class);
         MinecraftForge.EVENT_BUS.register(TickHandler.class);
+        MinecraftForge.EVENT_BUS.register(BotCommands.class);
 
+        // Register network messages
         PacketHandler.registerMessages();
+
     }
 
 
@@ -62,43 +69,43 @@ public final class Main {
             builder.push("general");
             this.keyProp = subscriber.subscribe(builder
                     .comment("Oauth key from twitchapps.com")
-                    .translation(Reference.MOD_ID + ".config.keyProp")
-                    .define("keyProp", ""));
+                    .translation(Reference.MOD_ID + ".config.key")
+                    .define("key", ""));
             this.channelProp = subscriber.subscribe(builder
                     .comment("Name of Twitch channel")
-                    .translation(Reference.MOD_ID + ".config.channelProp")
-                    .define("channelProp", ""));
+                    .translation(Reference.MOD_ID + ".config.channelName")
+                    .define("channelName", ""));
             this.showMessagesProp = subscriber.subscribe(builder
                     .comment("Should chat messages be shown")
-                    .translation(Reference.MOD_ID + ".config.showMessagesProp")
-                    .define("showMessagesProp", false));
+                    .translation(Reference.MOD_ID + ".config.showMessages")
+                    .define("showMessages", false));
 
             this.showCommandsProp = subscriber.subscribe(builder
                     .comment("Should chosen commands be shown if chat messages are enabled")
-                    .translation(Reference.MOD_ID + ".config.showCommandsProp")
-                    .define("showCommandsProp", true));
+                    .translation(Reference.MOD_ID + ".config.showCommands")
+                    .define("showCommands", true));
             this.chatSecondsProp = subscriber.subscribe(builder
                     .comment("How many seconds until the next command is chosen")
-                    .translation(Reference.MOD_ID + ".config.chatSecondsProp")
-                    .define("chatSecondsProp", 20));
+                    .translation(Reference.MOD_ID + ".config.chatSeconds")
+                    .define("chatSeconds", 20));
             this.messageSecondsProp = subscriber.subscribe(builder
                     .comment("How many seconds until a random viewer-written message is shown on screen")
-                    .translation(Reference.MOD_ID + ".config.messageSecondsProp")
-                    .define("messageSecondsProp", 300));
+                    .translation(Reference.MOD_ID + ".config.messageSeconds")
+                    .define("messageSeconds", 300));
 
             this.usernameProp = subscriber.subscribe(builder
                     .comment("The streamer's Minecraft username")
-                    .translation(Reference.MOD_ID + ".config.usernameProp")
-                    .define("usernameProp", ""));
+                    .translation(Reference.MOD_ID + ".config.username")
+                    .define("username", ""));
             this.prefixProp = subscriber.subscribe(builder
                     .comment("The streamer's Minecraft username")
-                    .translation(Reference.MOD_ID + ".config.prefixProp")
-                    .define("prefixProp", "!"));
+                    .translation(Reference.MOD_ID + ".config.prefix")
+                    .define("prefix", "!"));
 
             this.cooldownProp = subscriber.subscribe(builder
-                    .comment("Prevent the same command from being executed twice in a row.")
-                    .translation(Reference.MOD_ID + ".config.cooldownProp")
-                    .define("cooldownProp", false));
+                    .comment("Prevent the same command from being executed twice in a row, for this many seconds")
+                    .translation(Reference.MOD_ID + ".config.cooldownSeconds")
+                    .define("cooldownSeconds", false));
 
             builder.pop();
 

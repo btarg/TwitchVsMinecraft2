@@ -332,14 +332,16 @@ public class BotCommands {
 
     public static void monsterEgg() {
 
+        ServerPlayerEntity player = player();
+
         int range = 50;
         BlockPos bpos;
 
-        Vec3d lookVector = player().getLookVec();
-        Vec3d posVector = new Vec3d(player().getPosX(), player().getPosY() + player().getEyeHeight(), player().getPosZ());
+        Vec3d lookVector = player.getLookVec();
+        Vec3d posVector = new Vec3d(player.getPosX(), player.getPosY() + player.getEyeHeight(), player.getPosZ());
 
-        RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player());
-        RayTraceResult rayTrace = player().world.rayTraceBlocks(context);
+        RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player);
+        RayTraceResult rayTrace = player.world.rayTraceBlocks(context);
 
         if (rayTrace == null || rayTrace.getType() == RayTraceResult.Type.MISS) {
             return;
@@ -350,41 +352,45 @@ public class BotCommands {
         BlockState thisBlock = player().world.getBlockState(bpos);
 
         if (thisBlock.getBlock() == Blocks.STONE) {
-            player().world.setBlockState(bpos, Blocks.INFESTED_COBBLESTONE.getDefaultState());
+            player.world.setBlockState(bpos, Blocks.INFESTED_COBBLESTONE.getDefaultState());
         } else if (thisBlock.getBlock() == Blocks.STONE_BRICKS) {
-            player().world.setBlockState(bpos, Blocks.INFESTED_STONE_BRICKS.getDefaultState());
+            player.world.setBlockState(bpos, Blocks.INFESTED_STONE_BRICKS.getDefaultState());
         } else if (thisBlock == Blocks.MOSSY_STONE_BRICKS.getDefaultState()) {
-            player().world.setBlockState(bpos, Blocks.INFESTED_MOSSY_STONE_BRICKS.getDefaultState());
+            player.world.setBlockState(bpos, Blocks.INFESTED_MOSSY_STONE_BRICKS.getDefaultState());
         } else if (thisBlock == Blocks.CRACKED_STONE_BRICKS.getDefaultState()) {
-            player().world.setBlockState(bpos, Blocks.INFESTED_CRACKED_STONE_BRICKS.getDefaultState());
+            player.world.setBlockState(bpos, Blocks.INFESTED_CRACKED_STONE_BRICKS.getDefaultState());
         } else if (thisBlock == Blocks.CHISELED_STONE_BRICKS.getDefaultState()) {
-            player().world.setBlockState(bpos, Blocks.INFESTED_CHISELED_STONE_BRICKS.getDefaultState());
+            player.world.setBlockState(bpos, Blocks.INFESTED_CHISELED_STONE_BRICKS.getDefaultState());
         }
 
     }
 
     public static void spawnGlass() {
 
-        double dx = player().getPosX();
-        double dy = player().getPosY();
-        double dz = player().getPosZ();
+        ServerPlayerEntity player = player();
+
+        double dx = player.getPosX();
+        double dy = player.getPosY();
+        double dz = player.getPosZ();
 
         BlockPos[] positions = {new BlockPos(dx, dy + 2, dz), new BlockPos(dx, dy, dz - 1), new BlockPos(dx, dy + 1, dz - 1), new BlockPos(dx, dy, dz + 1), new BlockPos(dx, dy + 1, dz + 1), new BlockPos(dx - 1, dy, dz), new BlockPos(dx - 1, dy + 1, dz), new BlockPos(dx + 1, dy, dz), new BlockPos(dx + 1, dy + 1, dz), new BlockPos(dx, dy - 2, dz)};
 
         for (BlockPos bpos : positions) {
-            player().world.setBlockState(bpos, Blocks.GLASS.getDefaultState());
+            player.world.setBlockState(bpos, Blocks.GLASS.getDefaultState());
         }
 
     }
 
     public static void dropItem() { // Thanks Amoo!
 
-        ItemStack currentItem = player().inventory.getCurrentItem();
+        ServerPlayerEntity player = player();
+
+        ItemStack currentItem = player.inventory.getCurrentItem();
 
         if (currentItem != ItemStack.EMPTY) {
 
-            player().dropItem(currentItem, false, true);
-            player().inventory.deleteStack(currentItem);
+            player.dropItem(currentItem, false, true);
+            player.inventory.deleteStack(currentItem);
 
         }
 
@@ -392,16 +398,18 @@ public class BotCommands {
 
     public static void removeRandom() {
 
+        ServerPlayerEntity player = player();
+
         Random rand = new Random();
 
         // Delete a random item
-        int r = rand.nextInt(player().inventory.getSizeInventory());
+        int r = rand.nextInt(player.inventory.getSizeInventory());
 
-        ItemStack randomItem = player().inventory.getStackInSlot(r);
+        ItemStack randomItem = player.inventory.getStackInSlot(r);
 
         if (randomItem != ItemStack.EMPTY) {
 
-            player().inventory.deleteStack(randomItem);
+            player.inventory.deleteStack(randomItem);
 
         } else {
 
@@ -441,12 +449,14 @@ public class BotCommands {
 
     public static void messWithInventory(String sender) {
 
-        if (!player().inventory.isEmpty()) {
+        ServerPlayerEntity player = player();
+
+        if (!player.inventory.isEmpty()) {
 
             giveRandom();
 
             // Show chat message
-            player().sendMessage(new StringTextComponent(TextFormatting.RED + sender + " giveth, and " + sender + " taketh away."));
+            player.sendMessage(new StringTextComponent(TextFormatting.RED + sender + " giveth, and " + sender + " taketh away."));
 
         }
 
@@ -454,13 +464,15 @@ public class BotCommands {
 
     public static void renameItem(String name) {
 
+        ServerPlayerEntity player = player();
+
         Random rand = new Random();
 
-        if (!player().inventory.isEmpty()) {
+        if (!player.inventory.isEmpty()) {
 
             String newname = name.substring(7);
 
-            ItemStack currentitem = player().inventory.getCurrentItem();
+            ItemStack currentitem = player.inventory.getCurrentItem();
 
             if (currentitem != ItemStack.EMPTY) {
 
@@ -469,8 +481,8 @@ public class BotCommands {
             } else {
 
                 // Rename a random item in the player's inventory when the player isn't holding anything
-                int r = rand.nextInt(player().inventory.getSizeInventory());
-                ItemStack randomItem = player().inventory.getStackInSlot(r);
+                int r = rand.nextInt(player.inventory.getSizeInventory());
+                ItemStack randomItem = player.inventory.getStackInSlot(r);
 
                 if (randomItem != ItemStack.EMPTY && !randomItem.getDisplayName().equals(newname)) {
 
@@ -495,8 +507,10 @@ public class BotCommands {
 
     public static void dismount() {
 
-        if (player().isOnePlayerRiding()) {
-            player().stopRiding();
+        ServerPlayerEntity player = player();
+
+        if (player.isOnePlayerRiding()) {
+            player.stopRiding();
         }
 
     }
@@ -526,6 +540,8 @@ public class BotCommands {
 
     public static void placeSign(String message) {
 
+        ServerPlayerEntity player = player();
+
         // Cut off the command
         message = message.substring(5);
 
@@ -534,49 +550,59 @@ public class BotCommands {
         String[] splitMessage = message.split("(?<=\\G.{" + maxlength + "})");
 
 
-        BlockPos bpos = player().getPosition();
+        BlockPos bpos = player.getPosition();
 
-        double xpos = player().getPosX();
-        double ypos = player().getPosY();
-        double zpos = player().getPosZ();
+        double xpos = player.getPosX();
+        double ypos = player.getPosY();
+        double zpos = player.getPosZ();
 
         BlockPos bposBelow = new BlockPos(xpos, ypos - 1, zpos);
 
-        // UPDATE: Signs are now replaced.
 
         // Rotate the sign to face the player
-        int playerFace = MathHelper.floor((double) ((player().rotationYaw + 180.0F) * 16.0F / 360.0F) + 0.5D) & 15;
-        player().world.setBlockState(bpos, Blocks.OAK_SIGN.getDefaultState().with(BlockStateProperties.ROTATION_0_15, Integer.valueOf(playerFace)), 11);
+        int playerFace = MathHelper.floor((double) ((player.rotationYaw + 180.0F) * 16.0F / 360.0F) + 0.5D) & 15;
 
-        // Change the sign's text
-        TileEntity tileEntity = player().world.getTileEntity(bpos);
+        // Set block state to air before placing sign
+        player.world.setBlockState(bpos, Blocks.AIR.getDefaultState());
+
+        // Place the sign with rotation
+        player.world.setBlockState(bpos, Blocks.OAK_SIGN.getDefaultState().with(BlockStateProperties.ROTATION_0_15, playerFace), 11);
+
+        // Get tile entity
+        TileEntity tileEntity = player.world.getTileEntity(bpos);
+
+        // This returns true but the tileentity is null? What the fuck?
+        Main.logger.info(player.world.getBlockState(bpos).hasTileEntity());
 
         if (tileEntity instanceof SignTileEntity) {
 
             SignTileEntity sign = (SignTileEntity) tileEntity;
-            sign.signText[0] = new StringTextComponent(splitMessage[0]);
-            sign.signText[1] = new StringTextComponent(splitMessage[1]);
-            sign.signText[2] = new StringTextComponent(splitMessage[2]);
-            sign.signText[3] = new StringTextComponent(splitMessage[3]);
+
+            sign.setText(0, new StringTextComponent(splitMessage[0]));
+            sign.setText(1, new StringTextComponent(splitMessage[1]));
+            sign.setText(2, new StringTextComponent(splitMessage[2]));
+            sign.setText(3, new StringTextComponent(splitMessage[3]));
 
         }
 
         // Add a light source below the sign for reading at night (thanks Gaiet)
-        player().world.setBlockState(bposBelow, Blocks.GLOWSTONE.getDefaultState());
+        player.world.setBlockState(bposBelow, Blocks.GLOWSTONE.getDefaultState());
 
     }
 
     public static void placeChest() {
 
-        BlockPos bpos = player().getPosition();
-        Block bposBlock = player().world.getBlockState(bpos).getBlock();
+        ServerPlayerEntity player = player();
+
+        BlockPos bpos = player.getPosition();
+        Block bposBlock = player.world.getBlockState(bpos).getBlock();
 
         // Make sure we don't replace any chests
         if (bposBlock != Blocks.CHEST || bposBlock != Blocks.TRAPPED_CHEST) {
 
-            player().world.setBlockState(bpos, Blocks.CHEST.getDefaultState());
+            player.world.setBlockState(bpos, Blocks.CHEST.getDefaultState());
 
-            TileEntity tileEntity = player().world.getTileEntity(bpos);
+            TileEntity tileEntity = player.world.getTileEntity(bpos);
 
             if (tileEntity instanceof ChestTileEntity) {
 
