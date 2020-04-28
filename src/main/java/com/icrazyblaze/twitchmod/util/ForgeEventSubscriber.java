@@ -21,8 +21,8 @@ public class ForgeEventSubscriber {
         TickHandler.enabled = true;
 
         // Register commands
-        event.getCommandDispatcher().register(Commands.literal(Reference.MOD_ID)
-                .then(TTVCommand.register())
+        event.getCommandDispatcher().register(Commands.literal("ttv")
+                .then(TTVCommand.register(event.getCommandDispatcher()))
         );
 
     }

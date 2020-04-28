@@ -1,26 +1,27 @@
 package com.icrazyblaze.twitchmod.command;
 
-import com.icrazyblaze.twitchmod.Main;
+import com.icrazyblaze.twitchmod.irc.BotConnection;
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 
-public class TTVCommand {
+public class TTVCommand implements Command<CommandSource> {
 
-    public static LiteralArgumentBuilder<CommandSource> register() {
-        return Commands.literal("ttv")
-                .requires((source) -> source.hasPermissionLevel(2))
-                .executes(TTVCommand::checkArgs
-                );
+    private static final TTVCommand CMD = new TTVCommand();
+
+    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
+        return Commands.literal("connect")
+                .requires(cs -> cs.hasPermissionLevel(0))
+                .executes(CMD);
     }
 
-    private static int checkArgs(CommandContext<CommandSource> ctx) throws IllegalArgumentException {
-
-        Main.logger.info("FUCK");
-        return Command.SINGLE_SUCCESS;
-
+    @Override
+    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
+        BotConnection.tryConnect();
+        return SINGLE_SUCCESS;
     }
-
 }
