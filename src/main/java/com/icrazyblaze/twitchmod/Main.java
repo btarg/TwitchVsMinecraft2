@@ -98,14 +98,14 @@ public final class Main {
                     .translation(Reference.MOD_ID + ".config.username")
                     .define("username", ""));
             this.prefixProp = subscriber.subscribe(builder
-                    .comment("The streamer's Minecraft username")
+                    .comment("The prefix for commands")
                     .translation(Reference.MOD_ID + ".config.prefix")
                     .define("prefix", "!"));
 
             this.cooldownProp = subscriber.subscribe(builder
-                    .comment("Prevent the same command from being executed twice in a row, for this many seconds")
-                    .translation(Reference.MOD_ID + ".config.cooldownSeconds")
-                    .define("cooldownSeconds", false));
+                    .comment("Prevent the same command from being executed twice in a row)")
+                    .translation(Reference.MOD_ID + ".config.cooldownEnabled")
+                    .define("cooldownEnabled", false));
 
             builder.pop();
 

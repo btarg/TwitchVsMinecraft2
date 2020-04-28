@@ -598,8 +598,7 @@ public class BotCommands {
 
             int lines = splitMessage.length;
 
-            for (int i = 0; i < lines; i++)
-            {
+            for (int i = 0; i < lines; i++) {
                 sign.setText(i, new StringTextComponent(splitMessage[i]));
             }
 

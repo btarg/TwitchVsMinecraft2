@@ -26,7 +26,7 @@ public class ChatPicker {
 
     private static final Path path = Paths.get(Minecraft.getInstance().gameDir.getPath(), "config/twitch-blacklist.txt");
     private static final Map<String, Runnable> commands = new HashMap<>();
-    public static List<java.lang.String> blacklist;
+    public static List<String> blacklist;
     public static ArrayList<String> newChats = new ArrayList<>();
     public static ArrayList<String> newChatSenders = new ArrayList<>();
     public static boolean cooldownEnabled = false;
@@ -45,6 +45,9 @@ public class ChatPicker {
 
             textfile.createNewFile(); // Create file if it doesn't already exist
             blacklist = Files.readAllLines(path); // Read into list
+
+            // Remove all empty objects
+            blacklist.removeAll(Arrays.asList("", null));
 
         } catch (IOException e) {
             Main.logger.error(e);
@@ -122,9 +125,9 @@ public class ChatPicker {
 
         if (!blacklist.isEmpty()) {
 
-            for (java.lang.String str : blacklist) {
+            for (String str : blacklist) {
 
-                if (str.contains(message)) {
+                if (message.contains(str)) {
                     Main.logger.info("Command not executed: command is blacklisted.");
                     break;
                 } else {
@@ -202,10 +205,6 @@ public class ChatPicker {
 
                 newChats.remove(listRandom);
                 commandFailed();
-
-            } else if (BotConfig.showChatMessages && BotConfig.showCommands) {
-
-                BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
 
             }
 
@@ -303,7 +302,11 @@ public class ChatPicker {
      */
     public static boolean doCommand(String message, String sender) {
 
-        Main.logger.info("Running command: " + message);
+        if (BotConfig.showChatMessages && BotConfig.showCommands) {
+
+            BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
+
+        }
 
         // Re-register all commands (this is done because some commands rely on realtime information, e.g. the sender's name)
         commands.clear();
@@ -334,8 +337,10 @@ public class ChatPicker {
             return true;
 
         } catch (Exception e) {
-            return false;
+            e.printStackTrace();
         }
+
+        return false;
 
     }
 

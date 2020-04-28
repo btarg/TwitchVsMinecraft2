@@ -5,9 +5,12 @@ import com.google.common.collect.ImmutableMap;
 import com.icrazyblaze.twitchmod.BotCommands;
 import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
+import net.minecraft.util.concurrent.ThreadTaskExecutor;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSidedProvider;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.ConnectEvent;
 import org.pircbotx.hooks.events.DisconnectEvent;
@@ -78,10 +81,12 @@ public class TwitchBot extends ListenerAdapter {
 
             event.respond("Click here to download the mod: http://bit.ly/TwitchVsMinecraft");
 
-        } else if (message.equalsIgnoreCase(BotConfig.prefix + "blacklist")) {
+        } else if (message.startsWith(BotConfig.prefix + "blacklist")) {
+
+            message = message.substring(BotConfig.prefix.length());
 
             // Moved adding to and clearing blacklist to the Twitch chat (only for mods and broadcasters)
-            if (message.length() > 10) {
+            if (message.startsWith("blacklist ")) {
 
                 if (role.equals("Moderator") || role.equals("Broadcaster")) {
 
@@ -89,20 +94,34 @@ public class TwitchBot extends ListenerAdapter {
                         ChatPicker.addToBlacklist(message.substring(14));
                     } else if (message.substring(10).equalsIgnoreCase("clear")) {
                         ChatPicker.clearBlacklist();
+                        event.respond("Blacklist cleared.");
                     }
 
                 }
 
             }
+            ChatPicker.loadBlacklistFile();
             event.respond("Blacklisted commands: " + ChatPicker.blacklist.toString());
 
         } else if (message.startsWith(BotConfig.prefix)) {
 
             // Remove the prefix
-            message = message.substring(BotConfig.prefix.length());
+            String finalMessage = message.substring(BotConfig.prefix.length());
 
-            // Add command to queue
-            ChatPicker.checkChat(message, sender);
+            Runnable runnable = (() -> {
+
+                // Add command to queue
+                ChatPicker.checkChat(finalMessage, sender);
+
+            });
+
+            // Only run on main thread
+            ThreadTaskExecutor executor = LogicalSidedProvider.WORKQUEUE.get(LogicalSide.SERVER);
+            if (!executor.isOnExecutionThread()) {
+                executor.deferTask(runnable);
+            } else {
+                runnable.run();
+            }
 
         }
 
