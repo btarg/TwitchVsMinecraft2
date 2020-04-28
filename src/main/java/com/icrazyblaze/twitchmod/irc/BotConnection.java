@@ -15,7 +15,15 @@ public class BotConnection {
 
     public static void tryConnect() {
 
-        BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Connecting..."));
+        if (isConnected()) {
+
+            // Disconnect before connecting again
+            disconnectBot();
+            BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_PURPLE + "Reconnecting..."));
+
+        } else {
+            BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_PURPLE + "Connecting..."));
+        }
 
         try {
 

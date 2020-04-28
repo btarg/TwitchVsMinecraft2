@@ -12,10 +12,7 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
 import org.pircbotx.hooks.ListenerAdapter;
-import org.pircbotx.hooks.events.ConnectEvent;
-import org.pircbotx.hooks.events.DisconnectEvent;
-import org.pircbotx.hooks.events.MessageEvent;
-import org.pircbotx.hooks.events.PingEvent;
+import org.pircbotx.hooks.events.*;
 
 import java.util.Objects;
 
@@ -103,6 +100,13 @@ public class TwitchBot extends ListenerAdapter {
             ChatPicker.loadBlacklistFile();
             event.respond("Blacklisted commands: " + ChatPicker.blacklist.toString());
 
+        } else if (message.equalsIgnoreCase(BotConfig.prefix + "disconnect")) {
+            BotConnection.disconnectBot();
+
+        } else if (message.equalsIgnoreCase(BotConfig.prefix + "reconnect")) {
+
+            BotConnection.tryConnect();
+
         } else if (message.startsWith(BotConfig.prefix)) {
 
             // Remove the prefix
@@ -128,16 +132,16 @@ public class TwitchBot extends ListenerAdapter {
     }
 
     public void onConnect(ConnectEvent event) {
-        BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Bot connected! Use /ttv to see details."));
+        BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Bot connected!"));
         Main.logger.info("IRC Bot connected.");
     }
 
 
     public void onDisconnect(DisconnectEvent event) {
         BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_RED + "Bot disconnected."));
-        Main.logger.info("IRC Bot disconnected.");
+        Main.logger.info("IRC Bot disconnected: " + event.getDisconnectException());
     }
-
+    
 
     // Prevent the bot from being kicked
     @Override
