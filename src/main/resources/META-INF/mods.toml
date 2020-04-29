@@ -10,10 +10,10 @@ modLoader="javafml" #mandatory
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
 # See "https://maven.apache.org/enforcer/enforcer-rules/versionRanges.html"
 # 24 is 1.13-pre, 25 is 1.13.2, 26 is 1.14.2, 27 is 1.14.3, 28 is 1.14.4, 29 is 1.15, 30 is 1.15.1
-loaderVersion="[30,)" #mandatory
+loaderVersion="[31,)" #mandatory
 
 # A URL to refer people to when problems occur with this mod
-issueTrackerURL="http://github.com/iCrazyBlaze/TwitchVsMinecraft/issues" #optional
+issueTrackerURL="http://github.com/iCrazyBlaze/TwitchVsMinecraft2/issues" #optional
 
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
@@ -22,11 +22,11 @@ modId="twitchmod" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
 version="${version}" #mandatory
 # A display name for the mod
-displayName="Twitch Vs Minecraft" #mandatory
+displayName="Twitch Vs Minecraft Reloaded" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
 updateJSONURL="https://www.dropbox.com/s/izmenudk6nh48vv/update.json?dl=0" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
-displayURL="http://github.com/iCrazyBlaze/TwitchVsMinecraft" #optional
+displayURL="https://bit.ly/TwitchVsMinecraft" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="logo.png" #optional
 # A text field displayed in the mod UI
@@ -45,7 +45,7 @@ modId="forge" #mandatory
 # Does this dependency have to exist - if not, ordering below must be specified
 mandatory=true #mandatory
 # The version range of the dependency (see "https://maven.apache.org/enforcer/enforcer-rules/versionRanges.html")
-versionRange="[30,)" #mandatory
+versionRange="[31,)" #mandatory
 # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
 ordering="NONE"
 # Side this dependency is applied on - BOTH, CLIENT or SERVER
