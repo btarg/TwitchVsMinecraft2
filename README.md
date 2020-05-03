@@ -16,7 +16,7 @@ This mod integrates [PircBotX](https://github.com/pircbotx/pircbotx), a Java IRC
 # Twitch OAuth key
 As stated on CurseForge, you will need a Twitch OAuth key. You can get this [here.](https://twitchapps.com/tmi)
 
-You should keep this key private and safe. This key is stored in the mod's config file - **DO NOT** share this file with others!
+You should keep this key private and safe. **DO NOT** share this key with others!
 
 Follow the instructions on the TwitchApps page for how to revoke access to the Twitch API if you want to stay extra safe.
 
