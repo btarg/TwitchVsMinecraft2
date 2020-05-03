@@ -8,6 +8,7 @@ import com.icrazyblaze.twitchmod.util.Reference;
 import com.icrazyblaze.twitchmod.util.TickHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.EventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +28,9 @@ public final class Main {
         // Instantiate and subscribe our config instance
         config = ConfigHelper.register(ModConfig.Type.SERVER, ConfigImplementation::new);
 
+        // Initialise system property
+        System.setProperty("twitch_oauth_key", "");
+
         // Register event subscribers
         MinecraftForge.EVENT_BUS.register(ForgeEventSubscriber.class);
         MinecraftForge.EVENT_BUS.register(TickHandler.class);
@@ -40,8 +44,9 @@ public final class Main {
 
     public static void updateConfig() {
 
+        BotConfig.TWITCH_KEY = System.getProperty("twitch_oauth_key");
+
         // Set config values from server config file
-        BotConfig.TWITCH_KEY = config.keyProp.get();
         BotConfig.CHANNEL_NAME = config.channelProp.get();
         BotConfig.showChatMessages = config.showMessagesProp.get();
         BotConfig.showCommands = config.showCommandsProp.get();
@@ -53,7 +58,6 @@ public final class Main {
 
     public static class ConfigImplementation {
 
-        public final ConfigHelper.ConfigValueListener<String> keyProp;
         public final ConfigHelper.ConfigValueListener<String> channelProp;
         public final ConfigHelper.ConfigValueListener<Boolean> showMessagesProp;
         public final ConfigHelper.ConfigValueListener<Boolean> showCommandsProp;
@@ -67,10 +71,7 @@ public final class Main {
 
         ConfigImplementation(final ForgeConfigSpec.Builder builder, ConfigHelper.Subscriber subscriber) {
             builder.push("general");
-            this.keyProp = subscriber.subscribe(builder
-                    .comment("Oauth key from twitchapps.com")
-                    .translation(Reference.MOD_ID + ".config.key")
-                    .define("key", ""));
+
             this.channelProp = subscriber.subscribe(builder
                     .comment("Name of Twitch channel")
                     .translation(Reference.MOD_ID + ".config.channelName")

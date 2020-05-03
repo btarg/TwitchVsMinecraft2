@@ -8,7 +8,7 @@ A Minecraft mod for Forge inspired by [Kaze Emanuar](https://www.youtube.com/cha
 
 
 # Codebase Rewrite
-This version is being re-written to work with Minecraft 1.15.2 and above.A port to 1.14.4 is currently not in the works, however, one the mod is in a stable state it may be considered. The 1.12.2 version of the mod will be discontinued shortly after the new version's release.
+This version is being re-written to work with Minecraft 1.15.2 and above. A port to 1.14.4 is currently not in the works, however, once the mod is in a stable state it may be considered. The 1.12.2 version of the mod will be discontinued shortly after the new version's release.
 
 # How it works
 This mod integrates [PircBotX](https://github.com/pircbotx/pircbotx), a Java IRC API. It uses PircBotX to connect to Twitch's IRC server and read a Twitch channel's chat. Every time a new chat message is recieved that isn't blacklisted and starts with the chosen prefix, it is added to a list. Every 30 seconds (this can be changed), a random message from the list is chosen, and if it's a valid command, e.g. "!creeper", the list of new chat messages will be cleared, the timer will restart and the command will be executed. A list of commands is available on the CurseForge page.
@@ -20,7 +20,7 @@ You should keep this key private and safe. This key is stored in the mod's confi
 
 Follow the instructions on the TwitchApps page for how to revoke access to the Twitch API if you want to stay extra safe.
 
-This key is stored in the config file found in `<worldname>/serverconfig/twitchmod-server.toml`.
+This key needs to be reset every time the game is restarted using the in-game command `/ttv key`.
 
 # Building from source
 To build the project using a terminal, type

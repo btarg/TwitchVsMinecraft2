@@ -266,6 +266,7 @@ public class ChatPicker {
         registerCommand(() -> BotCommands.spawnMob(EntityType.ENDERMAN.create(BotCommands.player().world)), "enderman");
         registerCommand(() -> BotCommands.spawnMobBehind(EntityType.WITCH.create(BotCommands.player().world)), "witch");
         registerCommand(() -> BotCommands.spawnMobBehind(EntityType.SKELETON.create(BotCommands.player().world)), "skeleton");
+        registerCommand(() -> BotCommands.spawnMobBehind(EntityType.ARMOR_STAND.create(BotCommands.player().world)), "armorstand", "armourstand", "boo");
         registerCommand(BotCommands::creeperScare, "creeperscare", "behindyou");
         registerCommand(BotCommands::zombieScare, "zombiescare", "bruh");
         registerCommand(BotCommands::skeletonScare, "skeletonscare", "spook");
@@ -274,6 +275,7 @@ public class ChatPicker {
         registerCommand(BotCommands::spawnFireball, "fireball");
         registerCommand(() -> BotCommands.oresExplode = true, "oresexplode");
         registerCommand(() -> BotCommands.placeBedrock = true, "bedrock");
+        registerCommand(() -> BotCommands.killVillagers = true, "villagersburn", "burnthemall");
         registerCommand(BotCommands::waterBucket, "water", "watersbroke");
         registerCommand(BotCommands::breakBlock, "break");
         registerCommand(BotCommands::dismount, "dismount", "getoff");

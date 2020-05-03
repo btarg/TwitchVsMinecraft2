@@ -1,6 +1,7 @@
 package com.icrazyblaze.twitchmod.irc;
 
 import com.icrazyblaze.twitchmod.BotCommands;
+import com.icrazyblaze.twitchmod.Main;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import org.pircbotx.Configuration;
@@ -14,6 +15,14 @@ public class BotConnection {
     private static Thread botThread = null;
 
     public static void tryConnect() {
+
+        // Update settings before connecting
+        Main.updateConfig();
+
+        if (BotConfig.TWITCH_KEY.isEmpty()) {
+            BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.RED + "No key provided. Use /ttv key to set the key."));
+            return;
+        }
 
         if (isConnected()) {
 

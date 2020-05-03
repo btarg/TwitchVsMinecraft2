@@ -38,9 +38,9 @@ public class TwitchBot extends ListenerAdapter {
 
         if (BotConfig.showChatMessages) {
 
-            if (tags != null) {
+            ChatPicker.forceCommands = false;
 
-                ChatPicker.forceCommands = false;
+            if (tags != null) {
 
                 if (tags.get("badges").contains("broadcaster/1")) {
                     format = TextFormatting.GOLD;
@@ -141,7 +141,7 @@ public class TwitchBot extends ListenerAdapter {
         BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_RED + "Bot disconnected."));
         Main.logger.info("IRC Bot disconnected: " + event.getDisconnectException());
     }
-    
+
 
     // Prevent the bot from being kicked
     @Override

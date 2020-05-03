@@ -3,6 +3,7 @@ package com.icrazyblaze.twitchmod;
 import com.icrazyblaze.twitchmod.gui.MessageboxGui;
 import com.icrazyblaze.twitchmod.network.GuiMessage;
 import com.icrazyblaze.twitchmod.network.PacketHandler;
+import com.icrazyblaze.twitchmod.util.Reference;
 import com.icrazyblaze.twitchmod.util.TickHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -11,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.LightningBoltEntity;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.FireballEntity;
 import net.minecraft.item.Item;
@@ -36,10 +38,13 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.loot.LootTables;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.*;
 
@@ -58,6 +63,7 @@ public class BotCommands {
     public static String username = null;
     public static boolean oresExplode = false;
     public static boolean placeBedrock = false;
+    public static boolean killVillagers = false;
     public static ArrayList<String> messagesList = new ArrayList<>();
 
     public static MinecraftServer defaultServer = null;
@@ -663,7 +669,7 @@ public class BotCommands {
 
 
     @SubscribeEvent
-    public void explodeOnBreak(BreakEvent event) {
+    public static void explodeOnBreak(BreakEvent event) {
 
         Block thisBlock = event.getState().getBlock();
 
@@ -671,7 +677,8 @@ public class BotCommands {
             return;
         } else if (oresExplode) {
 
-            event.getWorld().getWorld().createExplosion(null, player().getPosX(), player().getPosY(), player().getPosZ(), 4.0F, Explosion.Mode.BREAK);
+            ServerPlayerEntity player = player();
+            event.getWorld().getWorld().createExplosion(null, player.getPosX(), player.getPosY(), player.getPosZ(), 3.0F, Explosion.Mode.BREAK);
 
             oresExplode = false;
 
@@ -680,7 +687,7 @@ public class BotCommands {
     }
 
     @SubscribeEvent
-    public void bedrockOnBreak(BreakEvent event) {
+    public static void bedrockOnBreak(BreakEvent event) {
 
         BlockPos bpos = event.getPos();
 
@@ -689,6 +696,18 @@ public class BotCommands {
             event.setCanceled(true);
             event.getWorld().setBlockState(bpos, Blocks.BEDROCK.getDefaultState(), 2);
             placeBedrock = false;
+
+        }
+
+    }
+
+    @SubscribeEvent
+    public static void villagersDie(PlayerInteractEvent.EntityInteract event) {
+
+        if (event.getTarget() instanceof VillagerEntity && killVillagers) {
+
+            event.getTarget().setFire(10);
+            killVillagers = false;
 
         }
 
