@@ -67,7 +67,7 @@ public class TwitchBot extends ListenerAdapter {
                     showText.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(format + role)));
                 }
 
-                BotCommands.player().sendMessage(showText);
+                BotCommands.broadcastMessage(showText);
 
             }
 
@@ -135,13 +135,13 @@ public class TwitchBot extends ListenerAdapter {
     }
 
     public void onConnect(ConnectEvent event) {
-        BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Bot connected! Use /ttv status to see details."));
+        BotCommands.broadcastMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Bot connected! Use /ttv status to see details."));
         Main.logger.info("IRC Bot connected.");
     }
 
 
     public void onDisconnect(DisconnectEvent event) {
-        BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_RED + "Bot disconnected."));
+        BotCommands.broadcastMessage(new StringTextComponent(TextFormatting.DARK_RED + "Bot disconnected."));
         Main.logger.info("IRC Bot disconnected: " + event.getDisconnectException());
     }
 

@@ -11,6 +11,7 @@ import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 
 /**
  * SubscribeEvents go here to avoid clutter in the main class.
+ *
  * @see com.icrazyblaze.twitchmod.Main
  */
 

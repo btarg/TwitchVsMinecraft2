@@ -32,6 +32,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.*;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Difficulty;
@@ -69,6 +70,7 @@ public class BotCommands {
 
     /**
      * This method gets a reference to the player, using the username specified. If the player is not found, it will get the first player in the list.
+     *
      * @return player
      */
     public static ServerPlayerEntity player() {
@@ -81,6 +83,13 @@ public class BotCommands {
         }
 
         return player;
+
+    }
+
+    public static void broadcastMessage(ITextComponent message) {
+
+        PlayerList playerList = defaultServer.getPlayerList();
+        playerList.sendMessage(message);
 
     }
 
@@ -760,7 +769,7 @@ public class BotCommands {
                 r = rand.nextInt(TextFormatting.values().length);
             }
 
-            player().sendMessage(new StringTextComponent(TextFormatting.fromColorIndex(r) + message));
+            broadcastMessage(new StringTextComponent(TextFormatting.fromColorIndex(r) + message));
 
         }
 

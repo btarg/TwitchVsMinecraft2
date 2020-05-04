@@ -1,5 +1,6 @@
 package com.icrazyblaze.twitchmod;
 
+import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.icrazyblaze.twitchmod.config.ConfigHelper;
 import com.icrazyblaze.twitchmod.irc.BotConfig;
 import com.icrazyblaze.twitchmod.network.PacketHandler;
@@ -37,6 +38,8 @@ public final class Main {
 
         // Register network messages
         PacketHandler.registerMessages();
+
+        ChatPicker.loadBlacklistFile();
 
     }
 

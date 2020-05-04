@@ -3,11 +3,11 @@ package com.icrazyblaze.twitchmod.chat;
 import com.icrazyblaze.twitchmod.BotCommands;
 import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.irc.BotConfig;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Difficulty;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Supplier;
 
 
 /**
@@ -24,7 +24,7 @@ import java.util.*;
  */
 public class ChatPicker {
 
-    private static final Path path = Paths.get(Minecraft.getInstance().gameDir.getPath(), "config/twitch-blacklist.txt");
+    private static final Supplier<Path> path = () -> FMLPaths.CONFIGDIR.get().resolve("twitch-blacklist.txt");
     private static final Map<String, Runnable> commands = new HashMap<>();
     public static List<String> blacklist;
     public static ArrayList<String> newChats = new ArrayList<>();
@@ -41,11 +41,13 @@ public class ChatPicker {
      */
     public static void loadBlacklistFile() {
 
-        textfile = new File(path.toString());
+        Main.logger.info(path);
+
+        textfile = path.get().toFile();
         try {
 
             textfile.createNewFile(); // Create file if it doesn't already exist
-            blacklist = Files.readAllLines(path); // Read into list
+            blacklist = Files.readAllLines(path.get()); // Read into list
 
             // Remove all empty objects
             blacklist.removeAll(Arrays.asList("", null));
@@ -315,7 +317,7 @@ public class ChatPicker {
 
         if (BotConfig.showChatMessages && BotConfig.showCommands) {
 
-            BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
+            BotCommands.broadcastMessage(new StringTextComponent(TextFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
 
         }
 

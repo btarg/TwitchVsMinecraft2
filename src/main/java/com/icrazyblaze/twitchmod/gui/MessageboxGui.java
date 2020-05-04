@@ -7,7 +7,6 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 
 public class MessageboxGui extends Screen {
