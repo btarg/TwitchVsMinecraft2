@@ -20,7 +20,7 @@ public class BotConnection {
         Main.updateConfig();
 
         if (BotConfig.TWITCH_KEY.isEmpty()) {
-            BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.RED + "No key provided. Use /ttv key to set the key."));
+            BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.RED + "No OAuth key provided. Use /ttv key to set the key."));
             return;
         }
 
@@ -31,7 +31,7 @@ public class BotConnection {
             BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_PURPLE + "Reconnecting..."));
 
         } else {
-            BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_PURPLE + "Connecting..."));
+            BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_PURPLE + String.format("Connecting to channel %s...", BotConfig.CHANNEL_NAME)));
         }
 
         try {

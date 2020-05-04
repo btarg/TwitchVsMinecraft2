@@ -33,7 +33,7 @@ public class SetKeyCommand implements Command<CommandSource> {
         // Update config
         Main.updateConfig();
 
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Set Twitch OAuth key"), false);
+        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Twitch OAuth key set. Use /ttv connect to start!"), false);
         return SINGLE_SUCCESS;
 
     }

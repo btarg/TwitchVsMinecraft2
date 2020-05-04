@@ -12,9 +12,14 @@ public class TickHandler {
     public static int chatTicks = 0;
     public static int chatSecondsDefault = 30;
     public static int chatSeconds = chatSecondsDefault;
+
     public static int timerTicks = 0;
     public static int timerSeconds = 60;
     public static boolean killTimer = false;
+
+    public static int peaceTimerTicks = 0;
+    public static int peaceTimerSeconds = 30;
+    public static boolean peaceTimer = false;
 
     public static int messageTicks = 0;
     public static int messageSecondsDefault = 300;
@@ -99,6 +104,28 @@ public class TickHandler {
 
                 }
             }
+
+            if (peaceTimer) {
+
+                peaceTimerTicks++;
+
+                if (peaceTimerTicks == 20) {
+
+                    if (peaceTimerSeconds > 0) {
+                        peaceTimerSeconds--;
+                    }
+
+                    peaceTimerTicks = 0;
+
+                }
+                if (peaceTimerSeconds == 0) {
+
+                    BotCommands.disableGraceTimer();
+                    peaceTimer = false;
+
+                }
+            }
+
 
             messageTicks++;
 

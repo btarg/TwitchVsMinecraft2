@@ -1,17 +1,18 @@
 package com.icrazyblaze.twitchmod;
 
+import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.icrazyblaze.twitchmod.gui.MessageboxGui;
+import com.icrazyblaze.twitchmod.irc.BotConfig;
 import com.icrazyblaze.twitchmod.network.GuiMessage;
 import com.icrazyblaze.twitchmod.network.PacketHandler;
-import com.icrazyblaze.twitchmod.util.Reference;
 import com.icrazyblaze.twitchmod.util.TickHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.LightningBoltEntity;
+import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.FireballEntity;
@@ -41,10 +42,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.*;
 
@@ -60,19 +59,17 @@ public class BotCommands {
     public static final ResourceLocation[] lootArray = {LootTables.CHESTS_SIMPLE_DUNGEON, LootTables.CHESTS_ABANDONED_MINESHAFT, LootTables.CHESTS_SPAWN_BONUS_CHEST};
     public static final List<Block> oresList = Arrays.asList(oresArray);
     public static final List<ResourceLocation> lootlist = Arrays.asList(lootArray);
-    public static String username = null;
     public static boolean oresExplode = false;
     public static boolean placeBedrock = false;
     public static boolean killVillagers = false;
     public static ArrayList<String> messagesList = new ArrayList<>();
-
     public static MinecraftServer defaultServer = null;
-
+    private static boolean previousTimerState = false;
 
     public static ServerPlayerEntity player() {
 
         PlayerList playerList = defaultServer.getPlayerList();
-        ServerPlayerEntity player = playerList.getPlayerByUsername(username);
+        ServerPlayerEntity player = playerList.getPlayerByUsername(BotConfig.username);
 
         if (player == null) {
             player = playerList.getPlayers().get(0);
@@ -196,7 +193,7 @@ public class BotCommands {
         ServerPlayerEntity player = player();
 
         BlockPos bpos = new BlockPos(player.getPosX(), player.getPosY(), player.getPosZ());
-        player.setSpawnPoint(bpos, true, false, player().getSpawnDimension());
+        player.setSpawnPoint(bpos, true, false, player.dimension);
 
     }
 
@@ -212,8 +209,31 @@ public class BotCommands {
         TickHandler.timerTicks = 0;
         TickHandler.killTimer = true;
 
+        player().sendStatusMessage(new StringTextComponent(TextFormatting.DARK_RED + "Chat has given you " + TickHandler.timerSeconds + " seconds to live."), true);
+
     }
 
+    public static void graceTimer() {
+
+        ChatPicker.enabled = false;
+        TickHandler.peaceTimerSeconds = 30;
+        TickHandler.peaceTimerTicks = 0;
+        TickHandler.peaceTimer = true;
+
+        previousTimerState = TickHandler.killTimer;
+        TickHandler.killTimer = false;
+
+        player().sendStatusMessage(new StringTextComponent(TextFormatting.AQUA + "Commands are turned off for " + TickHandler.peaceTimerSeconds + " seconds."), true);
+
+    }
+
+    public static void disableGraceTimer() {
+
+        ChatPicker.enabled = true;
+        TickHandler.peaceTimer = false;
+        TickHandler.killTimer = previousTimerState;
+
+    }
 
     public static void floorIsLava() {
 
@@ -247,8 +267,8 @@ public class BotCommands {
 
         ServerPlayerEntity player = player();
 
-        player.world.setBlockState(new BlockPos(player().getPosX(), player().getPosY() + 1, player().getPosZ()), Blocks.COBWEB.getDefaultState());
-        player.world.setBlockState(new BlockPos(player().getPosX(), player().getPosY() - 1, player().getPosZ()), Blocks.COBWEB.getDefaultState());
+        player.world.setBlockState(new BlockPos(player.getPosX(), player.getPosY() + 1, player.getPosZ()), Blocks.COBWEB.getDefaultState());
+        player.world.setBlockState(new BlockPos(player.getPosX(), player.getPosY(), player.getPosZ()), Blocks.COBWEB.getDefaultState());
 
     }
 
@@ -258,8 +278,8 @@ public class BotCommands {
 
         Vec3d lookVector = player.getLookVec();
 
-        double dx = player.getPosX() - (lookVector.x * 4);
-        double dz = player.getPosZ() - (lookVector.z * 4);
+        double dx = player.getPosX() - (lookVector.x * 3);
+        double dz = player.getPosZ() - (lookVector.z * 3);
 
         ent.setPosition(dx, player.getPosY(), dz);
 
@@ -281,6 +301,7 @@ public class BotCommands {
         player.world.addEntity(ent);
 
     }
+
 
     public static void creeperScare() {
         playSound(SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.HOSTILE, 1.0F, 1.0F);
@@ -318,10 +339,7 @@ public class BotCommands {
         double dx = player.getPosX() + (lookVector.x * 2);
         double dz = player.getPosZ() + (lookVector.z * 2);
 
-        Entity ent = new FireballEntity(EntityType.FIREBALL, player.world);
-        ent.setPosition(dx, player.getPosY() + player.getEyeHeight(), dz);
-
-        ent.setVelocity(lookVector.x * 2, lookVector.y * 2, lookVector.z * 2);
+        Entity ent = new FireballEntity(player.world, dx, player.getPosY() + player.getEyeHeight(), dz, lookVector.x * 3, lookVector.y * 3, lookVector.z * 3);
 
         player.world.addEntity(ent);
 
@@ -329,7 +347,28 @@ public class BotCommands {
 
     public static void spawnLightning() {
 
-        player().world.addEntity(new LightningBoltEntity(player().world, player().getPosX(), player().getPosY(), player().getPosZ(), false));
+        ServerPlayerEntity player = player();
+        player.world.addEntity(new LightningBoltEntity(player.world, player.getPosX(), player.getPosY(), player.getPosZ(), false));
+
+    }
+
+    public static void spawnArmorStand() {
+
+        ServerPlayerEntity player = player();
+
+        double d0 = player.getPosX();
+        double d1 = player.getPosY();
+        double d2 = player.getPosZ();
+
+        // Face where player is looking (Modified from vanilla ArmorStandItem)
+        ArmorStandEntity armorstandentity = new ArmorStandEntity(player.world, d0 + 0.5D, d1, d2 + 0.5D);
+        float f = (float) MathHelper.floor((MathHelper.wrapDegrees(player.rotationYaw - 180.0F) + 22.5F) / 45.0F) * 45.0F;
+        armorstandentity.setLocationAndAngles(d0 + 0.5D, d1, d2 + 0.5D, f, 0.0F);
+
+        // Access transformer needed for this
+        armorstandentity.setShowArms(true);
+
+        spawnMobBehind(armorstandentity);
 
     }
 
@@ -376,17 +415,19 @@ public class BotCommands {
 
         bpos = new BlockPos(rayTrace.getHitVec());
 
-        BlockState thisBlock = player().world.getBlockState(bpos);
+        Block thisBlock = player.world.getBlockState(bpos).getBlock();
 
-        if (thisBlock.getBlock() == Blocks.STONE) {
+        if (thisBlock == Blocks.COBBLESTONE) {
             player.world.setBlockState(bpos, Blocks.INFESTED_COBBLESTONE.getDefaultState());
-        } else if (thisBlock.getBlock() == Blocks.STONE_BRICKS) {
+        } else if (thisBlock == Blocks.STONE) {
+            player.world.setBlockState(bpos, Blocks.INFESTED_STONE.getDefaultState());
+        } else if (thisBlock == Blocks.STONE_BRICKS) {
             player.world.setBlockState(bpos, Blocks.INFESTED_STONE_BRICKS.getDefaultState());
-        } else if (thisBlock == Blocks.MOSSY_STONE_BRICKS.getDefaultState()) {
+        } else if (thisBlock == Blocks.MOSSY_STONE_BRICKS) {
             player.world.setBlockState(bpos, Blocks.INFESTED_MOSSY_STONE_BRICKS.getDefaultState());
-        } else if (thisBlock == Blocks.CRACKED_STONE_BRICKS.getDefaultState()) {
+        } else if (thisBlock == Blocks.CRACKED_STONE_BRICKS) {
             player.world.setBlockState(bpos, Blocks.INFESTED_CRACKED_STONE_BRICKS.getDefaultState());
-        } else if (thisBlock == Blocks.CHISELED_STONE_BRICKS.getDefaultState()) {
+        } else if (thisBlock == Blocks.CHISELED_STONE_BRICKS) {
             player.world.setBlockState(bpos, Blocks.INFESTED_CHISELED_STONE_BRICKS.getDefaultState());
         }
 
@@ -400,7 +441,7 @@ public class BotCommands {
         double dy = player.getPosY();
         double dz = player.getPosZ();
 
-        BlockPos[] positions = {new BlockPos(dx, dy + 2, dz), new BlockPos(dx, dy, dz - 1), new BlockPos(dx, dy + 1, dz - 1), new BlockPos(dx, dy, dz + 1), new BlockPos(dx, dy + 1, dz + 1), new BlockPos(dx - 1, dy, dz), new BlockPos(dx - 1, dy + 1, dz), new BlockPos(dx + 1, dy, dz), new BlockPos(dx + 1, dy + 1, dz), new BlockPos(dx, dy - 2, dz)};
+        BlockPos[] positions = {new BlockPos(dx, dy + 2, dz), new BlockPos(dx, dy, dz - 1), new BlockPos(dx, dy + 1, dz - 1), new BlockPos(dx, dy, dz + 1), new BlockPos(dx, dy + 1, dz + 1), new BlockPos(dx - 1, dy, dz), new BlockPos(dx - 1, dy + 1, dz), new BlockPos(dx + 1, dy, dz), new BlockPos(dx + 1, dy + 1, dz), new BlockPos(dx, dy - 1, dz)};
 
         for (BlockPos bpos : positions) {
             player.world.setBlockState(bpos, Blocks.GLASS.getDefaultState());
@@ -483,7 +524,7 @@ public class BotCommands {
             giveRandom();
 
             // Show chat message
-            player.sendMessage(new StringTextComponent(TextFormatting.RED + sender + " giveth, and " + sender + " taketh away."));
+            player.sendStatusMessage(new StringTextComponent(TextFormatting.RED + sender + " giveth, and " + sender + " taketh away."), true);
 
         }
 
@@ -675,7 +716,7 @@ public class BotCommands {
 
         if (!oresList.contains(thisBlock)) {
             return;
-        } else if (oresExplode) {
+        } else if (oresExplode && !event.getWorld().isRemote()) {
 
             ServerPlayerEntity player = player();
             event.getWorld().getWorld().createExplosion(null, player.getPosX(), player.getPosY(), player.getPosZ(), 3.0F, Explosion.Mode.BREAK);
@@ -691,7 +732,7 @@ public class BotCommands {
 
         BlockPos bpos = event.getPos();
 
-        if (placeBedrock) {
+        if (placeBedrock && !event.getWorld().isRemote()) {
 
             event.setCanceled(true);
             event.getWorld().setBlockState(bpos, Blocks.BEDROCK.getDefaultState(), 2);
@@ -704,7 +745,7 @@ public class BotCommands {
     @SubscribeEvent
     public static void villagersDie(PlayerInteractEvent.EntityInteract event) {
 
-        if (event.getTarget() instanceof VillagerEntity && killVillagers) {
+        if (event.getTarget() instanceof VillagerEntity && killVillagers && !event.getWorld().isRemote) {
 
             event.getTarget().setFire(10);
             killVillagers = false;

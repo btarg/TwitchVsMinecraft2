@@ -31,6 +31,7 @@ public class ChatPicker {
     public static ArrayList<String> newChatSenders = new ArrayList<>();
     public static boolean cooldownEnabled = false;
     public static boolean forceCommands = false;
+    public static boolean enabled = true;
     private static File textfile;
     private static boolean hasExecuted = false;
     private static String lastCommand = null;
@@ -111,6 +112,9 @@ public class ChatPicker {
      * @param sender  The sender's name
      */
     public static void checkChat(String message, String sender) {
+
+        if (!enabled)
+            return;
 
         // Skip checking if force commands is enabled
         if (forceCommands) {
@@ -259,6 +263,7 @@ public class ChatPicker {
         registerCommand(BotCommands::setOnFire, "fire", "burn");
         registerCommand(BotCommands::floorIsLava, "lava", "floorislava");
         registerCommand(BotCommands::deathTimer, "timer", "deathtimer");
+        registerCommand(BotCommands::graceTimer, "peacetimer", "timeout");
         registerCommand(BotCommands::drainHealth, "drain", "halfhealth");
         registerCommand(BotCommands::spawnAnvil, "anvil"); // Gaiet's favourite command <3
         registerCommand(() -> BotCommands.spawnMobBehind(EntityType.CREEPER.create(BotCommands.player().world)), "creeper", "awman");
@@ -266,7 +271,7 @@ public class ChatPicker {
         registerCommand(() -> BotCommands.spawnMob(EntityType.ENDERMAN.create(BotCommands.player().world)), "enderman");
         registerCommand(() -> BotCommands.spawnMobBehind(EntityType.WITCH.create(BotCommands.player().world)), "witch");
         registerCommand(() -> BotCommands.spawnMobBehind(EntityType.SKELETON.create(BotCommands.player().world)), "skeleton");
-        registerCommand(() -> BotCommands.spawnMobBehind(EntityType.ARMOR_STAND.create(BotCommands.player().world)), "armorstand", "armourstand", "boo");
+        registerCommand(BotCommands::spawnArmorStand, "armorstand", "armourstand", "boo");
         registerCommand(BotCommands::creeperScare, "creeperscare", "behindyou");
         registerCommand(BotCommands::zombieScare, "zombiescare", "bruh");
         registerCommand(BotCommands::skeletonScare, "skeletonscare", "spook");
