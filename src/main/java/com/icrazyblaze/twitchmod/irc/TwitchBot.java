@@ -135,7 +135,7 @@ public class TwitchBot extends ListenerAdapter {
     }
 
     public void onConnect(ConnectEvent event) {
-        BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Bot connected!"));
+        BotCommands.player().sendMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Bot connected! Use /ttv status to see details."));
         Main.logger.info("IRC Bot connected.");
     }
 
