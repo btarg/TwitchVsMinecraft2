@@ -28,7 +28,7 @@ public class MessageboxGui extends Screen {
     @Override
     public void init() {
 
-        Button btn = new ExtendedButton(width / 2 - 75, height / 2 + 55, 150, 20, I18n.format("gui.done"), button -> stopDisplay());
+        Button btn = new Button(width / 2 - 75, height / 2 + 55, 150, 20, I18n.format("gui.done"), button -> stopDisplay());
         addButton(btn);
 
     }

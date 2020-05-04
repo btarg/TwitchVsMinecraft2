@@ -5,6 +5,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
+/**
+ * This class is responsible for returning the uptime/online status of the specified channel using decapi.
+ */
 public class UptimeReader {
 
     public static String getUptimeString(String username) {
@@ -15,7 +18,7 @@ public class UptimeReader {
             e.printStackTrace();
         }
 
-        return null;
+        return "Could not get uptime";
 
     }
 

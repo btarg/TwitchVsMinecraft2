@@ -52,6 +52,8 @@ public final class Main {
         BotConfig.prefix = config.prefixProp.get();
         BotConfig.username = config.usernameProp.get();
 
+        TickHandler.messageSecondsDefault = config.messageSecondsProp.get();
+
     }
 
 

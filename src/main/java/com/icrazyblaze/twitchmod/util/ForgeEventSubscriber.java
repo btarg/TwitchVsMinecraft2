@@ -9,6 +9,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 
+/**
+ * SubscribeEvents go here to avoid clutter in the main class.
+ * @see com.icrazyblaze.twitchmod.Main
+ */
+
 public class ForgeEventSubscriber {
 
     @SubscribeEvent
@@ -25,6 +30,7 @@ public class ForgeEventSubscriber {
                 .then(TestCommand.register(event.getCommandDispatcher()))
                 .then(StatusCommand.register(event.getCommandDispatcher()))
                 .then(QueueCommand.register(event.getCommandDispatcher()))
+                .then(BlacklistCommand.register(event.getCommandDispatcher()))
         );
 
     }

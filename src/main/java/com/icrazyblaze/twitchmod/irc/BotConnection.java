@@ -8,6 +8,10 @@ import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.pircbotx.cap.EnableCapHandler;
 
+/**
+ * This class is responsible for connecting the IRC bot, which is defined by the TwitchBot class.
+ * The tryConnect method will either connect the bot or reconnect if it is already connected.
+ */
 
 public class BotConnection {
 
