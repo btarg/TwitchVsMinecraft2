@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ArmorStandEntity;
@@ -84,6 +85,10 @@ public class BotCommands {
         player().addPotionEffect(new EffectInstance(Effects.SLOWNESS, 400, 5));
     }
 
+    public static void addBlindness() {
+        player().addPotionEffect(new EffectInstance(Effects.BLINDNESS, 400, 0));
+    }
+
     public static void addHunger() {
         player().addPotionEffect(new EffectInstance(Effects.HUNGER, 800, 255));
     }
@@ -131,6 +136,10 @@ public class BotCommands {
 
     public static void addJumpBoost() {
         player().addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, 400, 2));
+    }
+
+    public static void clearEffects() {
+        player().clearActivePotions();
     }
 
     public static void setOnFire() {
@@ -232,6 +241,8 @@ public class BotCommands {
         ChatPicker.enabled = true;
         TickHandler.peaceTimer = false;
         TickHandler.killTimer = previousTimerState;
+
+        player().sendStatusMessage(new StringTextComponent(TextFormatting.AQUA + "Commands are now enabled!"), true);
 
     }
 
@@ -441,6 +452,7 @@ public class BotCommands {
         double dy = player.getPosY();
         double dz = player.getPosZ();
 
+        // TODO: This code is shit, replace it
         BlockPos[] positions = {new BlockPos(dx, dy + 2, dz), new BlockPos(dx, dy, dz - 1), new BlockPos(dx, dy + 1, dz - 1), new BlockPos(dx, dy, dz + 1), new BlockPos(dx, dy + 1, dz + 1), new BlockPos(dx - 1, dy, dz), new BlockPos(dx - 1, dy + 1, dz), new BlockPos(dx + 1, dy, dz), new BlockPos(dx + 1, dy + 1, dz), new BlockPos(dx, dy - 1, dz)};
 
         for (BlockPos bpos : positions) {
@@ -560,6 +572,43 @@ public class BotCommands {
                     // Try again
                     renameItem(name);
                 }
+
+            }
+
+        }
+
+    }
+
+    public static void enchantItem() {
+
+        ServerPlayerEntity player = player();
+
+        Random rand = new Random();
+
+        if (!player.inventory.isEmpty()) {
+
+            ItemStack currentitem = player.inventory.getCurrentItem();
+
+            // Get random enchantment from list
+            int length = ForgeRegistries.ENCHANTMENTS.getKeys().toArray().length;
+            int r = 0;
+
+            while (r == 0) {
+                r = rand.nextInt(length);
+            }
+
+            Enchantment enchantment = Enchantment.getEnchantmentByID(r);
+
+            // Set enchantment level
+            int level = 0;
+
+            while (level == 0) {
+                level = rand.nextInt(enchantment.getMaxLevel());
+            }
+
+            if (currentitem != ItemStack.EMPTY) {
+
+                currentitem.addEnchantment(enchantment, level);
 
             }
 

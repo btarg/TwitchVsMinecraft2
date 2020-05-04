@@ -251,6 +251,7 @@ public class ChatPicker {
         registerCommand(BotCommands::addPoison, "poison");
         registerCommand(BotCommands::addHunger, "hunger");
         registerCommand(BotCommands::addSlowness, "slowness");
+        registerCommand(BotCommands::addBlindness, "blindness", "jinkies");
         registerCommand(BotCommands::addSpeed, "speed", "gottagofast");
         registerCommand(BotCommands::addNausea, "nausea", "dontfeelsogood");
         registerCommand(BotCommands::addFatigue, "fatigue");
@@ -260,8 +261,10 @@ public class ChatPicker {
         registerCommand(BotCommands::addRegen, "regen", "heal", "health");
         registerCommand(BotCommands::addJumpBoost, "jumpboost", "yeet");
         registerCommand(BotCommands::addHaste, "haste", "diggydiggy");
+        registerCommand(BotCommands::clearEffects, "cleareffects", "milk");
         registerCommand(BotCommands::setOnFire, "fire", "burn");
         registerCommand(BotCommands::floorIsLava, "lava", "floorislava");
+        registerCommand(BotCommands::waterBucket, "water", "watersbroke");
         registerCommand(BotCommands::deathTimer, "timer", "deathtimer");
         registerCommand(BotCommands::graceTimer, "peacetimer", "timeout");
         registerCommand(BotCommands::drainHealth, "drain", "halfhealth");
@@ -276,15 +279,16 @@ public class ChatPicker {
         registerCommand(BotCommands::zombieScare, "zombiescare", "bruh");
         registerCommand(BotCommands::skeletonScare, "skeletonscare", "spook");
         registerCommand(BotCommands::witchScare, "witchscare");
+        registerCommand(BotCommands::anvilScare, "anvilscare");
         registerCommand(BotCommands::spawnLightning, "lightning");
         registerCommand(BotCommands::spawnFireball, "fireball");
         registerCommand(() -> BotCommands.oresExplode = true, "oresexplode");
         registerCommand(() -> BotCommands.placeBedrock = true, "bedrock");
         registerCommand(() -> BotCommands.killVillagers = true, "villagersburn", "burnthemall");
-        registerCommand(BotCommands::waterBucket, "water", "watersbroke");
         registerCommand(BotCommands::breakBlock, "break");
         registerCommand(BotCommands::dismount, "dismount", "getoff");
         registerCommand(BotCommands::dropItem, "drop", "throw");
+        registerCommand(BotCommands::dropAll, "dropall");
         registerCommand(BotCommands::monsterEgg, "silverfish");
         registerCommand(BotCommands::heavyRain, "rain", "shaun");
         registerCommand(() -> BotCommands.setDifficulty(Difficulty.HARD), "hardmode", "isthiseasymode");
@@ -295,8 +299,8 @@ public class ChatPicker {
         registerCommand(BotCommands::spawnCobweb, "cobweb", "stuck", "gbj");
         registerCommand(BotCommands::setSpawn, "spawnpoint", "setspawn");
         registerCommand(BotCommands::spawnGlass, "glass");
-        registerCommand(BotCommands::dropAll, "dropall");
-        registerCommand(BotCommands::anvilScare, "anvilscare");
+
+        registerCommand(BotCommands::enchantItem, "enchant");
 
     }
 
@@ -315,36 +319,40 @@ public class ChatPicker {
 
         }
 
-        // Re-register all commands (this is done because some commands rely on realtime information, e.g. the sender's name)
-        commands.clear();
-        initCommands();
+        if (!BotCommands.player().world.isRemote()) {
 
-        // Special commands below have extra arguments, so they are registered here.
-        registerCommand(() -> BotCommands.messWithInventory(sender), "itemroulette", "roulette");
+            // Re-register all commands (this is done because some commands rely on realtime information, e.g. the sender's name)
+            commands.clear();
+            initCommands();
 
-        try {
+            // Special commands below have extra arguments, so they are registered here.
+            registerCommand(() -> BotCommands.messWithInventory(sender), "itemroulette", "roulette");
 
-            if (message.startsWith("messagebox ") && message.length() > 11) {
-                BotCommands.showMessagebox(message);
-            } else if (message.startsWith("addmessage ") && message.length() > 11) {
-                BotCommands.addToMessages(message);
-            } else if (message.startsWith("sign ") && message.length() > 5) {
-                BotCommands.placeSign(message);
-            } else if (message.startsWith("rename ") && message.length() > 7) {
-                BotCommands.renameItem(message);
-            } else {
+            try {
 
-                // Invoke command from message
-                commands.get(message).run();
+                if (message.startsWith("messagebox ") && message.length() > 11) {
+                    BotCommands.showMessagebox(message);
+                } else if (message.startsWith("addmessage ") && message.length() > 11) {
+                    BotCommands.addToMessages(message);
+                } else if (message.startsWith("sign ") && message.length() > 5) {
+                    BotCommands.placeSign(message);
+                } else if (message.startsWith("rename ") && message.length() > 7) {
+                    BotCommands.renameItem(message);
+                } else {
 
+                    // Invoke command from message
+                    commands.get(message).run();
+
+                }
+
+                // Below will not be executed if the command does not run
+                lastCommand = message;
+                return true;
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            // Below will not be executed if the command does not run
-            lastCommand = message;
-            return true;
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return false;
