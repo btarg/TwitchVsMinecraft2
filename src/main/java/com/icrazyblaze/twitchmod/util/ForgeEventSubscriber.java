@@ -1,9 +1,7 @@
 package com.icrazyblaze.twitchmod.util;
 
 import com.icrazyblaze.twitchmod.BotCommands;
-import com.icrazyblaze.twitchmod.command.ConnectCommand;
-import com.icrazyblaze.twitchmod.command.SetKeyCommand;
-import com.icrazyblaze.twitchmod.command.TestCommand;
+import com.icrazyblaze.twitchmod.command.*;
 import com.icrazyblaze.twitchmod.irc.BotConnection;
 import net.minecraft.command.Commands;
 import net.minecraftforge.event.TickEvent;
@@ -22,9 +20,11 @@ public class ForgeEventSubscriber {
 
         // Register commands
         event.getCommandDispatcher().register(Commands.literal("ttv")
-                        .then(ConnectCommand.register(event.getCommandDispatcher()))
-                        .then(SetKeyCommand.register(event.getCommandDispatcher()))
-                        .then(TestCommand.register(event.getCommandDispatcher()))
+                .then(ConnectCommand.register(event.getCommandDispatcher()))
+                .then(SetKeyCommand.register(event.getCommandDispatcher()))
+                .then(TestCommand.register(event.getCommandDispatcher()))
+                .then(StatusCommand.register(event.getCommandDispatcher()))
+                .then(QueueCommand.register(event.getCommandDispatcher()))
         );
 
     }

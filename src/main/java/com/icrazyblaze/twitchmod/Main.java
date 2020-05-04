@@ -8,7 +8,6 @@ import com.icrazyblaze.twitchmod.util.Reference;
 import com.icrazyblaze.twitchmod.util.TickHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.EventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.logging.log4j.LogManager;
@@ -51,7 +50,7 @@ public final class Main {
         BotConfig.showChatMessages = config.showMessagesProp.get();
         BotConfig.showCommands = config.showCommandsProp.get();
         BotConfig.prefix = config.prefixProp.get();
-        BotCommands.username = config.usernameProp.get();
+        BotConfig.username = config.usernameProp.get();
 
     }
 

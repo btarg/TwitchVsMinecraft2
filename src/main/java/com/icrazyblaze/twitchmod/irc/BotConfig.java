@@ -8,4 +8,6 @@ public class BotConfig {
     public static boolean showCommands = false;
     public static String prefix = "!";
 
+    public static String username = null;
+
 }
