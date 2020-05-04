@@ -67,6 +67,10 @@ public class BotCommands {
     public static MinecraftServer defaultServer = null;
     private static boolean previousTimerState = false;
 
+    /**
+     * This method gets a reference to the player, using the username specified. If the player is not found, it will get the first player in the list.
+     * @return player
+     */
     public static ServerPlayerEntity player() {
 
         PlayerList playerList = defaultServer.getPlayerList();
@@ -745,11 +749,16 @@ public class BotCommands {
 
             Random rand = new Random();
             int r = rand.nextInt(messagesList.size());
-            String message = messagesList.get(r);
 
+            // Get random message
+            String message = messagesList.get(r);
             messagesList.remove(r);
 
-            r = rand.nextInt(TextFormatting.values().length);
+            // Get random colour
+            r = 0;
+            while (r == 0) {
+                r = rand.nextInt(TextFormatting.values().length);
+            }
 
             player().sendMessage(new StringTextComponent(TextFormatting.fromColorIndex(r) + message));
 
@@ -768,7 +777,7 @@ public class BotCommands {
         } else if (oresExplode && !event.getWorld().isRemote()) {
 
             ServerPlayerEntity player = player();
-            event.getWorld().getWorld().createExplosion(null, player.getPosX(), player.getPosY(), player.getPosZ(), 3.0F, Explosion.Mode.BREAK);
+            event.getWorld().getWorld().createExplosion(null, player.getPosX(), player.getPosY(), player.getPosZ(), 4.0F, Explosion.Mode.BREAK);
 
             oresExplode = false;
 
