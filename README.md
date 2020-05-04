@@ -6,6 +6,8 @@ A Minecraft mod for Forge inspired by [Kaze Emanuar](https://www.youtube.com/cha
 
 [View the project on CurseForge for more info!](https://www.curseforge.com/minecraft/mc-mods/twitch-vs-minecraft)
 
+[See the documentation if you are making modifications to the code.](https://icrazyblaze.github.io/TwitchVsMinecraft2/)
+
 
 # Codebase Rewrite
 This version is being re-written to work with Minecraft 1.15.2 and above. A port to 1.14.4 is currently not in the works, however, once the mod is in a stable state it may be considered. The 1.12.2 version of the mod will be discontinued shortly after the new version's release.
