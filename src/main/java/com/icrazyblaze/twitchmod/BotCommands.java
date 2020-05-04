@@ -86,6 +86,9 @@ public class BotCommands {
 
     }
 
+    /**
+     * This method sends a message to everyone on a server.
+     */
     public static void broadcastMessage(ITextComponent message) {
 
         PlayerList playerList = defaultServer.getPlayerList();
