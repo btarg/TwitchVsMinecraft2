@@ -1,5 +1,7 @@
 package com.icrazyblaze.twitchmod.irc;
 
+import com.icrazyblaze.twitchmod.BotCommands;
+
 public class BotConfig {
 
     public static String TWITCH_KEY = null;
@@ -8,6 +10,26 @@ public class BotConfig {
     public static boolean showCommands = false;
     public static String prefix = "!";
 
-    public static String username = null;
+    private static String username = null;
+
+    public static String getUsername() {
+
+        try {
+            if (username.isEmpty()) {
+                username = BotCommands.getDefaultPlayer().getName().getString();
+            }
+
+            return username;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public static void setUsername(String newname) {
+        username = newname;
+    }
 
 }

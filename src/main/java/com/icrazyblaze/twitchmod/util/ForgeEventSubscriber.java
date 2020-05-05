@@ -27,6 +27,7 @@ public class ForgeEventSubscriber {
         // Register commands
         event.getCommandDispatcher().register(Commands.literal("ttv")
                 .then(ConnectCommand.register(event.getCommandDispatcher()))
+                .then(DisconnectCommand.register(event.getCommandDispatcher()))
                 .then(SetKeyCommand.register(event.getCommandDispatcher()))
                 .then(TestCommand.register(event.getCommandDispatcher()))
                 .then(StatusCommand.register(event.getCommandDispatcher()))

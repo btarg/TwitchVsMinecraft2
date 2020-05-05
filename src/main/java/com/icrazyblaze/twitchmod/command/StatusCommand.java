@@ -2,6 +2,7 @@ package com.icrazyblaze.twitchmod.command;
 
 import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.irc.BotConfig;
+import com.icrazyblaze.twitchmod.irc.BotConnection;
 import com.icrazyblaze.twitchmod.util.TickHandler;
 import com.icrazyblaze.twitchmod.util.UptimeReader;
 import com.mojang.brigadier.Command;
@@ -31,10 +32,17 @@ public class StatusCommand implements Command<CommandSource> {
 
         Main.updateConfig();
 
+        // Display current status and uptime
+        if (BotConnection.isConnected()) {
+            context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Bot is connected."), false);
+        } else {
+            context.getSource().sendFeedback(new StringTextComponent(TextFormatting.RED + "Bot not connected."), false);
+        }
+        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Uptime: " + UptimeReader.getUptimeString(BotConfig.CHANNEL_NAME)), false);
+
         // Display current settings
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Channel name: " + BotConfig.CHANNEL_NAME), false);
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Uptime: " + UptimeReader.getUptimeString(BotConfig.CHANNEL_NAME)), false);
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Player affected: " + BotConfig.username), false);
+        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Player affected: " + BotConfig.getUsername()), false);
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.DARK_PURPLE + "A new command will be chosen every " + TickHandler.chatSecondsDefault + " seconds."), false);
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.DARK_PURPLE + "Commands start with " + BotConfig.prefix), false);
 

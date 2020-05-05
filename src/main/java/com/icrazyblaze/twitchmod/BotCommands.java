@@ -19,6 +19,8 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.FireballEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.server.MinecraftServer;
@@ -76,13 +78,20 @@ public class BotCommands {
     public static ServerPlayerEntity player() {
 
         PlayerList playerList = defaultServer.getPlayerList();
-        ServerPlayerEntity player = playerList.getPlayerByUsername(BotConfig.username);
+        ServerPlayerEntity player = playerList.getPlayerByUsername(BotConfig.getUsername());
 
         if (player == null) {
-            player = playerList.getPlayers().get(0);
+            player = getDefaultPlayer();
         }
 
         return player;
+
+    }
+
+    public static ServerPlayerEntity getDefaultPlayer() {
+
+        PlayerList playerList = defaultServer.getPlayerList();
+        return playerList.getPlayers().get(0);
 
     }
 
@@ -388,9 +397,18 @@ public class BotCommands {
         double d2 = player.getPosZ();
 
         // Face where player is looking (Modified from vanilla ArmorStandItem)
-        ArmorStandEntity armorstandentity = new ArmorStandEntity(player.world, d0 + 0.5D, d1, d2 + 0.5D);
-        float f = (float) MathHelper.floor((MathHelper.wrapDegrees(player.rotationYaw - 180.0F) + 22.5F) / 45.0F) * 45.0F;
+        ArmorStandEntity armorstandentity = new ArmorStandEntity(player.world, d0, d1, d2);
+        float f = (float) MathHelper.floor((MathHelper.wrapDegrees(player.rotationYaw) + 22.5F) / 45.0F) * 45.0F;
         armorstandentity.setLocationAndAngles(d0 + 0.5D, d1, d2 + 0.5D, f, 0.0F);
+
+        // Give the stand a custom player head
+        ItemStack item = new ItemStack(Items.PLAYER_HEAD, 1);
+        CompoundNBT nbt = item.getOrCreateTag();
+        nbt.putString("SkullOwner", BotConfig.getUsername());
+        Main.logger.info(nbt.toString());
+        item.write(nbt);
+
+        armorstandentity.replaceItemInInventory(103, item);
 
         // Access transformer needed for this
         armorstandentity.setShowArms(true);
@@ -817,6 +835,7 @@ public class BotCommands {
 
         if (event.getTarget() instanceof VillagerEntity && killVillagers && !event.getWorld().isRemote) {
 
+            ((VillagerEntity) event.getTarget()).addPotionEffect(new EffectInstance(Effects.INSTANT_DAMAGE, 1, 1));
             event.getTarget().setFire(10);
             killVillagers = false;
 

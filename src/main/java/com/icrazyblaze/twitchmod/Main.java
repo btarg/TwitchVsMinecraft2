@@ -53,7 +53,7 @@ public final class Main {
         BotConfig.showChatMessages = config.showMessagesProp.get();
         BotConfig.showCommands = config.showCommandsProp.get();
         BotConfig.prefix = config.prefixProp.get();
-        BotConfig.username = config.usernameProp.get();
+        BotConfig.setUsername(config.usernameProp.get());
 
         TickHandler.messageSecondsDefault = config.messageSecondsProp.get();
 
