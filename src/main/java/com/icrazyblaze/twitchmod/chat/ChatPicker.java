@@ -41,8 +41,6 @@ public class ChatPicker {
      */
     public static void loadBlacklistFile() {
 
-        Main.logger.info(path);
-
         textfile = path.get().toFile();
         try {
 

@@ -405,7 +405,6 @@ public class BotCommands {
         ItemStack item = new ItemStack(Items.PLAYER_HEAD, 1);
         CompoundNBT nbt = item.getOrCreateTag();
         nbt.putString("SkullOwner", BotConfig.getUsername());
-        Main.logger.info(nbt.toString());
         item.write(nbt);
 
         armorstandentity.replaceItemInInventory(103, item);
