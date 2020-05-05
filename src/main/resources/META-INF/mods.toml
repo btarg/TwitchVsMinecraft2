@@ -24,7 +24,7 @@ version="${version}" #mandatory
 # A display name for the mod
 displayName="Twitch Vs Minecraft Reloaded" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="https://www.dropbox.com/s/izmenudk6nh48vv/update.json?dl=0" #optional
+updateJSONURL="https://www.dropbox.com/s/qwmrqgdqe9jgnwf/tvm2-update.json?dl=0" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="https://bit.ly/TwitchVsMinecraft" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
