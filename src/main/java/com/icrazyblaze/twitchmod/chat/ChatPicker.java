@@ -278,13 +278,15 @@ public class ChatPicker {
         registerCommand(BotCommands::creeperScare, "creeperscare", "behindyou");
         registerCommand(BotCommands::zombieScare, "zombiescare", "bruh");
         registerCommand(BotCommands::skeletonScare, "skeletonscare", "spook");
-        registerCommand(BotCommands::witchScare, "witchscare");
+        registerCommand(BotCommands::witchScare, "witchscare", "hehe");
+        registerCommand(BotCommands::ghastScare, "ghastscare", "yikes");
         registerCommand(BotCommands::anvilScare, "anvilscare");
         registerCommand(BotCommands::spawnLightning, "lightning");
         registerCommand(BotCommands::spawnFireball, "fireball");
         registerCommand(() -> BotCommands.oresExplode = true, "oresexplode");
         registerCommand(() -> BotCommands.placeBedrock = true, "bedrock");
         registerCommand(() -> BotCommands.killVillagers = true, "villagersburn", "burnthemall");
+        registerCommand(() -> BotCommands.destroyWorkbenches = true, "nocrafting", "breakworkbench");
         registerCommand(BotCommands::breakBlock, "break");
         registerCommand(BotCommands::dismount, "dismount", "getoff");
         registerCommand(BotCommands::dropItem, "drop", "throw");
@@ -299,8 +301,8 @@ public class ChatPicker {
         registerCommand(BotCommands::spawnCobweb, "cobweb", "stuck", "gbj");
         registerCommand(BotCommands::setSpawn, "spawnpoint", "setspawn");
         registerCommand(BotCommands::spawnGlass, "glass");
-
         registerCommand(BotCommands::enchantItem, "enchant");
+        registerCommand(BotCommands::curseItem, "bind", "curse");
 
     }
 

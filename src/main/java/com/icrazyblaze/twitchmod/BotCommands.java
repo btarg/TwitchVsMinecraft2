@@ -11,6 +11,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ArmorStandEntity;
@@ -39,6 +40,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.loot.LootTables;
 import net.minecraftforge.api.distmarker.Dist;
@@ -66,6 +68,7 @@ public class BotCommands {
     public static boolean oresExplode = false;
     public static boolean placeBedrock = false;
     public static boolean killVillagers = false;
+    public static boolean destroyWorkbenches = false;
     public static ArrayList<String> messagesList = new ArrayList<>();
     public static MinecraftServer defaultServer = null;
     private static boolean previousTimerState = false;
@@ -355,6 +358,10 @@ public class BotCommands {
         playSound(SoundEvents.ENTITY_WITCH_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
     }
 
+    public static void ghastScare() {
+        playSound(SoundEvents.ENTITY_GHAST_WARN, SoundCategory.HOSTILE, 1.0F, 1.0F);
+    }
+
     public static void anvilScare() {
         playSound(SoundEvents.BLOCK_ANVIL_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
     }
@@ -399,7 +406,7 @@ public class BotCommands {
         // Face where player is looking (Modified from vanilla ArmorStandItem)
         ArmorStandEntity armorstandentity = new ArmorStandEntity(player.world, d0, d1, d2);
         float f = (float) MathHelper.floor((MathHelper.wrapDegrees(player.rotationYaw) + 22.5F) / 45.0F) * 45.0F;
-        armorstandentity.setLocationAndAngles(d0 + 0.5D, d1, d2 + 0.5D, f, 0.0F);
+        armorstandentity.setLocationAndAngles(d0, d1, d2, f, 0.0F);
 
         // Give the stand a custom player head
         ItemStack item = new ItemStack(Items.PLAYER_HEAD, 1);
@@ -622,6 +629,11 @@ public class BotCommands {
 
             ItemStack currentitem = player.inventory.getCurrentItem();
 
+            // FIX: don't enchant if the player's hand is empty
+            if (currentitem == ItemStack.EMPTY) {
+                return;
+            }
+
             // Get random enchantment from list
             int length = ForgeRegistries.ENCHANTMENTS.getKeys().toArray().length;
             int r = 0;
@@ -639,9 +651,28 @@ public class BotCommands {
                 level = rand.nextInt(enchantment.getMaxLevel());
             }
 
-            if (currentitem != ItemStack.EMPTY) {
+            currentitem.addEnchantment(enchantment, level);
 
-                currentitem.addEnchantment(enchantment, level);
+        }
+
+    }
+
+    public static void curseItem() {
+
+        ServerPlayerEntity player = player();
+
+        if (!player.inventory.isEmpty()) {
+
+            for (int i = 0; i < player.inventory.armorInventory.size(); i++) {
+
+                ItemStack armourItem = player.inventory.armorItemInSlot(i);
+
+                if (armourItem != ItemStack.EMPTY) {
+
+                    armourItem.addEnchantment(Enchantments.BINDING_CURSE, 1);
+                    player.inventory.armorInventory.set(i, armourItem);
+
+                }
 
             }
 
@@ -673,7 +704,6 @@ public class BotCommands {
         // Then trim the string to the proper length (324 chars max)
         message = message.substring(0, Math.min(message.length(), 324));
 
-        //PacketHandler.INSTANCE.sendToServer(new GuiMessage(message));
         PacketHandler.INSTANCE.sendTo(new GuiMessage(message), player().connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
 
     }
@@ -841,5 +871,25 @@ public class BotCommands {
         }
 
     }
+
+    @SubscribeEvent
+    public static void workbenchesBreak(PlayerInteractEvent.RightClickBlock event) {
+
+        World world = event.getWorld();
+        Block block = world.getBlockState(event.getPos()).getBlock();
+
+        if (destroyWorkbenches && !world.isRemote) {
+
+            if (block == Blocks.CRAFTING_TABLE || block == Blocks.FURNACE) {
+
+                world.destroyBlock(event.getPos(), false);
+                destroyWorkbenches = false;
+
+            }
+
+        }
+
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package com.icrazyblaze.twitchmod.command;
 
+import com.icrazyblaze.twitchmod.BotCommands;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;

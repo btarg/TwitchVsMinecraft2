@@ -26,8 +26,7 @@ public class DisconnectCommand implements Command<CommandSource> {
 
         if (BotConnection.isConnected()) {
             BotConnection.disconnectBot();
-        }
-        else {
+        } else {
             context.getSource().sendFeedback(new StringTextComponent(TextFormatting.RED + "Bot not connected."), false);
         }
 
