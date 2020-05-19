@@ -51,7 +51,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 /**
@@ -404,15 +408,21 @@ public class BotCommands {
         double d2 = player.getPosZ();
 
         // Face where player is looking (Modified from vanilla ArmorStandItem)
-        ArmorStandEntity armorstandentity = new ArmorStandEntity(player.world, d0, d1, d2);
+        ArmorStandEntity armorstandentity = new ArmorStandEntity(player.world, d0 + 0.5, d1 + 0.5, d2 + 0.5);
         float f = (float) MathHelper.floor((MathHelper.wrapDegrees(player.rotationYaw) + 22.5F) / 45.0F) * 45.0F;
-        armorstandentity.setLocationAndAngles(d0, d1, d2, f, 0.0F);
+        armorstandentity.setLocationAndAngles(d0 + 0.5, d1 + 0.5, d2 + 0.5, f, 0.0F);
 
         // Give the stand a custom player head
         ItemStack item = new ItemStack(Items.PLAYER_HEAD, 1);
-        CompoundNBT nbt = item.getOrCreateTag();
-        nbt.putString("SkullOwner", BotConfig.getUsername());
-        item.write(nbt);
+
+        // Add NBT if we can
+        if (BotConfig.getUsername() != null) {
+
+            CompoundNBT nbt = item.getOrCreateTag();
+            nbt.putString("SkullOwner", BotConfig.getUsername());
+            item.write(nbt);
+
+        }
 
         armorstandentity.replaceItemInInventory(103, item);
 
@@ -520,10 +530,8 @@ public class BotCommands {
 
         ServerPlayerEntity player = player();
 
-        Random rand = new Random();
-
         // Delete a random item
-        int r = rand.nextInt(player.inventory.getSizeInventory());
+        int r = ThreadLocalRandom.current().nextInt(player.inventory.getSizeInventory());
 
         ItemStack randomItem = player.inventory.getStackInSlot(r);
 
@@ -541,15 +549,10 @@ public class BotCommands {
 
     public static void giveRandom() {
 
-        Random rand = new Random();
-
         // Give the player a random item
         int length = ForgeRegistries.ITEMS.getKeys().toArray().length;
-        int r = 0;
-
-        while (r == 0) {
-            r = rand.nextInt(length);
-        }
+        ThreadLocalRandom rand = ThreadLocalRandom.current();
+        int r = rand.nextInt(length);
 
         Item select = Item.getItemById(r);
 
@@ -585,8 +588,7 @@ public class BotCommands {
     public static void renameItem(String name) {
 
         ServerPlayerEntity player = player();
-
-        Random rand = new Random();
+        ThreadLocalRandom rand = ThreadLocalRandom.current();
 
         if (!player.inventory.isEmpty()) {
 
@@ -594,26 +596,28 @@ public class BotCommands {
 
             ItemStack currentitem = player.inventory.getCurrentItem();
 
-            if (currentitem != ItemStack.EMPTY) {
+            if (currentitem == ItemStack.EMPTY || currentitem.getDisplayName().getUnformattedComponentText().equals(newname)) {
 
-                currentitem.setDisplayName(new StringTextComponent(newname));
-
-            } else {
+                int tries = 0;
 
                 // Rename a random item in the player's inventory when the player isn't holding anything
-                int r = rand.nextInt(player.inventory.getSizeInventory());
-                ItemStack randomItem = player.inventory.getStackInSlot(r);
+                while (currentitem == ItemStack.EMPTY || currentitem.getDisplayName().getUnformattedComponentText().equals(newname) && !player.inventory.isEmpty()) {
 
-                if (randomItem != ItemStack.EMPTY && !randomItem.getDisplayName().toString().equals(newname)) {
+                    if (tries < player.inventory.getSizeInventory()) {
 
-                    randomItem.setDisplayName(new StringTextComponent(newname));
+                        int r = rand.nextInt(player.inventory.getSizeInventory());
+                        currentitem = player.inventory.getStackInSlot(r);
+                        tries++;
 
-                } else {
-                    // Try again
-                    renameItem(name);
+                    } else {
+                        return;
+                    }
+
                 }
 
             }
+
+            currentitem.setDisplayName(new StringTextComponent(newname));
 
         }
 
@@ -622,33 +626,30 @@ public class BotCommands {
     public static void enchantItem() {
 
         ServerPlayerEntity player = player();
-
-        Random rand = new Random();
+        ThreadLocalRandom rand = ThreadLocalRandom.current();
 
         if (!player.inventory.isEmpty()) {
 
-            ItemStack currentitem = player.inventory.getCurrentItem();
-
-            // FIX: don't enchant if the player's hand is empty
-            if (currentitem == ItemStack.EMPTY) {
-                return;
-            }
-
             // Get random enchantment from list
             int length = ForgeRegistries.ENCHANTMENTS.getKeys().toArray().length;
-            int r = 0;
-
-            while (r == 0) {
-                r = rand.nextInt(length);
-            }
-
+            int r = rand.nextInt(1, length + 1);
             Enchantment enchantment = Enchantment.getEnchantmentByID(r);
 
-            // Set enchantment level
-            int level = 0;
+            // Set enchantment level (random level from 1 to enchantment max level)
+            int level = rand.nextInt(1, enchantment.getMaxLevel() + 1);
 
-            while (level == 0) {
-                level = rand.nextInt(enchantment.getMaxLevel());
+            ItemStack currentitem = player.inventory.getCurrentItem();
+
+            if (currentitem == ItemStack.EMPTY) {
+
+                // Enchant a random item in the player's inventory when the player isn't holding anything
+                while (currentitem == ItemStack.EMPTY && !player.inventory.isEmpty()) {
+
+                    r = rand.nextInt(player.inventory.getSizeInventory());
+                    currentitem = player.inventory.getStackInSlot(r);
+
+                }
+
             }
 
             currentitem.addEnchantment(enchantment, level);
@@ -784,10 +785,10 @@ public class BotCommands {
 
             if (tileEntity instanceof ChestTileEntity) {
 
-                Random rand = new Random();
+                ThreadLocalRandom rand = ThreadLocalRandom.current();
 
                 ((ChestTileEntity) tileEntity).setLootTable(lootlist.get(rand.nextInt(lootlist.size())), rand.nextLong());
-                ((ChestTileEntity) tileEntity).fillWithLoot(null);
+                ((ChestTileEntity) tileEntity).fillWithLoot(player);
 
             }
 
@@ -806,7 +807,7 @@ public class BotCommands {
 
         if (!messagesList.isEmpty()) {
 
-            Random rand = new Random();
+            ThreadLocalRandom rand = ThreadLocalRandom.current();
             int r = rand.nextInt(messagesList.size());
 
             // Get random message
@@ -814,12 +815,9 @@ public class BotCommands {
             messagesList.remove(r);
 
             // Get random colour
-            r = 0;
-            while (r == 0) {
-                r = rand.nextInt(TextFormatting.values().length);
-            }
+            TextFormatting format = TextFormatting.values()[1 + rand.nextInt(TextFormatting.values().length - 1)];
 
-            broadcastMessage(new StringTextComponent(TextFormatting.fromColorIndex(r) + message));
+            broadcastMessage(new StringTextComponent(format + message));
 
         }
 
@@ -882,6 +880,7 @@ public class BotCommands {
 
             if (block == Blocks.CRAFTING_TABLE || block == Blocks.FURNACE) {
 
+                event.setCanceled(true);
                 world.destroyBlock(event.getPos(), false);
                 destroyWorkbenches = false;
 

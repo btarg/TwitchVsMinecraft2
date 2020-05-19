@@ -2,7 +2,6 @@ package com.icrazyblaze.twitchmod.util;
 
 import com.icrazyblaze.twitchmod.BotCommands;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
-import com.icrazyblaze.twitchmod.irc.BotConnection;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -63,7 +62,7 @@ public class TickHandler {
     @SubscribeEvent
     public static void tickTimer(TickEvent.ServerTickEvent event) {
 
-        if (event.phase == TickEvent.Phase.END && enabled && BotConnection.isConnected()) {
+        if (event.phase == TickEvent.Phase.END && enabled) {
 
             chatTicks++;
 

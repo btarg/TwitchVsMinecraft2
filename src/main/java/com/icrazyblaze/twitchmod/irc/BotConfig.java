@@ -22,7 +22,6 @@ public class BotConfig {
             return username;
 
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
 

@@ -20,10 +20,6 @@ public class ForgeEventSubscriber {
     @SubscribeEvent
     public static void serverStarting(FMLServerStartingEvent event) {
 
-        // Set the server reference for BotCommands (used to get player entity)
-        BotCommands.defaultServer = event.getServer();
-        TickHandler.enabled = true;
-
         // Register commands
         event.getCommandDispatcher().register(Commands.literal("ttv")
                 .then(ConnectCommand.register(event.getCommandDispatcher()))
@@ -40,8 +36,10 @@ public class ForgeEventSubscriber {
     @SubscribeEvent
     public static void worldTick(TickEvent.WorldTickEvent event) {
 
+        // Set the server reference for BotCommands (used to get player entity)
         if (!event.world.isRemote && BotCommands.defaultServer == null) {
             BotCommands.defaultServer = event.world.getServer();
+            TickHandler.enabled = true;
         }
 
     }
