@@ -65,10 +65,10 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class BotCommands {
 
-    public static final Block[] oresArray = {Blocks.DIAMOND_ORE, Blocks.REDSTONE_ORE, Blocks.REDSTONE_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.EMERALD_ORE, Blocks.COAL_ORE};
-    public static final ResourceLocation[] lootArray = {LootTables.CHESTS_SIMPLE_DUNGEON, LootTables.CHESTS_ABANDONED_MINESHAFT, LootTables.CHESTS_SPAWN_BONUS_CHEST};
-    public static final List<Block> oresList = Arrays.asList(oresArray);
-    public static final List<ResourceLocation> lootlist = Arrays.asList(lootArray);
+    private static final Block[] oresArray = {Blocks.DIAMOND_ORE, Blocks.REDSTONE_ORE, Blocks.REDSTONE_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.EMERALD_ORE, Blocks.COAL_ORE};
+    private static final ResourceLocation[] lootArray = {LootTables.CHESTS_SIMPLE_DUNGEON, LootTables.CHESTS_ABANDONED_MINESHAFT, LootTables.CHESTS_SPAWN_BONUS_CHEST};
+    private static final List<Block> oresList = Arrays.asList(oresArray);
+    private static final List<ResourceLocation> lootlist = Arrays.asList(lootArray);
     public static boolean oresExplode = false;
     public static boolean placeBedrock = false;
     public static boolean killVillagers = false;
@@ -76,6 +76,8 @@ public class BotCommands {
     public static ArrayList<String> messagesList = new ArrayList<>();
     public static MinecraftServer defaultServer = null;
     private static boolean previousTimerState = false;
+
+    private static final ThreadLocalRandom rand = ThreadLocalRandom.current();
 
     /**
      * This method gets a reference to the player, using the username specified. If the player is not found, it will get the first player in the list.
@@ -123,6 +125,10 @@ public class BotCommands {
 
     public static void addHunger() {
         player().addPotionEffect(new EffectInstance(Effects.HUNGER, 800, 255));
+    }
+
+    public static void addSaturation() {
+        player().addPotionEffect(new EffectInstance(Effects.SATURATION, 200, 255));
     }
 
     public static void addSpeed() {
@@ -229,6 +235,7 @@ public class BotCommands {
 
     }
 
+
     public static void setSpawn() {
 
         ServerPlayerEntity player = player();
@@ -293,6 +300,16 @@ public class BotCommands {
 
         BlockPos bpos = player.getPosition();
         player.world.setBlockState(bpos, Blocks.WATER.getDefaultState());
+
+    }
+
+    public static void placeSponge() {
+
+        ServerPlayerEntity player = player();
+
+        BlockPos bpos = new BlockPos(player.getPosX(), player.getPosY(), player.getPosZ());
+
+        player.world.setBlockState(bpos, Blocks.SPONGE.getDefaultState());
 
     }
 
@@ -363,11 +380,15 @@ public class BotCommands {
     }
 
     public static void ghastScare() {
-        playSound(SoundEvents.ENTITY_GHAST_WARN, SoundCategory.HOSTILE, 1.0F, 1.0F);
+        playSound(SoundEvents.ENTITY_GHAST_WARN, SoundCategory.HOSTILE, 10.0F, 1.0F);
     }
 
     public static void anvilScare() {
         playSound(SoundEvents.BLOCK_ANVIL_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+    }
+
+    public static void pigmanScare() {
+        playSound(SoundEvents.ENTITY_ZOMBIE_PIGMAN_ANGRY, SoundCategory.HOSTILE, 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
     }
 
     public static void playSound(SoundEvent sound, SoundCategory category, float volume, float pitch) {
@@ -531,7 +552,7 @@ public class BotCommands {
         ServerPlayerEntity player = player();
 
         // Delete a random item
-        int r = ThreadLocalRandom.current().nextInt(player.inventory.getSizeInventory());
+        int r = rand.nextInt(player.inventory.getSizeInventory());
 
         ItemStack randomItem = player.inventory.getStackInSlot(r);
 
@@ -551,7 +572,6 @@ public class BotCommands {
 
         // Give the player a random item
         int length = ForgeRegistries.ITEMS.getKeys().toArray().length;
-        ThreadLocalRandom rand = ThreadLocalRandom.current();
         int r = rand.nextInt(length);
 
         Item select = Item.getItemById(r);
@@ -588,7 +608,6 @@ public class BotCommands {
     public static void renameItem(String name) {
 
         ServerPlayerEntity player = player();
-        ThreadLocalRandom rand = ThreadLocalRandom.current();
 
         if (!player.inventory.isEmpty()) {
 
@@ -626,7 +645,6 @@ public class BotCommands {
     public static void enchantItem() {
 
         ServerPlayerEntity player = player();
-        ThreadLocalRandom rand = ThreadLocalRandom.current();
 
         if (!player.inventory.isEmpty()) {
 
@@ -785,8 +803,6 @@ public class BotCommands {
 
             if (tileEntity instanceof ChestTileEntity) {
 
-                ThreadLocalRandom rand = ThreadLocalRandom.current();
-
                 ((ChestTileEntity) tileEntity).setLootTable(lootlist.get(rand.nextInt(lootlist.size())), rand.nextLong());
                 ((ChestTileEntity) tileEntity).fillWithLoot(player);
 
@@ -807,7 +823,6 @@ public class BotCommands {
 
         if (!messagesList.isEmpty()) {
 
-            ThreadLocalRandom rand = ThreadLocalRandom.current();
             int r = rand.nextInt(messagesList.size());
 
             // Get random message

@@ -1,6 +1,5 @@
 package com.icrazyblaze.twitchmod.command;
 
-import com.icrazyblaze.twitchmod.BotCommands;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
@@ -11,12 +10,12 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.util.text.StringTextComponent;
 
-public class QueueCommand implements Command<CommandSource> {
+public class ListCommand implements Command<CommandSource> {
 
-    private static final QueueCommand CMD = new QueueCommand();
+    private static final ListCommand CMD = new ListCommand();
 
     public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
-        return Commands.literal("queue")
+        return Commands.literal("allcommands")
                 .requires(cs -> cs.hasPermissionLevel(0))
                 .executes(CMD);
     }
@@ -24,8 +23,7 @@ public class QueueCommand implements Command<CommandSource> {
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
 
-        context.getSource().sendFeedback(new StringTextComponent("Possible commands: " + ChatPicker.newChats.toString()), false);
-        BotCommands.pigmanScare();
+        context.getSource().sendFeedback(new StringTextComponent("Registered commands: " + ChatPicker.getRegisteredCommands()), false);
 
         return SINGLE_SUCCESS;
     }

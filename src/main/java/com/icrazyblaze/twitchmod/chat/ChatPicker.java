@@ -238,7 +238,13 @@ public class ChatPicker {
         Thank you gigaherz, very cool!
         */
         for (String key : keys) {
+
+            // Don't register exactly the same command every time
+            if (commands.containsKey(key) && commands.containsValue(runnable))
+                return;
+
             commands.put(key, runnable);
+
         }
 
     }
@@ -259,12 +265,14 @@ public class ChatPicker {
         registerCommand(BotCommands::noFall, "nofall", "float");
         registerCommand(BotCommands::addWeakness, "weakness");
         registerCommand(BotCommands::addRegen, "regen", "heal", "health");
+        registerCommand(BotCommands::addSaturation, "saturation", "feed");
         registerCommand(BotCommands::addJumpBoost, "jumpboost", "yeet");
         registerCommand(BotCommands::addHaste, "haste", "diggydiggy");
         registerCommand(BotCommands::clearEffects, "cleareffects", "milk");
         registerCommand(BotCommands::setOnFire, "fire", "burn");
         registerCommand(BotCommands::floorIsLava, "lava", "floorislava");
         registerCommand(BotCommands::waterBucket, "water", "watersbroke");
+        registerCommand(BotCommands::placeSponge, "sponge");
         registerCommand(BotCommands::deathTimer, "timer", "deathtimer");
         registerCommand(BotCommands::graceTimer, "peacetimer", "timeout");
         registerCommand(BotCommands::drainHealth, "drain", "halfhealth");
@@ -280,6 +288,7 @@ public class ChatPicker {
         registerCommand(BotCommands::skeletonScare, "skeletonscare", "spook");
         registerCommand(BotCommands::witchScare, "witchscare", "hehe");
         registerCommand(BotCommands::ghastScare, "ghastscare", "yikes");
+        registerCommand(BotCommands::pigmanScare, "pigmanscare", "aggro");
         registerCommand(BotCommands::anvilScare, "anvilscare");
         registerCommand(BotCommands::spawnLightning, "lightning");
         registerCommand(BotCommands::spawnFireball, "fireball");
@@ -303,6 +312,22 @@ public class ChatPicker {
         registerCommand(BotCommands::spawnGlass, "glass");
         registerCommand(BotCommands::enchantItem, "enchant");
         registerCommand(BotCommands::curseItem, "bind", "curse");
+
+    }
+
+    public static List<String> getRegisteredCommands() {
+
+        List<String> commandList = new ArrayList<>();
+
+        for (String key : commands.keySet()) {
+
+            if (!blacklist.contains(key))
+                commandList.add(key);
+
+        }
+
+        Collections.sort(commandList);
+        return commandList;
 
     }
 
