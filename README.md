@@ -1,7 +1,7 @@
 # Twitch Vs Minecraft Reloaded (Now available for 1.16!)
 [![forthebadge](https://forthebadge.com/images/badges/fuck-it-ship-it.svg)](https://forthebadge.com)
 [![Build status](https://ci.appveyor.com/api/projects/status/xoql77ww8lpbpmyo?svg=true)](https://ci.appveyor.com/project/iCrazyBlaze/twitchvsminecraft2)
-[![CurseForge](https://cf.way2muchnoise.eu/full_twitch-vs-minecraft_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/twitch-vs-minecraft)
+[![CurseForge](http://cf.way2muchnoise.eu/full_twitch-vs-minecraft_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/twitch-vs-minecraft)
 
 A Minecraft mod for Forge inspired by [Kaze Emanuar](https://www.youtube.com/channel/UCuvSqzfO_LV_QzHdmEj84SQ) and [CrowdControl](https://crowdcontrol.live) that lets Twitch viewers interact with the game to provide a fun challenge for streamers.
 
@@ -10,8 +10,8 @@ A Minecraft mod for Forge inspired by [Kaze Emanuar](https://www.youtube.com/cha
 [See the documentation if you are making modifications to the code.](https://icrazyblaze.github.io/TwitchVsMinecraft2/)
 
 
-# Codebase Rewrite
-This version is being re-written to work with Minecraft 1.15.2 and above.
+# Forge version
+This version of the mod is designed to work with Minecraft Forge 1.16.3.
 
 # How it works
 This mod integrates [PircBotX](https://github.com/pircbotx/pircbotx), a Java IRC API. It uses PircBotX to connect to Twitch's IRC server and read a Twitch channel's chat. Every time a new chat message is recieved that isn't blacklisted and starts with the chosen prefix, it is added to a list. Every 30 seconds (this can be changed), a random message from the list is chosen, and if it's a valid command, e.g. "!creeper", the list of new chat messages will be cleared, the timer will restart and the command will be executed. A list of commands is available on the CurseForge page.
