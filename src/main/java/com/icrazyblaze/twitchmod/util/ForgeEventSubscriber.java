@@ -5,6 +5,8 @@ import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.icrazyblaze.twitchmod.command.*;
 import com.icrazyblaze.twitchmod.irc.BotConnection;
+import com.mojang.brigadier.CommandDispatcher;
+import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,15 +25,17 @@ public class ForgeEventSubscriber {
     public static void serverStarting(FMLServerStartingEvent event) {
 
         // Register commands
-        event.getCommandDispatcher().register(Commands.literal("ttv")
-                .then(ConnectCommand.register(event.getCommandDispatcher()))
-                .then(DisconnectCommand.register(event.getCommandDispatcher()))
-                .then(SetKeyCommand.register(event.getCommandDispatcher()))
-                .then(TestCommand.register(event.getCommandDispatcher()))
-                .then(StatusCommand.register(event.getCommandDispatcher()))
-                .then(QueueCommand.register(event.getCommandDispatcher()))
-                .then(BlacklistCommand.register(event.getCommandDispatcher()))
-                .then(ListCommand.register(event.getCommandDispatcher()))
+        // Dispatcher is now a variable, like it should be
+        CommandDispatcher<CommandSource> dispatcher = event.getServer().getCommandManager().getDispatcher();
+        dispatcher.register(Commands.literal("ttv")
+                .then(ConnectCommand.register(dispatcher))
+                .then(DisconnectCommand.register(dispatcher))
+                .then(SetKeyCommand.register(dispatcher))
+                .then(TestCommand.register(dispatcher))
+                .then(StatusCommand.register(dispatcher))
+                .then(QueueCommand.register(dispatcher))
+                .then(BlacklistCommand.register(dispatcher))
+                .then(ListCommand.register(dispatcher))
         );
 
         Main.updateConfig();

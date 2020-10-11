@@ -24,7 +24,7 @@ public class TimerGui {
             Minecraft mc = Minecraft.getInstance();
             String text = "TIMER: " + TickHandler.timerSeconds;
 
-            mc.fontRenderer.drawStringWithShadow(text, 4, 4, Integer.parseInt("AA0000", 16));
+            mc.fontRenderer.drawStringWithShadow(event.getMatrixStack(), text, 4, 4, Integer.parseInt("AA0000", 16));
 
         }
 

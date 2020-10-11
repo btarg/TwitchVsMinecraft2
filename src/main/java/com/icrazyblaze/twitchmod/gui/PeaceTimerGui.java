@@ -25,7 +25,7 @@ public class PeaceTimerGui {
             Minecraft mc = Minecraft.getInstance();
             String text = "COMMANDS DISABLED: " + TickHandler.peaceTimerSeconds;
 
-            mc.fontRenderer.drawStringWithShadow(text, 4, 4, TextFormatting.AQUA.getColor());
+            mc.fontRenderer.drawStringWithShadow(event.getMatrixStack(), text, 4, 4, TextFormatting.AQUA.getColor());
 
         }
 

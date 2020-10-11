@@ -153,4 +153,3 @@ public class TwitchBot extends ListenerAdapter {
     }
 
 }
-

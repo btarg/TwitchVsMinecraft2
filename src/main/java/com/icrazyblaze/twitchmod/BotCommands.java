@@ -9,10 +9,12 @@ import com.icrazyblaze.twitchmod.util.TickHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.OreBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
@@ -21,6 +23,7 @@ import net.minecraft.entity.projectile.FireballEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -34,7 +37,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceContext;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -42,7 +49,6 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.loot.LootTables;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -65,10 +71,9 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class BotCommands {
 
-    private static final Block[] oresArray = {Blocks.DIAMOND_ORE, Blocks.REDSTONE_ORE, Blocks.REDSTONE_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.EMERALD_ORE, Blocks.COAL_ORE};
     private static final ResourceLocation[] lootArray = {LootTables.CHESTS_SIMPLE_DUNGEON, LootTables.CHESTS_ABANDONED_MINESHAFT, LootTables.CHESTS_SPAWN_BONUS_CHEST};
-    private static final List<Block> oresList = Arrays.asList(oresArray);
     private static final List<ResourceLocation> lootlist = Arrays.asList(lootArray);
+    private static final ThreadLocalRandom rand = ThreadLocalRandom.current();
     public static boolean oresExplode = false;
     public static boolean placeBedrock = false;
     public static boolean killVillagers = false;
@@ -76,8 +81,6 @@ public class BotCommands {
     public static ArrayList<String> messagesList = new ArrayList<>();
     public static MinecraftServer defaultServer = null;
     private static boolean previousTimerState = false;
-
-    private static final ThreadLocalRandom rand = ThreadLocalRandom.current();
 
     /**
      * This method gets a reference to the player, using the username specified. If the player is not found, it will get the first player in the list.
@@ -109,8 +112,7 @@ public class BotCommands {
      */
     public static void broadcastMessage(ITextComponent message) {
 
-        PlayerList playerList = defaultServer.getPlayerList();
-        playerList.sendMessage(message);
+        defaultServer.sendMessage(message, player().getUniqueID());
 
     }
 
@@ -198,10 +200,11 @@ public class BotCommands {
     public static void heavyRain() {
 
         ServerPlayerEntity player = player();
-
         player.world.getWorldInfo().setRaining(true);
-        player.world.getWorldInfo().setThundering(true);
 
+        if (!player.world.isRemote) {
+            player.getServerWorld().func_241113_a_(0, 6000, true, true);
+        }
     }
 
     public static void setDifficulty(Difficulty difficulty) {
@@ -215,7 +218,7 @@ public class BotCommands {
         Iterable<ServerWorld> worlds = player().server.getWorlds();
 
         for (ServerWorld world : worlds) {
-            world.setDayTime(time);
+            world.func_241114_a_(time);
         }
 
     }
@@ -241,7 +244,8 @@ public class BotCommands {
         ServerPlayerEntity player = player();
 
         BlockPos bpos = new BlockPos(player.getPosX(), player.getPosY(), player.getPosZ());
-        player.setSpawnPoint(bpos, true, false, player.dimension);
+        // SetSpawn
+        player.func_242111_a(player.world.getDimensionKey(), bpos, 0.0F, false, true);
 
     }
 
@@ -336,7 +340,7 @@ public class BotCommands {
 
         ServerPlayerEntity player = player();
 
-        Vec3d lookVector = player.getLookVec();
+        Vector3d lookVector = player.getLookVec();
 
         double dx = player.getPosX() - (lookVector.x * 3);
         double dz = player.getPosZ() - (lookVector.z * 3);
@@ -351,7 +355,7 @@ public class BotCommands {
 
         ServerPlayerEntity player = player();
 
-        Vec3d lookVector = player.getLookVec();
+        Vector3d lookVector = player.getLookVec();
 
         double dx = player.getPosX() + (lookVector.x * 4);
         double dz = player.getPosZ() + (lookVector.z * 4);
@@ -388,7 +392,7 @@ public class BotCommands {
     }
 
     public static void pigmanScare() {
-        playSound(SoundEvents.ENTITY_ZOMBIE_PIGMAN_ANGRY, SoundCategory.HOSTILE, 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
+        playSound(SoundEvents.ENTITY_ZOMBIFIED_PIGLIN_ANGRY, SoundCategory.HOSTILE, 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
     }
 
     public static void playSound(SoundEvent sound, SoundCategory category, float volume, float pitch) {
@@ -402,7 +406,7 @@ public class BotCommands {
 
         ServerPlayerEntity player = player();
 
-        Vec3d lookVector = player.getLookVec();
+        Vector3d lookVector = player.getLookVec();
 
         double dx = player.getPosX() + (lookVector.x * 2);
         double dz = player.getPosZ() + (lookVector.z * 2);
@@ -416,7 +420,9 @@ public class BotCommands {
     public static void spawnLightning() {
 
         ServerPlayerEntity player = player();
-        player.world.addEntity(new LightningBoltEntity(player.world, player.getPosX(), player.getPosY(), player.getPosZ(), false));
+        LightningBoltEntity ent = new LightningBoltEntity(EntityType.LIGHTNING_BOLT, player.world);
+        ent.setPosition(player.getPosX(), player.getPosY(), player.getPosZ());
+        player.world.addEntity(ent);
 
     }
 
@@ -462,8 +468,8 @@ public class BotCommands {
         int range = 50;
         BlockPos bpos;
 
-        Vec3d lookVector = player.getLookVec();
-        Vec3d posVector = new Vec3d(player.getPosX(), player.getPosY() + player.getEyeHeight(), player.getPosZ());
+        Vector3d lookVector = player.getLookVec();
+        Vector3d posVector = new Vector3d(player.getPosX(), player.getPosY() + player.getEyeHeight(), player.getPosZ());
 
         RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player);
         RayTraceResult rayTrace = player.world.rayTraceBlocks(context);
@@ -485,8 +491,8 @@ public class BotCommands {
         int range = 50;
         BlockPos bpos;
 
-        Vec3d lookVector = player.getLookVec();
-        Vec3d posVector = new Vec3d(player.getPosX(), player.getPosY() + player.getEyeHeight(), player.getPosZ());
+        Vector3d lookVector = player.getLookVec();
+        Vector3d posVector = new Vector3d(player.getPosX(), player.getPosY() + player.getEyeHeight(), player.getPosZ());
 
         RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player);
         RayTraceResult rayTrace = player.world.rayTraceBlocks(context);
@@ -529,6 +535,7 @@ public class BotCommands {
         for (BlockPos bpos : positions) {
             player.world.setBlockState(bpos, Blocks.GLASS.getDefaultState());
         }
+
 
     }
 
@@ -844,12 +851,12 @@ public class BotCommands {
 
         Block thisBlock = event.getState().getBlock();
 
-        if (!oresList.contains(thisBlock)) {
+        if (!(thisBlock instanceof OreBlock)) {
             return;
         } else if (oresExplode && !event.getWorld().isRemote()) {
 
             ServerPlayerEntity player = player();
-            event.getWorld().getWorld().createExplosion(null, player.getPosX(), player.getPosY(), player.getPosZ(), 4.0F, Explosion.Mode.BREAK);
+            player.world.createExplosion(null, player.getPosX(), player.getPosY(), player.getPosZ(), 4.0F, Explosion.Mode.BREAK);
 
             oresExplode = false;
 
