@@ -1,10 +1,11 @@
-package com.icrazyblaze.twitchmod.irc;
+package com.icrazyblaze.twitchmod.util;
 
 import com.icrazyblaze.twitchmod.BotCommands;
 
 public class BotConfig {
 
     public static String TWITCH_KEY = null;
+    public static String DISCORD_TOKEN = null;
     public static String CHANNEL_NAME = null;
     public static boolean showChatMessages = false;
     public static boolean showCommands = false;

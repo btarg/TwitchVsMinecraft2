@@ -2,7 +2,6 @@ package com.icrazyblaze.twitchmod.command;
 
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -14,7 +13,7 @@ public class ListCommand implements Command<CommandSource> {
 
     private static final ListCommand CMD = new ListCommand();
 
-    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
+    public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("allcommands")
                 .requires(cs -> cs.hasPermissionLevel(0))
                 .executes(CMD);

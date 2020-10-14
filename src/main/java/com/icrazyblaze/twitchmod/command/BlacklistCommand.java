@@ -2,11 +2,9 @@ package com.icrazyblaze.twitchmod.command;
 
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.util.text.StringTextComponent;
@@ -16,14 +14,14 @@ public class BlacklistCommand implements Command<CommandSource> {
 
     private static final BlacklistCommand CMD = new BlacklistCommand();
 
-    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
+    public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("blacklist")
                 .requires(cs -> cs.hasPermissionLevel(0))
                 .then(Commands.argument("toadd", StringArgumentType.greedyString()).executes(CMD));
     }
 
     @Override
-    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSource> context) {
 
         // Get message and simulate command
         String message = StringArgumentType.getString(context, "toadd");

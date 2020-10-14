@@ -10,19 +10,16 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
 
 version = "${mod_version}"
 group = 'com.icrazyblaze.twitchmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'twitchmod'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-
 repositories {
     // Put remote maven repositories here
     mavenCentral()
     maven { url 'https://jitpack.io' }
+    jcenter()
 }
 
 minecraft {
@@ -39,14 +36,14 @@ minecraft {
             workingDirectory project.file('run')
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            mods { examplemod { source sourceSets.main } }
+            mods { twitchmod { source sourceSets.main } }
         }
 
         server {
             workingDirectory project.file('run')
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            mods { examplemod { source sourceSets.main } }
+            mods { twitchmod { source sourceSets.main } }
         }
     }
 }
@@ -69,6 +66,10 @@ dependencies {
     embed(group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30') {
         transitive = true
     }
+
+    embed(group: 'net.dv8tion', name: 'JDA', version: '4.2.0_209') {
+        transitive = true
+    }
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -89,10 +90,6 @@ jar {
 }
 
 
-// Bonus stuff!
-import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
-
 processResources {
     // Will allow gradle.properties version fill inside mods.toml file
     // This will ensure that this task is redone when the versions change.
@@ -112,19 +109,4 @@ processResources {
     }
 
 
-    // Will minify the json files of your mod when you build the jar.
-    // Helps reduce files size!
-    doLast {
-        def jsonMinifyStart = System.currentTimeMillis()
-        def jsonMinified = 0
-        def jsonBytesSaved = 0
-        fileTree(dir: outputs.files.asPath, include: '**/*.json').each {
-            File file = it
-            jsonMinified++
-            def oldLength = file.length()
-            file.text = JsonOutput.toJson(new JsonSlurper().parse(file))
-            jsonBytesSaved += oldLength - file.length()
-        }
-        println('Minified ' + jsonMinified + ' json files. Saved ' + jsonBytesSaved + ' bytes. Took ' + (System.currentTimeMillis() - jsonMinifyStart) + 'ms.')
-    }
 }

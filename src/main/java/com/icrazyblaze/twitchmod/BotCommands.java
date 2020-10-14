@@ -2,7 +2,7 @@ package com.icrazyblaze.twitchmod;
 
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.icrazyblaze.twitchmod.gui.MessageboxGui;
-import com.icrazyblaze.twitchmod.irc.BotConfig;
+import com.icrazyblaze.twitchmod.util.BotConfig;
 import com.icrazyblaze.twitchmod.network.GuiMessage;
 import com.icrazyblaze.twitchmod.network.PacketHandler;
 import com.icrazyblaze.twitchmod.util.TickHandler;
@@ -112,7 +112,7 @@ public class BotCommands {
      */
     public static void broadcastMessage(ITextComponent message) {
 
-        defaultServer.sendMessage(message, player().getUniqueID());
+        player().sendMessage(message, player().getUniqueID());
 
     }
 
@@ -257,11 +257,11 @@ public class BotCommands {
 
     public static void deathTimer() {
 
-        TickHandler.timerSeconds = 60;
-        TickHandler.timerTicks = 0;
-        TickHandler.killTimer = true;
+        TickHandler.deathTimerSeconds = 60;
+        TickHandler.deathTimerTicks = 0;
+        TickHandler.deathTimer = true;
 
-        player().sendStatusMessage(new StringTextComponent(TextFormatting.DARK_RED + "Chat has given you " + TickHandler.timerSeconds + " seconds to live."), true);
+        player().sendStatusMessage(new StringTextComponent(TextFormatting.DARK_RED + "Chat has given you " + TickHandler.deathTimerSeconds + " seconds to live."), true);
 
     }
 
@@ -272,8 +272,8 @@ public class BotCommands {
         TickHandler.peaceTimerTicks = 0;
         TickHandler.peaceTimer = true;
 
-        previousTimerState = TickHandler.killTimer;
-        TickHandler.killTimer = false;
+        previousTimerState = TickHandler.deathTimer;
+        TickHandler.deathTimer = false;
 
         player().sendStatusMessage(new StringTextComponent(TextFormatting.AQUA + "Commands are turned off for " + TickHandler.peaceTimerSeconds + " seconds."), true);
 
@@ -283,7 +283,7 @@ public class BotCommands {
 
         ChatPicker.enabled = true;
         TickHandler.peaceTimer = false;
-        TickHandler.killTimer = previousTimerState;
+        TickHandler.deathTimer = previousTimerState;
 
         player().sendStatusMessage(new StringTextComponent(TextFormatting.AQUA + "Commands are now enabled!"), true);
 

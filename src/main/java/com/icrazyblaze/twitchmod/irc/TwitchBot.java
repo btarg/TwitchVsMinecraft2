@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.icrazyblaze.twitchmod.BotCommands;
 import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
+import com.icrazyblaze.twitchmod.util.BotConfig;
 import net.minecraft.util.concurrent.ThreadTaskExecutor;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -104,11 +105,11 @@ public class TwitchBot extends ListenerAdapter {
             event.respond("Blacklisted commands: " + ChatPicker.blacklist.toString());
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "disconnect")) {
-            BotConnection.disconnectBot();
+            TwitchConnection.disconnectBot();
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "reconnect")) {
 
-            BotConnection.tryConnect();
+            TwitchConnection.tryConnect();
 
         } else if (message.startsWith(BotConfig.prefix)) {
 
@@ -149,7 +150,7 @@ public class TwitchBot extends ListenerAdapter {
     // Prevent the bot from being kicked
     @Override
     public void onPing(PingEvent event) throws Exception {
-        BotConnection.bot.sendRaw().rawLineNow(String.format("PONG %s\r\n", event.getPingValue()));
+        TwitchConnection.bot.sendRaw().rawLineNow(String.format("PONG %s\r\n", event.getPingValue()));
     }
 
 }

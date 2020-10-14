@@ -3,7 +3,6 @@ package com.icrazyblaze.twitchmod.command;
 import com.icrazyblaze.twitchmod.BotCommands;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -15,7 +14,7 @@ public class QueueCommand implements Command<CommandSource> {
 
     private static final QueueCommand CMD = new QueueCommand();
 
-    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
+    public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("queue")
                 .requires(cs -> cs.hasPermissionLevel(0))
                 .executes(CMD);

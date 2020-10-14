@@ -1,25 +1,26 @@
-package com.icrazyblaze.twitchmod.command;
+package com.icrazyblaze.twitchmod.discord;
 
-import com.icrazyblaze.twitchmod.irc.TwitchConnection;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 
-public class ConnectCommand implements Command<CommandSource> {
+public class DiscordDisconnectCommand implements Command<CommandSource> {
 
-    private static final ConnectCommand CMD = new ConnectCommand();
+    private static final DiscordDisconnectCommand CMD = new DiscordDisconnectCommand();
 
     public static ArgumentBuilder<CommandSource, ?> register() {
-        return Commands.literal("connect")
+        return Commands.literal("disconnect")
                 .requires(cs -> cs.hasPermissionLevel(0))
                 .executes(CMD);
     }
 
     @Override
     public int run(CommandContext<CommandSource> context) {
-        TwitchConnection.tryConnect();
+
+        DiscordConnection.disconnectDiscord();
+
         return SINGLE_SUCCESS;
     }
 }

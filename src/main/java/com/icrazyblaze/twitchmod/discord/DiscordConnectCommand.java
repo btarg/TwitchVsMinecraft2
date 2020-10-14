@@ -1,15 +1,16 @@
-package com.icrazyblaze.twitchmod.command;
+package com.icrazyblaze.twitchmod.discord;
 
-import com.icrazyblaze.twitchmod.irc.TwitchConnection;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 
-public class ConnectCommand implements Command<CommandSource> {
+import javax.security.auth.login.LoginException;
 
-    private static final ConnectCommand CMD = new ConnectCommand();
+public class DiscordConnectCommand implements Command<CommandSource> {
+
+    private static final DiscordConnectCommand CMD = new DiscordConnectCommand();
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("connect")
@@ -19,7 +20,7 @@ public class ConnectCommand implements Command<CommandSource> {
 
     @Override
     public int run(CommandContext<CommandSource> context) {
-        TwitchConnection.tryConnect();
+        DiscordConnection.login();
         return SINGLE_SUCCESS;
     }
 }

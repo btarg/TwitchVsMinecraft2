@@ -1,8 +1,7 @@
 package com.icrazyblaze.twitchmod.command;
 
-import com.icrazyblaze.twitchmod.irc.BotConnection;
+import com.icrazyblaze.twitchmod.irc.TwitchConnection;
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -15,7 +14,7 @@ public class DisconnectCommand implements Command<CommandSource> {
 
     private static final DisconnectCommand CMD = new DisconnectCommand();
 
-    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
+    public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("disconnect")
                 .requires(cs -> cs.hasPermissionLevel(0))
                 .executes(CMD);
@@ -24,8 +23,8 @@ public class DisconnectCommand implements Command<CommandSource> {
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
 
-        if (BotConnection.isConnected()) {
-            BotConnection.disconnectBot();
+        if (TwitchConnection.isConnected()) {
+            TwitchConnection.disconnectBot();
         } else {
             context.getSource().sendFeedback(new StringTextComponent(TextFormatting.RED + "Bot not connected."), false);
         }

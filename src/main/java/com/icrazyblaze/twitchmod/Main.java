@@ -2,7 +2,7 @@ package com.icrazyblaze.twitchmod;
 
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.icrazyblaze.twitchmod.config.ConfigHelper;
-import com.icrazyblaze.twitchmod.irc.BotConfig;
+import com.icrazyblaze.twitchmod.util.BotConfig;
 import com.icrazyblaze.twitchmod.network.PacketHandler;
 import com.icrazyblaze.twitchmod.util.ForgeEventSubscriber;
 import com.icrazyblaze.twitchmod.util.Reference;
@@ -47,6 +47,7 @@ public final class Main {
     public static void updateConfig() {
 
         BotConfig.TWITCH_KEY = System.getProperty("twitch_oauth_key");
+        BotConfig.DISCORD_TOKEN = System.getProperty("discord_bot_token");
 
         // Set config values from server config file
         BotConfig.CHANNEL_NAME = config.channelProp.get();
@@ -55,10 +56,10 @@ public final class Main {
         BotConfig.prefix = config.prefixProp.get();
         BotConfig.setUsername(config.usernameProp.get());
 
-        TickHandler.messageSecondsDefault = config.messageSecondsProp.get();
+        TickHandler.messageSecondsTrigger = config.messageSecondsProp.get();
         TickHandler.messageSeconds = config.messageSecondsProp.get();
 
-        TickHandler.chatSecondsDefault = config.chatSecondsProp.get();
+        TickHandler.chatSecondsTrigger = config.chatSecondsProp.get();
         TickHandler.chatSeconds = config.chatSecondsProp.get();
 
     }
@@ -82,39 +83,31 @@ public final class Main {
 
             this.channelProp = subscriber.subscribe(builder
                     .comment("Name of Twitch channel")
-                    .translation(Reference.MOD_ID + ".config.channelName")
                     .define("channelName", ""));
             this.showMessagesProp = subscriber.subscribe(builder
-                    .comment("Should chat messages be shown")
-                    .translation(Reference.MOD_ID + ".config.showMessages")
+                    .comment("Should chat messages be shown?")
                     .define("showMessages", false));
 
             this.showCommandsProp = subscriber.subscribe(builder
-                    .comment("Should chosen commands be shown if chat messages are enabled")
-                    .translation(Reference.MOD_ID + ".config.showCommands")
+                    .comment("Should chosen commands be shown if chat messages are enabled?")
                     .define("showCommands", true));
             this.chatSecondsProp = subscriber.subscribe(builder
                     .comment("How many seconds until the next command is chosen")
-                    .translation(Reference.MOD_ID + ".config.chatSeconds")
                     .define("chatSeconds", 20));
             this.messageSecondsProp = subscriber.subscribe(builder
                     .comment("How many seconds until a random viewer-written message is shown on screen")
-                    .translation(Reference.MOD_ID + ".config.messageSeconds")
-                    .define("messageSeconds", 300));
+                    .define("messageSeconds", 240));
 
             this.usernameProp = subscriber.subscribe(builder
                     .comment("The streamer's Minecraft username")
-                    .translation(Reference.MOD_ID + ".config.username")
                     .define("username", ""));
             this.prefixProp = subscriber.subscribe(builder
                     .comment("The prefix for commands")
-                    .translation(Reference.MOD_ID + ".config.prefix")
                     .define("prefix", "!"));
 
             this.cooldownProp = subscriber.subscribe(builder
-                    .comment("Prevent the same command from being executed twice in a row)")
-                    .translation(Reference.MOD_ID + ".config.cooldownEnabled")
-                    .define("cooldownEnabled", false));
+                    .comment("Prevent the same command from being executed twice in a row")
+                    .define("cooldownEnabled", true));
 
             builder.pop();
 

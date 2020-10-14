@@ -2,7 +2,7 @@ package com.icrazyblaze.twitchmod.chat;
 
 import com.icrazyblaze.twitchmod.BotCommands;
 import com.icrazyblaze.twitchmod.Main;
-import com.icrazyblaze.twitchmod.irc.BotConfig;
+import com.icrazyblaze.twitchmod.util.BotConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -142,20 +142,18 @@ public class ChatPicker {
 
                             newChats.add(message);
                             newChatSenders.add(sender);
-                            break;
 
                         } else {
                             Main.logger.info("Command not executed: cooldown is active for this command.");
-                            break;
                         }
 
                     } else {
 
                         newChats.add(message);
                         newChatSenders.add(sender);
-                        break;
 
                     }
+                    break;
                 }
             }
 
@@ -240,10 +238,12 @@ public class ChatPicker {
         for (String key : keys) {
 
             // Don't register exactly the same command every time
-            if (commands.containsKey(key) && commands.containsValue(runnable))
-                return;
-
-            commands.put(key, runnable);
+            // UPDATE: if a command with the same key already exists, replace it.
+            if (commands.containsKey(key) && commands.containsValue(runnable)) {
+                commands.replace(key, runnable);
+            } else {
+                commands.put(key, runnable);
+            }
 
         }
 
@@ -340,17 +340,10 @@ public class ChatPicker {
      */
     public static boolean doCommand(String message, String sender) {
 
-        if (BotConfig.showChatMessages && BotConfig.showCommands) {
-
-            BotCommands.broadcastMessage(new StringTextComponent(TextFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
-
-        }
-
         if (!BotCommands.player().world.isRemote()) {
 
-            // Re-register all commands (this is done because some commands rely on realtime information, e.g. the sender's name)
-            commands.clear();
-            initCommands();
+            // UPDATE: init no longer needed, everything is initialised properly now
+            //initCommands();
 
             // Special commands below have extra arguments, so they are registered here.
             registerCommand(() -> BotCommands.messWithInventory(sender), "itemroulette", "roulette");
@@ -370,6 +363,10 @@ public class ChatPicker {
                     // Invoke command from message
                     commands.get(message).run();
 
+                }
+
+                if (BotConfig.showChatMessages && BotConfig.showCommands) {
+                    BotCommands.broadcastMessage(new StringTextComponent(TextFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
                 }
 
                 // Below will not be executed if the command does not run

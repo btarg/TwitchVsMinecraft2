@@ -1,9 +1,8 @@
 package com.icrazyblaze.twitchmod.command;
 
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
-import com.icrazyblaze.twitchmod.irc.BotConfig;
+import com.icrazyblaze.twitchmod.util.BotConfig;
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -16,7 +15,7 @@ public class TestCommand implements Command<CommandSource> {
 
     private static final TestCommand CMD = new TestCommand();
 
-    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
+    public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("test")
                 .requires(cs -> cs.hasPermissionLevel(0))
                 .then(Commands.argument("teststring", StringArgumentType.greedyString()).executes(CMD));

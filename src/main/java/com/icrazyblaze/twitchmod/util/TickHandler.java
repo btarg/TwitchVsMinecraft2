@@ -7,23 +7,23 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TickHandler {
 
-    public static boolean enabled = true;
+    public static boolean enableTimers = true;
 
     public static int chatTicks = 0;
-    public static int chatSecondsDefault = 30;
-    public static int chatSeconds = chatSecondsDefault;
+    public static int chatSecondsTrigger = 30;
+    public static int chatSeconds = chatSecondsTrigger;
 
-    public static int timerTicks = 0;
-    public static int timerSeconds = 60;
-    public static boolean killTimer = false;
+    public static int deathTimerTicks = 0;
+    public static int deathTimerSeconds = 60;
+    public static boolean deathTimer = false;
 
     public static int peaceTimerTicks = 0;
     public static int peaceTimerSeconds = 30;
     public static boolean peaceTimer = false;
 
     public static int messageTicks = 0;
-    public static int messageSecondsDefault = 300;
-    public static int messageSeconds = messageSecondsDefault;
+    public static int messageSecondsTrigger = 240;
+    public static int messageSeconds = messageSecondsTrigger;
 
     /**
      * This method is used for timers such as the death timer as thread.sleep cannot be called while playing.
@@ -62,7 +62,7 @@ public class TickHandler {
     @SubscribeEvent
     public static void tickTimer(TickEvent.ServerTickEvent event) {
 
-        if (event.phase == TickEvent.Phase.END && enabled) {
+        if (event.phase == TickEvent.Phase.END && enableTimers) {
 
             chatTicks++;
 
@@ -79,28 +79,28 @@ public class TickHandler {
                 ChatPicker.pickRandomChat();
 
                 // Reset timer
-                chatSeconds = chatSecondsDefault;
+                chatSeconds = chatSecondsTrigger;
                 chatTicks = 0;
 
             }
 
-            if (killTimer) {
+            if (deathTimer) {
 
-                timerTicks++;
+                deathTimerTicks++;
 
-                if (timerTicks == 20) {
+                if (deathTimerTicks == 20) {
 
-                    if (timerSeconds > 0) {
-                        timerSeconds--;
+                    if (deathTimerSeconds > 0) {
+                        deathTimerSeconds--;
                     }
 
-                    timerTicks = 0;
+                    deathTimerTicks = 0;
 
                 }
-                if (timerSeconds == 0) {
+                if (deathTimerSeconds == 0) {
 
                     BotCommands.killPlayer();
-                    killTimer = false;
+                    deathTimer = false;
 
                 }
             }
@@ -131,14 +131,14 @@ public class TickHandler {
 
             if (messageTicks == 20) {
 
-                if (messageSeconds < messageSecondsDefault) {
+                if (messageSeconds < messageSecondsTrigger) {
                     messageSeconds++;
                 }
 
                 messageTicks = 0;
 
             }
-            if (messageSeconds == messageSecondsDefault) {
+            if (messageSeconds == messageSecondsTrigger) {
 
                 BotCommands.chooseRandomMessage();
 

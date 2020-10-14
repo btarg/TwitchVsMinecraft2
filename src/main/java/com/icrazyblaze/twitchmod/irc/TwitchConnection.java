@@ -2,6 +2,7 @@ package com.icrazyblaze.twitchmod.irc;
 
 import com.icrazyblaze.twitchmod.BotCommands;
 import com.icrazyblaze.twitchmod.Main;
+import com.icrazyblaze.twitchmod.util.BotConfig;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import org.pircbotx.Configuration;
@@ -13,7 +14,7 @@ import org.pircbotx.cap.EnableCapHandler;
  * The tryConnect method will either connect the bot or reconnect if it is already connected.
  */
 
-public class BotConnection {
+public class TwitchConnection {
 
     public static PircBotX bot = null;
     private static Thread botThread = null;

@@ -19,10 +19,10 @@ public class TimerGui {
             return;
         }
 
-        if (TickHandler.killTimer) {
+        if (TickHandler.deathTimer) {
 
             Minecraft mc = Minecraft.getInstance();
-            String text = "TIMER: " + TickHandler.timerSeconds;
+            String text = "TIMER: " + TickHandler.deathTimerSeconds;
 
             mc.fontRenderer.drawStringWithShadow(event.getMatrixStack(), text, 4, 4, Integer.parseInt("AA0000", 16));
 
