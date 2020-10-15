@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "[32,)"
-license = "GNU GPLv3"
+license = "GNU LGPLv3"
 issueTrackerURL = "http://github.com/iCrazyBlaze/TwitchVsMinecraft2/issues"
 
 [[mods]]

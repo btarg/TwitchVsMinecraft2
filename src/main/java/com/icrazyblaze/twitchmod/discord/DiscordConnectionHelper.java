@@ -1,11 +1,11 @@
 package com.icrazyblaze.twitchmod.discord;
 
-import com.icrazyblaze.twitchmod.BotCommands;
+import com.icrazyblaze.twitchmod.CommandHandlers;
 import com.icrazyblaze.twitchmod.util.BotConfig;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
-public class DiscordConnection {
+public class DiscordConnectionHelper {
 
     private static Thread botThread = null;
     private static DiscordBot listener = null;
@@ -13,7 +13,7 @@ public class DiscordConnection {
     public static void login() {
 
         if (BotConfig.DISCORD_TOKEN.isEmpty()) {
-            BotCommands.broadcastMessage(new StringTextComponent(TextFormatting.RED + "No Bot Token provided. Use /discord token to set the token."));
+            CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.RED + "No Bot Token provided. Use /discord token to set the token."));
             return;
         }
 
@@ -36,8 +36,20 @@ public class DiscordConnection {
 
         listener.jda.shutdown();
         botThread.interrupt();
+        listener = null;
 
-        BotCommands.broadcastMessage(new StringTextComponent(TextFormatting.DARK_RED + "Bot disconnected."));
+        CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.DARK_RED + "Bot disconnected."));
 
     }
+
+    public static boolean isConnected() {
+
+        if (listener != null) {
+            return listener.isConnected;
+        }
+        else {
+            return false;
+        }
+    }
+
 }

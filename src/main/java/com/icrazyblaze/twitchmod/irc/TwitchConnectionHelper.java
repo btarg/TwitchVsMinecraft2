@@ -1,6 +1,6 @@
 package com.icrazyblaze.twitchmod.irc;
 
-import com.icrazyblaze.twitchmod.BotCommands;
+import com.icrazyblaze.twitchmod.CommandHandlers;
 import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.util.BotConfig;
 import net.minecraft.util.text.StringTextComponent;
@@ -14,7 +14,7 @@ import org.pircbotx.cap.EnableCapHandler;
  * The tryConnect method will either connect the bot or reconnect if it is already connected.
  */
 
-public class TwitchConnection {
+public class TwitchConnectionHelper {
 
     public static PircBotX bot = null;
     private static Thread botThread = null;
@@ -25,7 +25,7 @@ public class TwitchConnection {
         Main.updateConfig();
 
         if (BotConfig.TWITCH_KEY.isEmpty()) {
-            BotCommands.broadcastMessage(new StringTextComponent(TextFormatting.RED + "No OAuth key provided. Use /ttv key to set the key."));
+            CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.RED + "No OAuth key provided. Use /ttv key to set the key."));
             return;
         }
 
@@ -33,10 +33,10 @@ public class TwitchConnection {
 
             // Disconnect before connecting again
             disconnectBot();
-            BotCommands.broadcastMessage(new StringTextComponent(TextFormatting.DARK_PURPLE + "Reconnecting..."));
+            CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.DARK_PURPLE + "Reconnecting..."));
 
         } else {
-            BotCommands.broadcastMessage(new StringTextComponent(TextFormatting.DARK_PURPLE + String.format("Connecting to channel %s...", BotConfig.CHANNEL_NAME)));
+            CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.DARK_PURPLE + String.format("Connecting to channel %s...", BotConfig.CHANNEL_NAME)));
         }
 
         try {
@@ -71,7 +71,7 @@ public class TwitchConnection {
 
         } catch (Exception e) {
             e.printStackTrace();
-            BotCommands.broadcastMessage(new StringTextComponent(TextFormatting.RED + "Could not connect: " + e.toString()));
+            CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.RED + "Could not connect: " + e.toString()));
         }
     }
 

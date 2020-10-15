@@ -6,8 +6,6 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 
-import javax.security.auth.login.LoginException;
-
 public class DiscordConnectCommand implements Command<CommandSource> {
 
     private static final DiscordConnectCommand CMD = new DiscordConnectCommand();
@@ -20,7 +18,7 @@ public class DiscordConnectCommand implements Command<CommandSource> {
 
     @Override
     public int run(CommandContext<CommandSource> context) {
-        DiscordConnection.login();
+        DiscordConnectionHelper.login();
         return SINGLE_SUCCESS;
     }
 }

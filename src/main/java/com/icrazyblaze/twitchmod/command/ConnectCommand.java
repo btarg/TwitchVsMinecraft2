@@ -1,6 +1,6 @@
 package com.icrazyblaze.twitchmod.command;
 
-import com.icrazyblaze.twitchmod.irc.TwitchConnection;
+import com.icrazyblaze.twitchmod.irc.TwitchConnectionHelper;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -19,7 +19,7 @@ public class ConnectCommand implements Command<CommandSource> {
 
     @Override
     public int run(CommandContext<CommandSource> context) {
-        TwitchConnection.tryConnect();
+        TwitchConnectionHelper.tryConnect();
         return SINGLE_SUCCESS;
     }
 }

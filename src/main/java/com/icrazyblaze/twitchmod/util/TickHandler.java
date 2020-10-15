@@ -1,6 +1,6 @@
 package com.icrazyblaze.twitchmod.util;
 
-import com.icrazyblaze.twitchmod.BotCommands;
+import com.icrazyblaze.twitchmod.CommandHandlers;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -99,7 +99,7 @@ public class TickHandler {
                 }
                 if (deathTimerSeconds == 0) {
 
-                    BotCommands.killPlayer();
+                    CommandHandlers.killPlayer();
                     deathTimer = false;
 
                 }
@@ -120,7 +120,7 @@ public class TickHandler {
                 }
                 if (peaceTimerSeconds == 0) {
 
-                    BotCommands.disableGraceTimer();
+                    CommandHandlers.disableGraceTimer();
                     peaceTimer = false;
 
                 }
@@ -140,7 +140,7 @@ public class TickHandler {
             }
             if (messageSeconds == messageSecondsTrigger) {
 
-                BotCommands.chooseRandomMessage();
+                CommandHandlers.chooseRandomMessage();
 
                 messageTicks = 0;
                 messageSeconds = 0;

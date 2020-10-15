@@ -2,7 +2,7 @@ package com.icrazyblaze.twitchmod.irc;
 
 
 import com.google.common.collect.ImmutableMap;
-import com.icrazyblaze.twitchmod.BotCommands;
+import com.icrazyblaze.twitchmod.CommandHandlers;
 import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.icrazyblaze.twitchmod.util.BotConfig;
@@ -27,6 +27,15 @@ public class TwitchBot extends ListenerAdapter {
         ChatPicker.loadBlacklistFile();
     }
 
+    public void onConnect(ConnectEvent event) {
+        CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Bot connected! Use /ttv status to see details."));
+        Main.logger.info("IRC Bot connected.");
+    }
+
+    public void onDisconnect(DisconnectEvent event) {
+        CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.DARK_RED + "Bot disconnected."));
+        Main.logger.info("IRC Bot disconnected: " + event.getDisconnectException());
+    }
 
     @Override
     public void onMessage(MessageEvent event) {
@@ -68,7 +77,7 @@ public class TwitchBot extends ListenerAdapter {
                     showText.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(format + role)));
                 }
 
-                BotCommands.broadcastMessage(showText);
+                CommandHandlers.broadcastMessage(showText);
 
             }
 
@@ -105,11 +114,11 @@ public class TwitchBot extends ListenerAdapter {
             event.respond("Blacklisted commands: " + ChatPicker.blacklist.toString());
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "disconnect")) {
-            TwitchConnection.disconnectBot();
+            TwitchConnectionHelper.disconnectBot();
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "reconnect")) {
 
-            TwitchConnection.tryConnect();
+            TwitchConnectionHelper.tryConnect();
 
         } else if (message.startsWith(BotConfig.prefix)) {
 
@@ -135,22 +144,10 @@ public class TwitchBot extends ListenerAdapter {
 
     }
 
-    public void onConnect(ConnectEvent event) {
-        BotCommands.broadcastMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Bot connected! Use /ttv status to see details."));
-        Main.logger.info("IRC Bot connected.");
-    }
-
-
-    public void onDisconnect(DisconnectEvent event) {
-        BotCommands.broadcastMessage(new StringTextComponent(TextFormatting.DARK_RED + "Bot disconnected."));
-        Main.logger.info("IRC Bot disconnected: " + event.getDisconnectException());
-    }
-
-
     // Prevent the bot from being kicked
     @Override
     public void onPing(PingEvent event) throws Exception {
-        TwitchConnection.bot.sendRaw().rawLineNow(String.format("PONG %s\r\n", event.getPingValue()));
+        TwitchConnectionHelper.bot.sendRaw().rawLineNow(String.format("PONG %s\r\n", event.getPingValue()));
     }
 
 }

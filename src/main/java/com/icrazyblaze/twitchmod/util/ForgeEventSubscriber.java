@@ -1,13 +1,12 @@
 package com.icrazyblaze.twitchmod.util;
 
-import com.icrazyblaze.twitchmod.BotCommands;
 import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.icrazyblaze.twitchmod.command.*;
 import com.icrazyblaze.twitchmod.discord.DiscordConnectCommand;
 import com.icrazyblaze.twitchmod.discord.DiscordDisconnectCommand;
 import com.icrazyblaze.twitchmod.discord.TokenCommand;
-import com.icrazyblaze.twitchmod.irc.TwitchConnection;
+import com.icrazyblaze.twitchmod.irc.TwitchConnectionHelper;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -39,12 +38,12 @@ public class ForgeEventSubscriber {
                 .then(QueueCommand.register())
                 .then(BlacklistCommand.register())
                 .then(ListCommand.register())
-        );
-
-        dispatcher.register(Commands.literal("discord")
-                .then(DiscordConnectCommand.register())
-                .then(DiscordDisconnectCommand.register())
-                .then(TokenCommand.register())
+                // Register Discord commands under /ttv
+                .then(dispatcher.register(Commands.literal("discord")
+                        .then(DiscordConnectCommand.register())
+                        .then(DiscordDisconnectCommand.register())
+                        .then(TokenCommand.register())
+                ))
         );
 
         Main.updateConfig();
@@ -55,10 +54,10 @@ public class ForgeEventSubscriber {
     @SubscribeEvent
     public static void worldTick(TickEvent.WorldTickEvent event) {
 
-        if (!event.world.isRemote && BotCommands.defaultServer == null) {
+        if (!event.world.isRemote && PlayerHelper.defaultServer == null) {
 
             // Set the server reference for BotCommands (used to get player entity)
-            BotCommands.defaultServer = event.world.getServer();
+            PlayerHelper.defaultServer = event.world.getServer();
             TickHandler.enableTimers = true;
 
         }
@@ -69,8 +68,8 @@ public class ForgeEventSubscriber {
     @SubscribeEvent
     public static void serverStopping(FMLServerStoppingEvent event) {
 
-        if (TwitchConnection.isConnected())
-            TwitchConnection.disconnectBot();
+        if (TwitchConnectionHelper.isConnected())
+            TwitchConnectionHelper.disconnectBot();
 
         TickHandler.enableTimers = false;
 

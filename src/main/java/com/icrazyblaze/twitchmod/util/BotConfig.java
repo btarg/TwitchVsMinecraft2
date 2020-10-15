@@ -1,7 +1,5 @@
 package com.icrazyblaze.twitchmod.util;
 
-import com.icrazyblaze.twitchmod.BotCommands;
-
 public class BotConfig {
 
     public static String TWITCH_KEY = null;
@@ -17,7 +15,7 @@ public class BotConfig {
 
         try {
             if (username.isEmpty()) {
-                username = BotCommands.getDefaultPlayer().getName().getString();
+                username = PlayerHelper.getDefaultPlayer().getName().getString();
             }
 
             return username;

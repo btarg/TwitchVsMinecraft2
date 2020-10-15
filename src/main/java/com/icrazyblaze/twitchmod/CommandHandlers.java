@@ -1,10 +1,11 @@
 package com.icrazyblaze.twitchmod;
 
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
-import com.icrazyblaze.twitchmod.gui.MessageboxGui;
-import com.icrazyblaze.twitchmod.util.BotConfig;
-import com.icrazyblaze.twitchmod.network.GuiMessage;
+import com.icrazyblaze.twitchmod.gui.MessageboxScreen;
+import com.icrazyblaze.twitchmod.network.MessageboxPacket;
 import com.icrazyblaze.twitchmod.network.PacketHandler;
+import com.icrazyblaze.twitchmod.util.BotConfig;
+import com.icrazyblaze.twitchmod.util.PlayerHelper;
 import com.icrazyblaze.twitchmod.util.TickHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -15,6 +16,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
@@ -27,8 +29,6 @@ import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.PlayerList;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.SignTileEntity;
@@ -69,7 +69,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * @see com.icrazyblaze.twitchmod.chat.ChatPicker
  */
-public class BotCommands {
+public class CommandHandlers {
 
     private static final ResourceLocation[] lootArray = {LootTables.CHESTS_SIMPLE_DUNGEON, LootTables.CHESTS_ABANDONED_MINESHAFT, LootTables.CHESTS_SPAWN_BONUS_CHEST};
     private static final List<ResourceLocation> lootlist = Arrays.asList(lootArray);
@@ -79,46 +79,15 @@ public class BotCommands {
     public static boolean killVillagers = false;
     public static boolean destroyWorkbenches = false;
     public static ArrayList<String> messagesList = new ArrayList<>();
-    public static MinecraftServer defaultServer = null;
-    private static boolean previousTimerState = false;
-
-    /**
-     * This method gets a reference to the player, using the username specified. If the player is not found, it will get the first player in the list.
-     *
-     * @return player
-     */
-    public static ServerPlayerEntity player() {
-
-        PlayerList playerList = defaultServer.getPlayerList();
-        ServerPlayerEntity player = playerList.getPlayerByUsername(BotConfig.getUsername());
-
-        if (player == null) {
-            player = getDefaultPlayer();
-        }
-
-        return player;
-
-    }
-
-    public static ServerPlayerEntity getDefaultPlayer() {
-
-        PlayerList playerList = defaultServer.getPlayerList();
-        return playerList.getPlayers().get(0);
-
-    }
-
-    /**
-     * This method sends a message to everyone on a server.
-     */
-    public static void broadcastMessage(ITextComponent message) {
-
-        player().sendMessage(message, player().getUniqueID());
-
-    }
-
+    private static boolean previousDeathTimerState = false;
 
     public static void addSlowness() {
         player().addPotionEffect(new EffectInstance(Effects.SLOWNESS, 400, 5));
+    }
+
+    // UPDATE: moved player getter into its own class
+    public static ServerPlayerEntity player() {
+        return PlayerHelper.player();
     }
 
     public static void addBlindness() {
@@ -197,7 +166,7 @@ public class BotCommands {
 
     }
 
-    public static void heavyRain() {
+    public static void setRainAndThunder() {
 
         ServerPlayerEntity player = player();
         player.world.getWorldInfo().setRaining(true);
@@ -238,6 +207,11 @@ public class BotCommands {
 
     }
 
+    public static void killPlayer() {
+
+        player().onKillCommand();
+
+    }
 
     public static void setSpawn() {
 
@@ -246,12 +220,6 @@ public class BotCommands {
         BlockPos bpos = new BlockPos(player.getPosX(), player.getPosY(), player.getPosZ());
         // SetSpawn
         player.func_242111_a(player.world.getDimensionKey(), bpos, 0.0F, false, true);
-
-    }
-
-    public static void killPlayer() {
-
-        player().onKillCommand();
 
     }
 
@@ -272,7 +240,7 @@ public class BotCommands {
         TickHandler.peaceTimerTicks = 0;
         TickHandler.peaceTimer = true;
 
-        previousTimerState = TickHandler.deathTimer;
+        previousDeathTimerState = TickHandler.deathTimer;
         TickHandler.deathTimer = false;
 
         player().sendStatusMessage(new StringTextComponent(TextFormatting.AQUA + "Commands are turned off for " + TickHandler.peaceTimerSeconds + " seconds."), true);
@@ -283,7 +251,7 @@ public class BotCommands {
 
         ChatPicker.enabled = true;
         TickHandler.peaceTimer = false;
-        TickHandler.deathTimer = previousTimerState;
+        TickHandler.deathTimer = previousDeathTimerState;
 
         player().sendStatusMessage(new StringTextComponent(TextFormatting.AQUA + "Commands are now enabled!"), true);
 
@@ -298,7 +266,7 @@ public class BotCommands {
 
     }
 
-    public static void waterBucket() {
+    public static void placeWater() {
 
         ServerPlayerEntity player = player();
 
@@ -336,21 +304,6 @@ public class BotCommands {
 
     }
 
-    public static void spawnMobBehind(Entity ent) {
-
-        ServerPlayerEntity player = player();
-
-        Vector3d lookVector = player.getLookVec();
-
-        double dx = player.getPosX() - (lookVector.x * 3);
-        double dz = player.getPosZ() - (lookVector.z * 3);
-
-        ent.setPosition(dx, player.getPosY(), dz);
-
-        player.world.addEntity(ent);
-
-    }
-
     public static void spawnMob(Entity ent) {
 
         ServerPlayerEntity player = player();
@@ -366,9 +319,15 @@ public class BotCommands {
 
     }
 
-
     public static void creeperScare() {
         playSound(SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.HOSTILE, 1.0F, 1.0F);
+    }
+
+    public static void playSound(SoundEvent sound, SoundCategory category, float volume, float pitch) {
+
+        ServerPlayerEntity player = player();
+        player.world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), sound, category, volume, pitch);
+
     }
 
     public static void zombieScare() {
@@ -395,13 +354,6 @@ public class BotCommands {
         playSound(SoundEvents.ENTITY_ZOMBIFIED_PIGLIN_ANGRY, SoundCategory.HOSTILE, 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
     }
 
-    public static void playSound(SoundEvent sound, SoundCategory category, float volume, float pitch) {
-
-        ServerPlayerEntity player = player();
-        player.world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), sound, category, volume, pitch);
-
-    }
-
     public static void spawnFireball() {
 
         ServerPlayerEntity player = player();
@@ -411,7 +363,7 @@ public class BotCommands {
         double dx = player.getPosX() + (lookVector.x * 2);
         double dz = player.getPosZ() + (lookVector.z * 2);
 
-        Entity ent = new FireballEntity(player.world, dx, player.getPosY() + player.getEyeHeight(), dz, lookVector.x * 3, lookVector.y * 3, lookVector.z * 3);
+        Entity ent = new FireballEntity(player.world, (LivingEntity) player.getEntity(), dx, player.getPosY(), dz);
 
         player.world.addEntity(ent);
 
@@ -460,6 +412,20 @@ public class BotCommands {
 
     }
 
+    public static void spawnMobBehind(Entity ent) {
+
+        ServerPlayerEntity player = player();
+
+        Vector3d lookVector = player.getLookVec();
+
+        double dx = player.getPosX() - (lookVector.x * 3);
+        double dz = player.getPosZ() - (lookVector.z * 3);
+
+        ent.setPosition(dx, player.getPosY(), dz);
+
+        player.world.addEntity(ent);
+
+    }
 
     public static void breakBlock() {
 
@@ -484,7 +450,7 @@ public class BotCommands {
 
     }
 
-    public static void monsterEgg() {
+    public static void infestBlock() {
 
         ServerPlayerEntity player = player();
 
@@ -521,7 +487,7 @@ public class BotCommands {
 
     }
 
-    public static void spawnGlass() {
+    public static void placeGlass() {
 
         ServerPlayerEntity player = player();
 
@@ -612,7 +578,38 @@ public class BotCommands {
 
     }
 
+    // Thank you to ChiKitsune for writing this code!
+    // https://github.com/ChiKitsune/SwapThings/blob/master/src/main/java/chikitsune/swap_things/commands/ShuffleInventory.java
+    public static void shuffleInventory(String sender) {
+
+        ServerPlayerEntity player = player();
+
+        ItemStack tempItem = ItemStack.EMPTY;
+        int tempRandNum = 0;
+
+        for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+
+            tempItem = ItemStack.EMPTY;
+            tempRandNum = i;
+
+            while (tempRandNum == i) {
+                tempRandNum = rand.nextInt(player.inventory.getSizeInventory());
+            }
+
+            tempItem = player.inventory.getStackInSlot(i).copy();
+            player.inventory.setInventorySlotContents(i, player.inventory.getStackInSlot(tempRandNum).copy());
+            player.inventory.setInventorySlotContents(tempRandNum, tempItem);
+        }
+
+        // Show chat message
+        player.sendStatusMessage(new StringTextComponent(TextFormatting.RED + sender + " rearranged your inventory."), true);
+
+    }
+
     public static void renameItem(String name) {
+
+        if (!(name.length() > 7))
+            return;
 
         ServerPlayerEntity player = player();
 
@@ -724,13 +721,16 @@ public class BotCommands {
 
     public static void showMessagebox(String message) {
 
+        if (!(message.length() > 11))
+            return;
+
         // Cut off the command
         message = message.substring(11);
 
         // Then trim the string to the proper length (324 chars max)
         message = message.substring(0, Math.min(message.length(), 324));
 
-        PacketHandler.INSTANCE.sendTo(new GuiMessage(message), player().connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+        PacketHandler.INSTANCE.sendTo(new MessageboxPacket(message), player().connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
 
     }
 
@@ -740,11 +740,14 @@ public class BotCommands {
     @OnlyIn(Dist.CLIENT)
     public static void showMessageBoxClient(String message) {
 
-        Minecraft.getInstance().displayGuiScreen(new MessageboxGui(message));
+        Minecraft.getInstance().displayGuiScreen(new MessageboxScreen(message));
 
     }
 
     public static void placeSign(String message) {
+
+        if (!(message.length() > 5))
+            return;
 
         ServerPlayerEntity player = player();
 
@@ -821,6 +824,9 @@ public class BotCommands {
 
     public static void addToMessages(String message) {
 
+        if (!(message.length() > 11))
+            return;
+
         String newmsg = message.substring(11);
         messagesList.add(newmsg);
 
@@ -845,6 +851,14 @@ public class BotCommands {
 
     }
 
+    /**
+     * This method sends a message to everyone on a server.
+     */
+    public static void broadcastMessage(ITextComponent message) {
+
+        player().sendMessage(message, player().getUniqueID());
+
+    }
 
     @SubscribeEvent
     public static void explodeOnBreak(BreakEvent event) {
@@ -855,8 +869,11 @@ public class BotCommands {
             return;
         } else if (oresExplode && !event.getWorld().isRemote()) {
 
-            ServerPlayerEntity player = player();
-            player.world.createExplosion(null, player.getPosX(), player.getPosY(), player.getPosZ(), 4.0F, Explosion.Mode.BREAK);
+            double dx = event.getPos().getX();
+            double dy = event.getPos().getY();
+            double dz = event.getPos().getZ();
+
+            player().world.createExplosion(null, dx, dy, dz, 4.0F, Explosion.Mode.BREAK);
 
             oresExplode = false;
 

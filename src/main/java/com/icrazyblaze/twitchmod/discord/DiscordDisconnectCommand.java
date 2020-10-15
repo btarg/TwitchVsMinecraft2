@@ -19,7 +19,7 @@ public class DiscordDisconnectCommand implements Command<CommandSource> {
     @Override
     public int run(CommandContext<CommandSource> context) {
 
-        DiscordConnection.disconnectDiscord();
+        DiscordConnectionHelper.disconnectDiscord();
 
         return SINGLE_SUCCESS;
     }

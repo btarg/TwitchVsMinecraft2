@@ -1,12 +1,14 @@
 package com.icrazyblaze.twitchmod.discord;
 
-import com.icrazyblaze.twitchmod.BotCommands;
+import com.icrazyblaze.twitchmod.CommandHandlers;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.icrazyblaze.twitchmod.util.BotConfig;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.events.DisconnectEvent;
+import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.minecraft.util.concurrent.ThreadTaskExecutor;
@@ -14,12 +16,14 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
+import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
 
 public class DiscordBot extends ListenerAdapter {
 
     public JDA jda = null;
+    public boolean isConnected = false;
 
     public void startDiscordBot() throws LoginException {
 
@@ -27,15 +31,25 @@ public class DiscordBot extends ListenerAdapter {
             jda.shutdown();
         }
 
-        BotCommands.broadcastMessage(new StringTextComponent(TextFormatting.LIGHT_PURPLE + "Connecting to Discord..."));
+        CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.LIGHT_PURPLE + "Connecting to Discord..."));
         jda = JDABuilder.createDefault(BotConfig.DISCORD_TOKEN).build();
         jda.addEventListener(new DiscordBot());
 
         jda.getPresence().setActivity(Activity.playing("Twitch Vs Minecraft Reloaded"));
-        BotCommands.broadcastMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Bot connected!"));
+        CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Bot connected!"));
+        isConnected = true;
 
     }
 
+    @Override
+    public void onDisconnect(@NotNull DisconnectEvent event) {
+        isConnected = false;
+    }
+
+    @Override
+    public void onShutdown(@NotNull ShutdownEvent event) {
+        isConnected = false;
+    }
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -43,7 +57,7 @@ public class DiscordBot extends ListenerAdapter {
         if (event.getAuthor().isBot() || event.getMessage().isWebhookMessage())
             return;
 
-        String message = event.getMessage().getContentStripped();
+        String message = event.getMessage().getContentRaw();
         String sender = event.getMember().getEffectiveName();
 
         boolean isAdmin = event.getMember().hasPermission(Permission.ADMINISTRATOR);
@@ -53,7 +67,7 @@ public class DiscordBot extends ListenerAdapter {
             TextFormatting format = TextFormatting.WHITE;
             StringTextComponent showText = new StringTextComponent(String.format("%s<%sDiscord %s%s%s> %s", TextFormatting.WHITE, TextFormatting.LIGHT_PURPLE, format, sender, TextFormatting.WHITE, message));
 
-            BotCommands.broadcastMessage(showText);
+            CommandHandlers.broadcastMessage(showText);
 
         }
 

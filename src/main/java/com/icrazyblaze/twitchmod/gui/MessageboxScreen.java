@@ -13,27 +13,14 @@ import net.minecraft.util.text.StringTextComponent;
 import java.util.List;
 
 
-public class MessageboxGui extends Screen {
+public class MessageboxScreen extends Screen {
 
     private static final ResourceLocation BG_TEXTURE = new ResourceLocation(Reference.MOD_ID, "textures/gui/messagebox_background.png");
     public static String message = null;
 
-    public MessageboxGui(String message) {
+    public MessageboxScreen(String message) {
         super(new StringTextComponent("Message Box"));
-        MessageboxGui.message = message;
-    }
-
-    @Override
-    public boolean isPauseScreen() {
-        return true;
-    }
-
-    @Override
-    public void init() {
-
-        Button btn = new Button(width / 2 - 75, height / 2 + 55, 150, 20, new StringTextComponent(I18n.format("gui.done")), button -> stopDisplay());
-        addButton(btn);
-
+        MessageboxScreen.message = message;
     }
 
     @Override
@@ -58,6 +45,19 @@ public class MessageboxGui extends Screen {
 
         super.render(stack, mouseX, mouseY, partialTicks);
 
+    }
+
+    @Override
+    public void init() {
+
+        Button btn = new Button(width / 2 - 75, height / 2 + 55, 150, 20, new StringTextComponent(I18n.format("gui.done")), button -> stopDisplay());
+        addButton(btn);
+
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return true;
     }
 
     private void stopDisplay() {

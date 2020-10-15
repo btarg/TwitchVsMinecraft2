@@ -1,8 +1,9 @@
 package com.icrazyblaze.twitchmod.command;
 
 import com.icrazyblaze.twitchmod.Main;
+import com.icrazyblaze.twitchmod.discord.DiscordConnectionHelper;
+import com.icrazyblaze.twitchmod.irc.TwitchConnectionHelper;
 import com.icrazyblaze.twitchmod.util.BotConfig;
-import com.icrazyblaze.twitchmod.irc.TwitchConnection;
 import com.icrazyblaze.twitchmod.util.TickHandler;
 import com.icrazyblaze.twitchmod.util.UptimeReader;
 import com.mojang.brigadier.Command;
@@ -15,6 +16,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
+
+import javax.xml.soap.Text;
 
 public class StatusCommand implements Command<CommandSource> {
 
@@ -32,15 +35,22 @@ public class StatusCommand implements Command<CommandSource> {
         Main.updateConfig();
 
         // Display current status and uptime
-        if (TwitchConnection.isConnected()) {
-            context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Bot is connected."), false);
+        if (TwitchConnectionHelper.isConnected()) {
+            context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Twitch bot connected."), false);
         } else {
-            context.getSource().sendFeedback(new StringTextComponent(TextFormatting.RED + "Bot not connected."), false);
+            context.getSource().sendFeedback(new StringTextComponent(TextFormatting.RED + "Twitch bot not connected."), false);
         }
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Uptime: " + UptimeReader.getUptimeString(BotConfig.CHANNEL_NAME)), false);
+
+        if (DiscordConnectionHelper.isConnected()) {
+            context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Discord bot connected."), false);
+        } else {
+            context.getSource().sendFeedback(new StringTextComponent(TextFormatting.RED + "Discord bot not connected."), false);
+        }
+
+        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Twitch stream uptime: " + UptimeReader.getUptimeString(BotConfig.CHANNEL_NAME)), false);
 
         // Display current settings
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Channel name: " + BotConfig.CHANNEL_NAME), false);
+        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Twitch channel name: " + BotConfig.CHANNEL_NAME), false);
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Player affected: " + BotConfig.getUsername()), false);
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.DARK_PURPLE + "A new command will be chosen every " + TickHandler.chatSecondsTrigger + " seconds."), false);
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.DARK_PURPLE + "Commands start with " + BotConfig.prefix), false);

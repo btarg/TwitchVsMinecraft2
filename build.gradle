@@ -59,16 +59,18 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
+    // PircBotX has many dependencies that we already have downloaded
     embed(group: 'com.github.pircbotx', name: 'pircbotx', version: '2.2') {
         transitive = false
     }
 
-    embed(group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30') {
-        transitive = true
-    }
+    embed group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30'
 
+    // JDA without audio
     embed(group: 'net.dv8tion', name: 'JDA', version: '4.2.0_209') {
         transitive = true
+        exclude module: 'opus-java'
+        exclude group: 'org.slf4j', module: 'slf4j-api' // we already have this
     }
 }
 
@@ -87,6 +89,9 @@ jar {
     }
 
     from configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
+//    (configurations.embed.collect { !it.path.endsWith(".pom") }).collect {
+//        it.isDirectory() ? it : zipTree(it)
+//    }
 }
 
 

@@ -2,8 +2,8 @@ package com.icrazyblaze.twitchmod;
 
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.icrazyblaze.twitchmod.config.ConfigHelper;
-import com.icrazyblaze.twitchmod.util.BotConfig;
 import com.icrazyblaze.twitchmod.network.PacketHandler;
+import com.icrazyblaze.twitchmod.util.BotConfig;
 import com.icrazyblaze.twitchmod.util.ForgeEventSubscriber;
 import com.icrazyblaze.twitchmod.util.Reference;
 import com.icrazyblaze.twitchmod.util.TickHandler;
@@ -11,6 +11,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import org.apache.log4j.BasicConfigurator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,6 +26,9 @@ public final class Main {
 
     public Main() {
 
+        // Get rid of that annoying log4j:WARN message
+        BasicConfigurator.configure();
+
         // Instantiate and subscribe our config instance
         config = ConfigHelper.register(ModConfig.Type.SERVER, ConfigImplementation::new);
 
@@ -34,7 +38,7 @@ public final class Main {
         // Register event subscribers
         MinecraftForge.EVENT_BUS.register(ForgeEventSubscriber.class);
         MinecraftForge.EVENT_BUS.register(TickHandler.class);
-        MinecraftForge.EVENT_BUS.register(BotCommands.class);
+        MinecraftForge.EVENT_BUS.register(CommandHandlers.class);
 
         // Register network messages
         PacketHandler.registerMessages();

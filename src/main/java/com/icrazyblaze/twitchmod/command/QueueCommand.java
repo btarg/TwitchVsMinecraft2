@@ -1,6 +1,6 @@
 package com.icrazyblaze.twitchmod.command;
 
-import com.icrazyblaze.twitchmod.BotCommands;
+import com.icrazyblaze.twitchmod.CommandHandlers;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -24,7 +24,7 @@ public class QueueCommand implements Command<CommandSource> {
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
 
         context.getSource().sendFeedback(new StringTextComponent("Possible commands: " + ChatPicker.newChats.toString()), false);
-        BotCommands.pigmanScare();
+        CommandHandlers.pigmanScare();
 
         return SINGLE_SUCCESS;
     }

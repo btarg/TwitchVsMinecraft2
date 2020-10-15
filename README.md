@@ -28,16 +28,16 @@ You should keep this key private and safe. **DO NOT** share this key with others
 
 Follow the instructions on the TwitchApps page for how to revoke access to the Twitch API if you want to stay extra safe.
 
-> This key needs to be reset every time the game is restarted using the in-game command `/ttv key`.
+> This key needs to be reset every time the game is restarted using the in-game command `/ttv key <key>`.
 
 # Discord Bot Token
 As of version `3.1.0`, you can connect a Discord Bot and use your Discord server instead of Twitch chat.
 Visit the [Discord Developer Dashboard](https://discord.com/developers/applications), and create a bot.
 
-> This token needs to be reset every time the game is restarted using the in-game command `/discord token`.
+> This token needs to be reset every time the game is restarted using the in-game command `/discord token <token>` or `/ttv discord token <token>`.
 
 # Building from source
-> *Before you try building,m ake sure you [have JDK installed](https://adoptopenjdk.net/) and have properly set up your Java development environment.*
+> *Before you try building, make sure you [have JDK installed](https://adoptopenjdk.net/) and have properly set up your Java development environment.*
 
 To build the project using a terminal, type
 ```
@@ -45,4 +45,4 @@ To build the project using a terminal, type
 ```
 Or find it in the Gradle tab in IDEA.
 
-The build will be located in the **build/libs** folder.
+The final `.jar` mod file will be located in the **build/libs** folder.

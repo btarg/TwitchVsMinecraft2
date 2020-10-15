@@ -103,15 +103,15 @@ public class ConfigHelper {
             return value;
         }
 
-        public void update() {
-            this.value = this.configValue.get();
-        }
-
         @Override
         public T get() {
             if (this.value == null)
                 this.update();
             return this.value;
+        }
+
+        public void update() {
+            this.value = this.configValue.get();
         }
     }
 
