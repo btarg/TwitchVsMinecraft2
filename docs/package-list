@@ -2,6 +2,7 @@ com.icrazyblaze.twitchmod
 com.icrazyblaze.twitchmod.chat
 com.icrazyblaze.twitchmod.command
 com.icrazyblaze.twitchmod.config
+com.icrazyblaze.twitchmod.discord
 com.icrazyblaze.twitchmod.gui
 com.icrazyblaze.twitchmod.irc
 com.icrazyblaze.twitchmod.network
