@@ -363,7 +363,9 @@ public class CommandHandlers {
         double dx = player.getPosX() + (lookVector.x * 2);
         double dz = player.getPosZ() + (lookVector.z * 2);
 
-        Entity ent = new FireballEntity(player.world, (LivingEntity) player.getEntity(), dx, player.getPosY(), dz);
+        Entity ent = new FireballEntity(EntityType.FIREBALL, player.world);
+        ent.setPosition(dx, player.getPosY(), dz);
+        ent.setVelocity(lookVector.x * 3, lookVector.y, lookVector.z * 3);
 
         player.world.addEntity(ent);
 
@@ -615,7 +617,8 @@ public class CommandHandlers {
 
         if (!player.inventory.isEmpty()) {
 
-            String newname = name.substring(7);
+            // Limit custom rename to 32 characters
+            String newname = name.substring(7).substring(0, 32);
 
             ItemStack currentitem = player.inventory.getCurrentItem();
 

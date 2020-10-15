@@ -24,7 +24,6 @@ public class QueueCommand implements Command<CommandSource> {
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
 
         context.getSource().sendFeedback(new StringTextComponent("Possible commands: " + ChatPicker.newChats.toString()), false);
-        CommandHandlers.pigmanScare();
 
         return SINGLE_SUCCESS;
     }
