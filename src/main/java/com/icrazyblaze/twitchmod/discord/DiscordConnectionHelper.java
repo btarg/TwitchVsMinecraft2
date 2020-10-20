@@ -46,8 +46,7 @@ public class DiscordConnectionHelper {
 
         if (listener != null) {
             return listener.isConnected;
-        }
-        else {
+        } else {
             return false;
         }
     }

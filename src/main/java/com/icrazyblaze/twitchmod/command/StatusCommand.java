@@ -17,8 +17,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 
-import javax.xml.soap.Text;
-
 public class StatusCommand implements Command<CommandSource> {
 
     private static final StatusCommand CMD = new StatusCommand();
@@ -59,8 +57,10 @@ public class StatusCommand implements Command<CommandSource> {
         StringTextComponent keyMessage = new StringTextComponent(TextFormatting.AQUA + "Click here to get your Twitch OAuth key!");
         ClickEvent goLinkEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, "https://twitchapps.com/tmi/");
         HoverEvent goHoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Click to open the link in your browser"));
-        keyMessage.getStyle().setClickEvent(goLinkEvent);
-        keyMessage.getStyle().setHoverEvent(goHoverEvent);
+
+        // UPDATE: Fixed styles: use setStyle() to set them properly
+        keyMessage.setStyle(keyMessage.getStyle().setClickEvent(goLinkEvent));
+        keyMessage.setStyle(keyMessage.getStyle().setHoverEvent(goHoverEvent));
 
         return SINGLE_SUCCESS;
     }

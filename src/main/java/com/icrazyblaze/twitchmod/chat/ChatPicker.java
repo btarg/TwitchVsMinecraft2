@@ -5,6 +5,8 @@ import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.util.BotConfig;
 import com.icrazyblaze.twitchmod.util.PlayerHelper;
 import net.minecraft.entity.EntityType;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Difficulty;
@@ -32,6 +34,7 @@ public class ChatPicker {
     public static ArrayList<String> newChatSenders = new ArrayList<>();
     public static boolean cooldownEnabled = false;
     public static boolean forceCommands = false;
+    public static boolean instantCommands = false;
     public static boolean enabled = true;
     private static File textfile;
     private static boolean hasExecuted = false;
@@ -118,7 +121,7 @@ public class ChatPicker {
             return;
 
         // Skip checking if force commands is enabled
-        if (forceCommands) {
+        if (forceCommands || instantCommands) {
 
             doCommand(message, sender);
             return;
@@ -248,6 +251,7 @@ public class ChatPicker {
      *     registerCommand(() -> BotCommands.myCommand(), "mycommand", "mycommandalias");
      * }
      * </pre>
+     * If an entry with the same runnable or alias already exists, it will be replaced.
      * IDEA will swap the lambda for a method reference wherever possible.
      *
      * @param runnable The function linked to the command
@@ -262,7 +266,6 @@ public class ChatPicker {
         for (String key : keys) {
 
             // Don't register exactly the same command every time
-            // UPDATE: if a command with the same key already exists, replace it.
             if (commands.containsKey(key) && commands.containsValue(runnable)) {
                 commands.replace(key, runnable);
             } else {
@@ -310,20 +313,20 @@ public class ChatPicker {
      */
     public static void initCommands() {
 
-        registerCommand(CommandHandlers::addPoison, "poison");
-        registerCommand(CommandHandlers::addHunger, "hunger");
-        registerCommand(CommandHandlers::addSlowness, "slowness");
-        registerCommand(CommandHandlers::addBlindness, "blindness", "jinkies");
-        registerCommand(CommandHandlers::addSpeed, "speed", "gottagofast");
-        registerCommand(CommandHandlers::addNausea, "nausea", "dontfeelsogood");
-        registerCommand(CommandHandlers::addFatigue, "fatigue");
-        registerCommand(CommandHandlers::addLevitation, "levitate", "fly");
-        registerCommand(CommandHandlers::noFall, "nofall", "float");
-        registerCommand(CommandHandlers::addWeakness, "weakness");
-        registerCommand(CommandHandlers::addRegen, "regen", "heal", "health");
-        registerCommand(CommandHandlers::addSaturation, "saturation", "feed");
-        registerCommand(CommandHandlers::addJumpBoost, "jumpboost", "yeet");
-        registerCommand(CommandHandlers::addHaste, "haste", "diggydiggy");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.POISON, 400, 0)}), "poison");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.HUNGER, 800, 255)}), "hunger");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.SLOWNESS, 400, 5)}), "slowness");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.BLINDNESS, 400, 0)}), "blindness", "jinkies");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.SPEED, 400, 10)}), "speed", "gottagofast");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.NAUSEA, 400, 0)}), "nausea", "dontfeelsogood");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.MINING_FATIGUE, 400, 0)}), "fatigue");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.LEVITATION, 200, 1)}), "levitate", "fly");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.LEVITATION, 400, 255)}), "nofall", "float");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.LEVITATION, 200, 1)}), "levitate", "fly");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.HEALTH_BOOST, 400, 1), new EffectInstance(Effects.REGENERATION, 400, 1)}), "regen", "heal", "health");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.SATURATION, 200, 255)}), "saturation", "feed");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.JUMP_BOOST, 400, 2)}), "jumpboost", "yeet");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.HASTE, 400, 2)}), "haste", "diggydiggy");
         registerCommand(CommandHandlers::clearEffects, "cleareffects", "milk");
         registerCommand(CommandHandlers::setOnFire, "fire", "burn");
         registerCommand(CommandHandlers::floorIsLava, "lava", "floorislava");
@@ -331,6 +334,7 @@ public class ChatPicker {
         registerCommand(CommandHandlers::placeSponge, "sponge");
         registerCommand(CommandHandlers::deathTimer, "timer", "deathtimer");
         registerCommand(CommandHandlers::graceTimer, "peacetimer", "timeout");
+        registerCommand(CommandHandlers::frenzyTimer, "frenzy", "frenzymode", "suddendeath");
         registerCommand(CommandHandlers::drainHealth, "drain", "halfhealth");
         registerCommand(CommandHandlers::spawnAnvil, "anvil"); // Gaiet's favourite command <3
         registerCommand(() -> CommandHandlers.spawnMobBehind(EntityType.CREEPER.create(PlayerHelper.player().world)), "creeper", "awman");

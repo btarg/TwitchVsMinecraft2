@@ -17,6 +17,9 @@ public class TickHandler {
     public static int deathTimerSeconds = 60;
     public static boolean deathTimer = false;
 
+    public static int frenzyTimerTicks = 0;
+    public static int frenzyTimerSeconds = 10;
+
     public static int peaceTimerTicks = 0;
     public static int peaceTimerSeconds = 30;
     public static boolean peaceTimer = false;
@@ -105,6 +108,26 @@ public class TickHandler {
                 }
             }
 
+            if (ChatPicker.instantCommands) {
+
+                frenzyTimerTicks++;
+
+                if (frenzyTimerTicks == 20) {
+
+                    if (frenzyTimerSeconds > 0) {
+                        frenzyTimerSeconds--;
+                    }
+
+                    frenzyTimerTicks = 0;
+
+                }
+                if (frenzyTimerSeconds == 0) {
+
+                    CommandHandlers.disableFrenzyTimer();
+
+                }
+            }
+
             if (peaceTimer) {
 
                 peaceTimerTicks++;
@@ -121,7 +144,6 @@ public class TickHandler {
                 if (peaceTimerSeconds == 0) {
 
                     CommandHandlers.disableGraceTimer();
-                    peaceTimer = false;
 
                 }
             }

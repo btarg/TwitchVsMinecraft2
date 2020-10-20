@@ -16,7 +16,6 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
@@ -81,70 +80,20 @@ public class CommandHandlers {
     public static ArrayList<String> messagesList = new ArrayList<>();
     private static boolean previousDeathTimerState = false;
 
-    public static void addSlowness() {
-        player().addPotionEffect(new EffectInstance(Effects.SLOWNESS, 400, 5));
+    // UPDATE: moved potions into one function
+    public static void addPotionEffects(EffectInstance[] effectInstances) {
+
+        ServerPlayerEntity player = player();
+
+        for (EffectInstance effect : effectInstances) {
+            player.addPotionEffect(effect);
+        }
+
     }
 
     // UPDATE: moved player getter into its own class
     public static ServerPlayerEntity player() {
         return PlayerHelper.player();
-    }
-
-    public static void addBlindness() {
-        player().addPotionEffect(new EffectInstance(Effects.BLINDNESS, 400, 0));
-    }
-
-    public static void addHunger() {
-        player().addPotionEffect(new EffectInstance(Effects.HUNGER, 800, 255));
-    }
-
-    public static void addSaturation() {
-        player().addPotionEffect(new EffectInstance(Effects.SATURATION, 200, 255));
-    }
-
-    public static void addSpeed() {
-        player().addPotionEffect(new EffectInstance(Effects.SPEED, 400, 10));
-    }
-
-    public static void addPoison() {
-        player().addPotionEffect(new EffectInstance(Effects.POISON, 400, 0));
-    }
-
-    public static void addNausea() {
-        player().addPotionEffect(new EffectInstance(Effects.NAUSEA, 400, 0));
-    }
-
-    public static void addWeakness() {
-        player().addPotionEffect(new EffectInstance(Effects.WEAKNESS, 400, 1));
-    }
-
-    public static void addFatigue() {
-        player().addPotionEffect(new EffectInstance(Effects.MINING_FATIGUE, 400, 0));
-    }
-
-    public static void addLevitation() {
-        player().addPotionEffect(new EffectInstance(Effects.LEVITATION, 200, 1));
-    }
-
-    public static void addHaste() {
-        player().addPotionEffect(new EffectInstance(Effects.HASTE, 400, 2));
-    }
-
-    public static void noFall() {
-        player().addPotionEffect(new EffectInstance(Effects.LEVITATION, 400, 255));
-    }
-
-    public static void addRegen() {
-
-        ServerPlayerEntity player = player();
-
-        player.addPotionEffect(new EffectInstance(Effects.HEALTH_BOOST, 400, 1));
-        player.addPotionEffect(new EffectInstance(Effects.REGENERATION, 400, 1));
-
-    }
-
-    public static void addJumpBoost() {
-        player().addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, 400, 2));
     }
 
     public static void clearEffects() {
@@ -225,6 +174,10 @@ public class CommandHandlers {
 
     public static void deathTimer() {
 
+        if (ChatPicker.instantCommands) {
+            return;
+        }
+
         TickHandler.deathTimerSeconds = 60;
         TickHandler.deathTimerTicks = 0;
         TickHandler.deathTimer = true;
@@ -233,7 +186,26 @@ public class CommandHandlers {
 
     }
 
+    public static void frenzyTimer() {
+
+        // Prevent spamming
+        if (ChatPicker.instantCommands) {
+            return;
+        }
+
+        TickHandler.frenzyTimerSeconds = 10;
+        TickHandler.frenzyTimerTicks = 0;
+        ChatPicker.instantCommands = true;
+
+        player().sendStatusMessage(new StringTextComponent(TextFormatting.GOLD + "FRENZY MODE! All commands are executed for the next " + TickHandler.frenzyTimerSeconds + " seconds."), true);
+
+    }
+
     public static void graceTimer() {
+
+        if (ChatPicker.instantCommands) {
+            return;
+        }
 
         ChatPicker.enabled = false;
         TickHandler.peaceTimerSeconds = 30;
@@ -254,6 +226,13 @@ public class CommandHandlers {
         TickHandler.deathTimer = previousDeathTimerState;
 
         player().sendStatusMessage(new StringTextComponent(TextFormatting.AQUA + "Commands are now enabled!"), true);
+
+    }
+
+    public static void disableFrenzyTimer() {
+
+        ChatPicker.instantCommands = false;
+        player().sendStatusMessage(new StringTextComponent(TextFormatting.GOLD + "Frenzy mode is now disabled."), true);
 
     }
 
