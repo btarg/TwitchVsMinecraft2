@@ -66,6 +66,8 @@ public final class Main {
         TickHandler.chatSecondsTrigger = config.chatSecondsProp.get();
         TickHandler.chatSeconds = config.chatSecondsProp.get();
 
+        CommandHandlers.enableFrenzyMode = config.frenzyProp.get();
+
     }
 
 
@@ -81,6 +83,7 @@ public final class Main {
         public final ConfigHelper.ConfigValueListener<String> prefixProp;
 
         public final ConfigHelper.ConfigValueListener<Boolean> cooldownProp;
+        public final ConfigHelper.ConfigValueListener<Boolean> frenzyProp;
 
         ConfigImplementation(final ForgeConfigSpec.Builder builder, ConfigHelper.Subscriber subscriber) {
             builder.push("general");
@@ -112,6 +115,10 @@ public final class Main {
             this.cooldownProp = subscriber.subscribe(builder
                     .comment("Prevent the same command from being executed twice in a row")
                     .define("cooldownEnabled", true));
+
+            this.frenzyProp = subscriber.subscribe(builder
+                    .comment("Enable Frenzy Mode")
+                    .define("frenzyModeEnabled", true));
 
             builder.pop();
 

@@ -80,6 +80,8 @@ public class CommandHandlers {
     public static ArrayList<String> messagesList = new ArrayList<>();
     private static boolean previousDeathTimerState = false;
 
+    public static boolean enableFrenzyMode = true;
+
     // UPDATE: moved potions into one function
     public static void addPotionEffects(EffectInstance[] effectInstances) {
 
@@ -187,9 +189,8 @@ public class CommandHandlers {
     }
 
     public static void frenzyTimer() {
-
-        // Prevent spamming
-        if (ChatPicker.instantCommands) {
+        
+        if (ChatPicker.instantCommands || !enableFrenzyMode) {
             return;
         }
 
