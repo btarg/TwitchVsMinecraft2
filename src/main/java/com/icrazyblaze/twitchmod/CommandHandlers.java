@@ -299,35 +299,12 @@ public class CommandHandlers {
 
     }
 
-    public static void creeperScare() {
-        playSound(SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.HOSTILE, 1.0F, 1.0F);
-    }
 
     public static void playSound(SoundEvent sound, SoundCategory category, float volume, float pitch) {
 
         ServerPlayerEntity player = player();
         player.world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), sound, category, volume, pitch);
 
-    }
-
-    public static void zombieScare() {
-        playSound(SoundEvents.ENTITY_ZOMBIE_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
-    }
-
-    public static void skeletonScare() {
-        playSound(SoundEvents.ENTITY_SKELETON_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
-    }
-
-    public static void witchScare() {
-        playSound(SoundEvents.ENTITY_WITCH_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F);
-    }
-
-    public static void ghastScare() {
-        playSound(SoundEvents.ENTITY_GHAST_WARN, SoundCategory.HOSTILE, 10.0F, 1.0F);
-    }
-
-    public static void anvilScare() {
-        playSound(SoundEvents.BLOCK_ANVIL_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
     }
 
     public static void pigmanScare() {
