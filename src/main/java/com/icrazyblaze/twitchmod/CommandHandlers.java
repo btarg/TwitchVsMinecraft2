@@ -26,6 +26,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -56,10 +58,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -78,9 +78,8 @@ public class CommandHandlers {
     public static boolean killVillagers = false;
     public static boolean destroyWorkbenches = false;
     public static ArrayList<String> messagesList = new ArrayList<>();
-    private static boolean previousDeathTimerState = false;
-
     public static boolean enableFrenzyMode = true;
+    private static boolean previousDeathTimerState = false;
 
     // UPDATE: moved potions into one function
     public static void addPotionEffects(EffectInstance[] effectInstances) {
@@ -189,7 +188,7 @@ public class CommandHandlers {
     }
 
     public static void frenzyTimer() {
-        
+
         if (ChatPicker.instantCommands || !enableFrenzyMode) {
             return;
         }
@@ -303,16 +302,15 @@ public class CommandHandlers {
 
     }
 
+    public static void pigmanScare() {
+        playSound(SoundEvents.ENTITY_ZOMBIFIED_PIGLIN_ANGRY, SoundCategory.HOSTILE, 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
+    }
 
     public static void playSound(SoundEvent sound, SoundCategory category, float volume, float pitch) {
 
         ServerPlayerEntity player = player();
         player.world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), sound, category, volume, pitch);
 
-    }
-
-    public static void pigmanScare() {
-        playSound(SoundEvents.ENTITY_ZOMBIFIED_PIGLIN_ANGRY, SoundCategory.HOSTILE, 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
     }
 
     public static void spawnFireball() {
@@ -706,6 +704,41 @@ public class CommandHandlers {
 
         Minecraft.getInstance().displayGuiScreen(new MessageboxScreen(message));
 
+    }
+
+    public static void startWritingBook() {
+
+        ChatPicker.tempChatLog.clear();
+        ChatPicker.tempLogMessages = true;
+        player().sendStatusMessage(new StringTextComponent(TextFormatting.LIGHT_PURPLE + "Chat has started writing a book."), true);
+
+    }
+
+    public static void createBook(List<String> text) {
+        try {
+            Main.logger.info("Creating book");
+            ServerPlayerEntity player = player();
+
+            ItemStack itemStack = new ItemStack(Items.WRITTEN_BOOK, 1);
+            CompoundNBT nbt = itemStack.getOrCreateTag();
+
+            ListNBT pages = new ListNBT();
+
+            nbt.putString("author", BotConfig.getUsername());
+            nbt.putString("title", "Chat Log " + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+
+            for (String str : text) {
+                pages.add(StringNBT.valueOf(str));
+            }
+
+            nbt.put("pages", pages);
+            itemStack.write(nbt);
+
+            player.addItemStackToInventory(itemStack);
+            player.sendStatusMessage(new StringTextComponent(TextFormatting.LIGHT_PURPLE + "Chat has written you a book."), true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void placeSign(String message) {

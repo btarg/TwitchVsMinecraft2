@@ -67,6 +67,7 @@ public final class Main {
         TickHandler.chatSeconds = config.chatSecondsProp.get();
 
         CommandHandlers.enableFrenzyMode = config.frenzyProp.get();
+        ChatPicker.chatLogLength = config.chatLogProp.get();
 
     }
 
@@ -84,6 +85,8 @@ public final class Main {
 
         public final ConfigHelper.ConfigValueListener<Boolean> cooldownProp;
         public final ConfigHelper.ConfigValueListener<Boolean> frenzyProp;
+
+        public final ConfigHelper.ConfigValueListener<Integer> chatLogProp;
 
         ConfigImplementation(final ForgeConfigSpec.Builder builder, ConfigHelper.Subscriber subscriber) {
             builder.push("general");
@@ -119,6 +122,10 @@ public final class Main {
             this.frenzyProp = subscriber.subscribe(builder
                     .comment("Enable Frenzy Mode")
                     .define("frenzyModeEnabled", true));
+
+            this.chatLogProp = subscriber.subscribe(builder
+                    .comment("How many messages should be included when chat writes a book")
+                    .define("chatLogLength", 10));
 
             builder.pop();
 

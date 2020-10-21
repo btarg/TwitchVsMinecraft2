@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -38,6 +39,9 @@ public class ChatPicker {
     public static boolean forceCommands = false;
     public static boolean instantCommands = false;
     public static boolean enabled = true;
+    public static boolean tempLogMessages = false;
+    public static ArrayList<String> tempChatLog = new ArrayList<>();
+    public static int chatLogLength = 10;
     private static File textfile;
     private static boolean hasExecuted = false;
     private static String lastCommand = null;
@@ -122,6 +126,27 @@ public class ChatPicker {
         if (!enabled)
             return;
 
+        // Remove the prefix
+        if (message.startsWith(BotConfig.prefix)) {
+            message = message.substring(BotConfig.prefix.length());
+        } else if (tempLogMessages) {
+
+            // If a message is not a command and temp logging is enabled, log the message
+            String timeStamp = new SimpleDateFormat("[HH:mm:ss] ").format(new Date());
+            tempChatLog.add(timeStamp + sender + ": " + message);
+
+            // Add messages to book when there are enough
+            if (tempChatLog.size() == chatLogLength) {
+
+                // Add the chat messages to the book then stop recording chat
+                CommandHandlers.createBook(tempChatLog);
+                tempChatLog.clear();
+                tempLogMessages = false;
+
+            }
+            return;
+        }
+
         // Skip checking if force commands is enabled
         if (forceCommands || instantCommands) {
 
@@ -129,6 +154,7 @@ public class ChatPicker {
             return;
 
         }
+
 
         // Only add the message if it is not blacklisted, and if the command isn't the same as the last
         loadBlacklistFile();
@@ -373,6 +399,7 @@ public class ChatPicker {
         registerCommand(CommandHandlers::placeGlass, "glass");
         registerCommand(CommandHandlers::enchantItem, "enchant");
         registerCommand(CommandHandlers::curseItem, "bind", "curse");
+        registerCommand(CommandHandlers::startWritingBook, "book", "chatlog");
 
     }
 

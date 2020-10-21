@@ -62,6 +62,8 @@ public class StatusCommand implements Command<CommandSource> {
         keyMessage.setStyle(keyMessage.getStyle().setClickEvent(goLinkEvent));
         keyMessage.setStyle(keyMessage.getStyle().setHoverEvent(goHoverEvent));
 
+        context.getSource().sendFeedback(keyMessage, false);
+
         return SINGLE_SUCCESS;
     }
 }

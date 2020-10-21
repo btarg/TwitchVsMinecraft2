@@ -104,10 +104,9 @@ public class DiscordBot extends ListenerAdapter {
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "disconnect") && isAdmin) {
             jda.shutdown();
 
-        } else if (message.startsWith(BotConfig.prefix)) {
+        } else if (message.startsWith(BotConfig.prefix) || ChatPicker.tempLogMessages) {
 
-            // Remove the prefix
-            String finalMessage = message.substring(BotConfig.prefix.length());
+            String finalMessage = message;
 
             Runnable runnable = (() -> {
 

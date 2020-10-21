@@ -120,10 +120,9 @@ public class TwitchBot extends ListenerAdapter {
 
             TwitchConnectionHelper.tryConnect();
 
-        } else if (message.startsWith(BotConfig.prefix)) {
+        } else if (message.startsWith(BotConfig.prefix) || ChatPicker.tempLogMessages) {
 
-            // Remove the prefix
-            String finalMessage = message.substring(BotConfig.prefix.length());
+            String finalMessage = message;
 
             Runnable runnable = (() -> {
 
