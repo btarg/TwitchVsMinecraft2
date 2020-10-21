@@ -4,6 +4,7 @@ import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.icrazyblaze.twitchmod.command.*;
 import com.icrazyblaze.twitchmod.discord.DiscordConnectCommand;
+import com.icrazyblaze.twitchmod.discord.DiscordConnectionHelper;
 import com.icrazyblaze.twitchmod.discord.DiscordDisconnectCommand;
 import com.icrazyblaze.twitchmod.discord.TokenCommand;
 import com.icrazyblaze.twitchmod.irc.TwitchConnectionHelper;
@@ -68,8 +69,12 @@ public class ForgeEventSubscriber {
     @SubscribeEvent
     public static void serverStopping(FMLServerStoppingEvent event) {
 
-        if (TwitchConnectionHelper.isConnected())
+        if (TwitchConnectionHelper.isConnected()) {
             TwitchConnectionHelper.disconnectBot();
+        }
+        if (DiscordConnectionHelper.isConnected()) {
+            DiscordConnectionHelper.disconnectDiscord();
+        }
 
         TickHandler.enableTimers = false;
 

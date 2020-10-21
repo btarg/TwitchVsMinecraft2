@@ -1,9 +1,10 @@
-# Twitch Vs Minecraft Reloaded (Now available for 1.16!)
-[![forthebadge](https://forthebadge.com/images/badges/fuck-it-ship-it.svg)](https://forthebadge.com)
+# Twitch Vs Minecraft Reloaded (Forge 1.16)
 [![Build status](https://ci.appveyor.com/api/projects/status/xoql77ww8lpbpmyo?svg=true)](https://ci.appveyor.com/project/iCrazyBlaze/twitchvsminecraft2)
 [![CurseForge](http://cf.way2muchnoise.eu/full_twitch-vs-minecraft_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/twitch-vs-minecraft)
 
 A Minecraft mod for Forge inspired by [Kaze Emanuar](https://www.youtube.com/channel/UCuvSqzfO_LV_QzHdmEj84SQ) and [CrowdControl](https://crowdcontrol.live) that lets Twitch viewers interact with the game to provide a fun challenge for streamers.
+
+[Project homepage](https://icrazyblaze.github.io/twitchvsminecraft)
 
 [View the project on CurseForge for more info!](https://www.curseforge.com/minecraft/mc-mods/twitch-vs-minecraft)
 
@@ -35,6 +36,13 @@ As of version `3.1.0`, you can connect a Discord Bot and use your Discord server
 Visit the [Discord Developer Dashboard](https://discord.com/developers/applications), and create a bot.
 
 > This token needs to be reset every time the game is restarted using the in-game command `/discord token <token>` or `/ttv discord token <token>`.
+
+# Testing
+To test commands without connecting to Twitch or Discord, use `/ttv test <string>`.
+
+When connected to Twitch, the Broadcaster's commands are always sent through, bypassing the blacklist and command timer entirely.
+
+To view connection info, type `/ttv status`.
 
 # Building from source
 > *Before you try building, make sure you [have JDK installed](https://adoptopenjdk.net/) and have properly set up your Java development environment.*

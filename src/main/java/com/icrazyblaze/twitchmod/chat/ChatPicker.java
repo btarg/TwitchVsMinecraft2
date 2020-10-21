@@ -139,7 +139,6 @@ public class ChatPicker {
 
                 if (message.contains(str)) {
                     Main.logger.info("Command not executed: command is blacklisted.");
-                    break;
                 } else {
 
                     if (lastCommand != null && cooldownEnabled) {
@@ -150,7 +149,7 @@ public class ChatPicker {
                             newChatSenders.add(sender);
 
                         } else {
-                            Main.logger.info("Command not executed: cooldown is active for this command.");
+                            Main.logger.info(String.format("Command not executed: cooldown is active for this command (%s).", message));
                         }
 
                     } else {
@@ -159,8 +158,8 @@ public class ChatPicker {
                         newChatSenders.add(sender);
 
                     }
-                    break;
                 }
+                break;
             }
 
         }
@@ -203,15 +202,15 @@ public class ChatPicker {
             // If the command contains a space, everything after the space is treated like an argument.
             // We chop of the arguments, and check the map for the command.
             // If we find the command in the map, then we pass it the full message with the arguments.
-            String finalmessage;
+            String commandString;
             if (message.contains(" ")) {
 
                 // Get everything before space (e.g. "messagebox")
                 String[] split = message.split("\\s+");
-                finalmessage = split[0];
+                commandString = split[0];
 
             } else {
-                finalmessage = message;
+                commandString = message;
             }
 
             // Special commands below have extra arguments, so they are registered here.
@@ -225,7 +224,7 @@ public class ChatPicker {
 
             try {
                 // Invoke command from command map
-                commands.get(finalmessage).run();
+                commands.get(commandString).run();
 
                 if (BotConfig.showChatMessages && BotConfig.showCommands) {
                     CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
@@ -383,8 +382,9 @@ public class ChatPicker {
 
         for (String key : commands.keySet()) {
 
-            if (!blacklist.contains(key))
+            if (!blacklist.contains(key)) {
                 commandList.add(key);
+            }
 
         }
 
@@ -400,9 +400,7 @@ public class ChatPicker {
                 // Choose another if the list is big enough
                 pickRandomChat();
             } else {
-                newChats.clear();
-                Main.logger.info("Failed to execute a command.");
-                return;
+                Main.logger.error("Failed to execute a command.");
             }
         }
 

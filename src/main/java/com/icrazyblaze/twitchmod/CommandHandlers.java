@@ -198,6 +198,9 @@ public class CommandHandlers {
         TickHandler.frenzyTimerTicks = 0;
         ChatPicker.instantCommands = true;
 
+        previousDeathTimerState = TickHandler.deathTimer;
+        TickHandler.deathTimer = false;
+
         player().sendStatusMessage(new StringTextComponent(TextFormatting.GOLD + "FRENZY MODE! All commands are executed for the next " + TickHandler.frenzyTimerSeconds + " seconds."), true);
 
     }
@@ -233,6 +236,7 @@ public class CommandHandlers {
     public static void disableFrenzyTimer() {
 
         ChatPicker.instantCommands = false;
+        TickHandler.deathTimer = previousDeathTimerState;
         player().sendStatusMessage(new StringTextComponent(TextFormatting.GOLD + "Frenzy mode is now disabled."), true);
 
     }
