@@ -354,6 +354,7 @@ public class ChatPicker {
         registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.SATURATION, 200, 255)}), "saturation", "feed");
         registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.JUMP_BOOST, 400, 2)}), "jumpboost", "yeet");
         registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.HASTE, 400, 2)}), "haste", "diggydiggy");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.BAD_OMEN, 400, 0)}), "badomen", "pillager");
         registerCommand(CommandHandlers::clearEffects, "cleareffects", "milk");
         registerCommand(CommandHandlers::setOnFire, "fire", "burn");
         registerCommand(CommandHandlers::floorIsLava, "lava", "floorislava");
