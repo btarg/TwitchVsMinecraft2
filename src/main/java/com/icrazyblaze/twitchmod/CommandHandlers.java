@@ -577,7 +577,7 @@ public class CommandHandlers {
         if (!player.inventory.isEmpty()) {
 
             // Limit custom rename to 32 characters
-            String newname = name.substring(7).substring(0, 32);
+            String newname = name.substring(7).substring(0, Math.min(name.length(), 32));
 
             ItemStack currentitem = player.inventory.getCurrentItem();
 
