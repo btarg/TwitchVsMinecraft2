@@ -77,6 +77,7 @@ public class ForgeEventSubscriber {
         }
 
         TickHandler.enableTimers = false;
+        PlayerHelper.defaultServer = null; // Set to null again to avoid errors when restarting world
 
     }
 
