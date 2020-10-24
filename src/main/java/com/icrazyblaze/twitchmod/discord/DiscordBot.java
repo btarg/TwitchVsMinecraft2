@@ -3,10 +3,12 @@ package com.icrazyblaze.twitchmod.discord;
 import com.icrazyblaze.twitchmod.CommandHandlers;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.icrazyblaze.twitchmod.util.BotConfig;
+import com.icrazyblaze.twitchmod.util.CalculateMinecraftColor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.DisconnectEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -14,11 +16,16 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.minecraft.util.concurrent.ThreadTaskExecutor;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DiscordBot extends ListenerAdapter {
 
@@ -59,13 +66,29 @@ public class DiscordBot extends ListenerAdapter {
 
         String message = event.getMessage().getContentRaw();
         String sender = event.getMember().getEffectiveName();
+        String channel = event.getChannel().getName();
+
+        Color userColor = event.getMember().getColor();
+
+        if (userColor == null) {
+            userColor = Color.WHITE;
+        }
 
         boolean isAdmin = event.getMember().hasPermission(Permission.ADMINISTRATOR);
 
         if ((!message.startsWith(BotConfig.prefix) || BotConfig.showCommands) && BotConfig.showChatMessages) {
 
-            TextFormatting format = TextFormatting.WHITE;
-            StringTextComponent showText = new StringTextComponent(String.format("%s<%sDiscord %s%s%s> %s", TextFormatting.WHITE, TextFormatting.LIGHT_PURPLE, format, sender, TextFormatting.WHITE, message));
+            TextFormatting format = CalculateMinecraftColor.findNearestMinecraftColor(userColor);
+            List<String> roleNames = new ArrayList<>();
+
+            // Get role names and add them to a hover
+            for (Role r : event.getMember().getRoles()) {
+                roleNames.add(r.getName());
+            }
+
+            StringTextComponent showText = new StringTextComponent(String.format("%s<%sDiscord (%s) %s%s%s> %s", TextFormatting.WHITE, TextFormatting.BLUE, channel, format, sender, TextFormatting.WHITE, message));
+
+            showText.setStyle(showText.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(format + StringUtils.join(roleNames, ", ")))));
 
             CommandHandlers.broadcastMessage(showText);
 

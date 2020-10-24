@@ -6,6 +6,7 @@ import com.icrazyblaze.twitchmod.CommandHandlers;
 import com.icrazyblaze.twitchmod.Main;
 import com.icrazyblaze.twitchmod.chat.ChatPicker;
 import com.icrazyblaze.twitchmod.util.BotConfig;
+import com.icrazyblaze.twitchmod.util.CalculateMinecraftColor;
 import net.minecraft.util.concurrent.ThreadTaskExecutor;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -18,6 +19,7 @@ import org.pircbotx.hooks.events.DisconnectEvent;
 import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.events.PingEvent;
 
+import java.awt.*;
 import java.util.Objects;
 
 
@@ -55,15 +57,16 @@ public class TwitchBot extends ListenerAdapter {
 
             if (tags != null) {
 
+                // Get hex colour, convert to RGB, then get nearest Minecraft colour code
+                Color userColor = Color.decode(tags.get("color"));
+                format = CalculateMinecraftColor.findNearestMinecraftColor(userColor);
+
                 if (tags.get("badges").contains("broadcaster/1")) {
-                    format = TextFormatting.GOLD;
                     ChatPicker.forceCommands = true; // Force commands to execute instantly for broadcaster testing
                     role = "Broadcaster";
                 } else if (tags.get("badges").contains("subscriber/1")) {
-                    format = TextFormatting.AQUA;
                     role = "Subscriber";
                 } else if (tags.get("badges").contains("moderator/1")) {
-                    format = TextFormatting.GREEN;
                     role = "Moderator";
                 }
 

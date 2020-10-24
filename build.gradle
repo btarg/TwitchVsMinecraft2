@@ -67,7 +67,7 @@ dependencies {
     embed group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30'
 
     // JDA without audio
-    embed(group: 'net.dv8tion', name: 'JDA', version: '4.2.0_209') {
+    embed(group: 'net.dv8tion', name: 'JDA', version: '4.2.0_211') {
         transitive = true
         exclude module: 'opus-java'
         exclude group: 'org.slf4j', module: 'slf4j-api' // we already have this
@@ -89,9 +89,7 @@ jar {
     }
 
     from configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
-//    (configurations.embed.collect { !it.path.endsWith(".pom") }).collect {
-//        it.isDirectory() ? it : zipTree(it)
-//    }
+
 }
 
 
