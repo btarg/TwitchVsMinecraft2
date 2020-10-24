@@ -86,7 +86,7 @@ public class DiscordBot extends ListenerAdapter {
                 roleNames.add(r.getName());
             }
 
-            StringTextComponent showText = new StringTextComponent(String.format("%s<%sDiscord (%s) %s%s%s> %s", TextFormatting.WHITE, TextFormatting.BLUE, channel, format, sender, TextFormatting.WHITE, message));
+            StringTextComponent showText = new StringTextComponent(String.format("%s<%s[%s] %s%s%s> %s", TextFormatting.WHITE, TextFormatting.BLUE, channel, format, sender, TextFormatting.WHITE, message));
 
             showText.setStyle(showText.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(format + StringUtils.join(roleNames, ", ")))));
 
