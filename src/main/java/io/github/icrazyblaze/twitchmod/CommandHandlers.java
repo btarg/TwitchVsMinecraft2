@@ -853,7 +853,11 @@ public class CommandHandlers {
      */
     public static void broadcastMessage(ITextComponent message) {
 
-        player().sendMessage(message, player().getUniqueID());
+        try {
+            player().sendMessage(message, player().getUniqueID());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
