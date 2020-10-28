@@ -6,13 +6,15 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
     }
 }
+apply plugin: 'java'
 apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'com.github.johnrengelman.shadow'
 
 version = "${mod_version}"
-group = 'com.icrazyblaze.twitchmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = 'io.github.icrazyblaze.twitchmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'twitchmod'
 
 repositories {
@@ -48,10 +50,6 @@ minecraft {
     }
 }
 
-configurations {
-    embed
-    compile.extendsFrom(embed)
-}
 
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
@@ -60,17 +58,52 @@ dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
     // PircBotX has many dependencies that we already have downloaded
-    embed(group: 'com.github.pircbotx', name: 'pircbotx', version: '2.2') {
+    compile shadow (group: 'com.github.pircbotx', name: 'pircbotx', version: '2.2') {
         transitive = false
     }
 
-    embed group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30'
+    compile shadow (group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30')
 
     // JDA without audio
-    embed(group: 'net.dv8tion', name: 'JDA', version: '4.2.0_211') {
+    compile shadow (group: 'net.dv8tion', name: 'JDA', version: '4.2.0_212') {
         transitive = true
         exclude module: 'opus-java'
         exclude group: 'org.slf4j', module: 'slf4j-api' // we already have this
+    }
+
+}
+
+def repack(it) {
+    shadowJar.relocate(it, "repack.${it}")
+}
+
+shadowJar {
+
+    repack 'org.pircbotx'
+    repack "net.dv8tion.jda"
+    repack 'org.apache.commons.collections4'
+    repack 'gnu.trove'
+    repack "com.neovisionaries.ws.client"
+    repack "com.iwebpp.crypto"
+    repack "org.json"
+    repack "okio"
+    repack "okhttp3"
+    repack "org.slf4j"
+    repack "com.fasterxml.jackson"
+
+    classifier ''
+    configurations = [project.configurations.shadow]
+    dependencies{
+        exclude(dependency('org.jetbrains:annotations'))
+        exclude(dependency('com.google.code.findbugs:jsr305'))
+    }
+
+}
+
+reobf {
+    shadowJar {
+        dependsOn createMcpToSrg
+        mappings = createMcpToSrg.output
     }
 }
 
@@ -78,7 +111,7 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "twitchmod",
+                "Specification-Title"     : "${archivesBaseName}",
                 "Specification-Vendor"    : "icrazyblaze",
                 "Specification-Version"   : "1",
                 "Implementation-Title"    : project.name,
@@ -88,10 +121,7 @@ jar {
         ])
     }
 
-    from configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
-
 }
-
 
 processResources {
     // Will allow gradle.properties version fill inside mods.toml file
@@ -111,5 +141,5 @@ processResources {
         exclude 'META-INF/mods.toml'
     }
 
-
 }
+tasks.assemble.dependsOn shadowJar
