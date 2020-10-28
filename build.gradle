@@ -81,7 +81,7 @@ shadowJar {
 
     repack 'org.pircbotx'
     repack "net.dv8tion.jda"
-    repack 'org.apache'
+    repack 'org.apache.commons.collections4'
     repack 'gnu.trove'
     repack "com.neovisionaries.ws.client"
     repack "com.iwebpp.crypto"
