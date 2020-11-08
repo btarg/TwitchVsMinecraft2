@@ -1,5 +1,6 @@
 package io.github.icrazyblaze.twitchmod.util;
 
+import com.mojang.brigadier.CommandDispatcher;
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.command.*;
@@ -8,7 +9,6 @@ import io.github.icrazyblaze.twitchmod.discord.DiscordConnectionHelper;
 import io.github.icrazyblaze.twitchmod.discord.DiscordDisconnectCommand;
 import io.github.icrazyblaze.twitchmod.discord.TokenCommand;
 import io.github.icrazyblaze.twitchmod.irc.TwitchConnectionHelper;
-import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraftforge.event.TickEvent;

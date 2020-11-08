@@ -1,4 +1,4 @@
-# Twitch Vs Minecraft Reloaded (Forge 1.16)
+# Twitch Vs Minecraft Reloaded (Forge 1.16.X)
 [![Build status](https://ci.appveyor.com/api/projects/status/xoql77ww8lpbpmyo?svg=true)](https://ci.appveyor.com/project/iCrazyBlaze/twitchvsminecraft2)
 [![CurseForge](http://cf.way2muchnoise.eu/full_twitch-vs-minecraft_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/twitch-vs-minecraft)
 
@@ -12,7 +12,7 @@ A Minecraft mod for Forge inspired by [Kaze Emanuar](https://www.youtube.com/cha
 
 
 # Forge version
-This version of the mod is designed to work with Minecraft Forge 1.16.3 and above.
+The latest version of the mod is designed to work with Minecraft Forge 1.16.2 and above.
 
 # How it works
 ## **Twitch**
@@ -32,7 +32,7 @@ Follow the instructions on the TwitchApps page for how to revoke access to the T
 > This key needs to be reset every time the game is restarted using the in-game command `/ttv key <key>`.
 
 # Discord Bot Token
-As of version `3.1.0`, you can connect a Discord Bot and use your Discord server instead of Twitch chat.
+You can also connect a Discord Bot and use your Discord server instead of Twitch chat.
 Visit the [Discord Developer Dashboard](https://discord.com/developers/applications), and create a bot.
 
 > This token needs to be reset every time the game is restarted using the in-game command `/discord token <token>` or `/ttv discord token <token>`.

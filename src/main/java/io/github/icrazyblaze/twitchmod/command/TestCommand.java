@@ -1,12 +1,12 @@
 package io.github.icrazyblaze.twitchmod.command;
 
-import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
-import io.github.icrazyblaze.twitchmod.util.BotConfig;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
+import io.github.icrazyblaze.twitchmod.util.BotConfig;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 

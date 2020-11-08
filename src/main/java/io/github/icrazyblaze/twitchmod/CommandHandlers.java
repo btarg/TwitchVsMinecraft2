@@ -57,6 +57,7 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -137,7 +138,7 @@ public class CommandHandlers {
         Iterable<ServerWorld> worlds = player().server.getWorlds();
 
         for (ServerWorld world : worlds) {
-            world.func_241114_a_(time);
+            world.setDayTime(time);
         }
 
     }
@@ -572,12 +573,13 @@ public class CommandHandlers {
         if (!(name.length() > 7))
             return;
 
+        name = name.substring(7); // FIXED: remove "rename"
         ServerPlayerEntity player = player();
 
         if (!player.inventory.isEmpty()) {
 
-            // Limit custom rename to 32 characters
-            String newname = name.substring(7).substring(0, Math.min(name.length(), 32));
+            // Limit custom rename to 32 characters (FIXED: use StringUtils)
+            String newname = StringUtils.left(name, 32);
 
             ItemStack currentitem = player.inventory.getCurrentItem();
 
@@ -620,7 +622,12 @@ public class CommandHandlers {
             Enchantment enchantment = Enchantment.getEnchantmentByID(r);
 
             // Set enchantment level (random level from 1 to enchantment max level)
-            int level = rand.nextInt(1, enchantment.getMaxLevel() + 1);
+            int level = 1;
+            if (enchantment != null) {
+                level = rand.nextInt(1, enchantment.getMaxLevel() + 1);
+            } else {
+                return;
+            }
 
             ItemStack currentitem = player.inventory.getCurrentItem();
 

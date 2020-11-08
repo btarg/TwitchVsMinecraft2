@@ -20,9 +20,10 @@ public class CalculateMinecraftColor {
 
     /**
      * Takes a Color object and returns the closest Minecraft colour code.
-     * @See https://minecraft.gamepedia.com/Formatting_codes#Color_codes
+     *
      * @param color
      * @return
+     * @See https://minecraft.gamepedia.com/Formatting_codes#Color_codes
      */
     public static TextFormatting findNearestMinecraftColor(Color color) {
         return Arrays.stream(TextFormatting.values())

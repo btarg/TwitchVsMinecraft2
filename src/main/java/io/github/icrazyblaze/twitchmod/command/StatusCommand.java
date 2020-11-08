@@ -1,15 +1,15 @@
 package io.github.icrazyblaze.twitchmod.command;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.builder.ArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.discord.DiscordConnectionHelper;
 import io.github.icrazyblaze.twitchmod.irc.TwitchConnectionHelper;
 import io.github.icrazyblaze.twitchmod.util.BotConfig;
 import io.github.icrazyblaze.twitchmod.util.TickHandler;
 import io.github.icrazyblaze.twitchmod.util.UptimeReader;
-import com.mojang.brigadier.Command;
-import com.mojang.brigadier.builder.ArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.util.text.StringTextComponent;

@@ -5,7 +5,7 @@ issueTrackerURL = "http://github.com/iCrazyBlaze/TwitchVsMinecraft2/issues"
 
 [[mods]]
 modId = "twitchmod"
-version = "${version}"
+version = "${file.jarVersion}"
 displayName = "Twitch Vs Minecraft Reloaded"
 updateJSONURL = "https://www.dropbox.com/s/qwmrqgdqe9jgnwf/tvm2-update.json?dl=0"
 displayURL = "https://bit.ly/TwitchVsMinecraft"
@@ -22,3 +22,9 @@ mandatory = true
 versionRange = "[32,)"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.twitchmod]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.16,1.17)"
+side="BOTH"
