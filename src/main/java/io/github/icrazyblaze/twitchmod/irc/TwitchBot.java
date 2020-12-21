@@ -59,7 +59,14 @@ public class TwitchBot extends ListenerAdapter {
 
                 // Get hex colour, convert to RGB, then get nearest Minecraft colour code
                 Color userColor = Color.decode(tags.get("color"));
-                format = CalculateMinecraftColor.findNearestMinecraftColor(userColor);
+				
+				try {
+					if (format != null)
+						format = CalculateMinecraftColor.findNearestMinecraftColor(userColor);
+				}
+				catch(Exception e) {
+					Main.logger.info("No valid user colour");
+				}
 
                 if (tags.get("badges").contains("broadcaster/1")) {
                     ChatPicker.forceCommands = true; // Force commands to execute instantly for broadcaster testing
