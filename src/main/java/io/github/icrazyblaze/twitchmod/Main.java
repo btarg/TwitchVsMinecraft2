@@ -1,6 +1,7 @@
 package io.github.icrazyblaze.twitchmod;
 
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
+import io.github.icrazyblaze.twitchmod.chat.FrenzyVote;
 import io.github.icrazyblaze.twitchmod.config.ConfigHelper;
 import io.github.icrazyblaze.twitchmod.network.PacketHandler;
 import io.github.icrazyblaze.twitchmod.util.BotConfig;
@@ -67,7 +68,11 @@ public final class Main {
         TickHandler.chatSeconds = config.chatSecondsProp.get();
 
         CommandHandlers.enableFrenzyMode = config.frenzyProp.get();
+        FrenzyVote.votesNeeded = config.votesProp.get();
+
         ChatPicker.chatLogLength = config.chatLogProp.get();
+
+        ChatPicker.initCommands();
 
     }
 
@@ -85,6 +90,7 @@ public final class Main {
 
         public final ConfigHelper.ConfigValueListener<Boolean> cooldownProp;
         public final ConfigHelper.ConfigValueListener<Boolean> frenzyProp;
+        public final ConfigHelper.ConfigValueListener<Integer> votesProp;
 
         public final ConfigHelper.ConfigValueListener<Integer> chatLogProp;
 
@@ -122,6 +128,10 @@ public final class Main {
             this.frenzyProp = subscriber.subscribe(builder
                     .comment("Enable Frenzy Mode")
                     .define("frenzyModeEnabled", true));
+
+            this.votesProp = subscriber.subscribe(builder
+                    .comment("How many votes are needed to activate certain commands")
+                    .define("votesNeeded", 3));
 
             this.chatLogProp = subscriber.subscribe(builder
                     .comment("How many messages should be included when chat writes a book")

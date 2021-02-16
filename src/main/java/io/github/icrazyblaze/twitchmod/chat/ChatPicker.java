@@ -227,26 +227,27 @@ public class ChatPicker {
 
             // If the command contains a space, everything after the space is treated like an argument.
             // We chop of the arguments, and check the map for the command.
-            // If we find the command in the map, then we pass it the full message with the arguments.
+
+            // UPDATE: we now use the second part of this split to avoid cutting the commands off the beginning in actual functions.
+            // e.g. before, showMessageBox() would be sent the whole message from twitch chat, and then substring the word "messagebox".
+
             String commandString;
+            String argString;
             if (message.contains(" ")) {
 
-                // Get everything before space (e.g. "messagebox")
+                // Split at the space
                 String[] split = message.split("\\s+");
-                commandString = split[0];
+
+                commandString = split[0]; // Before space (e.g. "messagebox")
+                argString = message.substring(commandString.length());
 
             } else {
                 commandString = message;
+                argString = message;
             }
 
             // Special commands below have extra arguments, so they are registered here.
-            registerCommand(() -> CommandHandlers.messWithInventory(sender), "itemroulette", "roulette");
-            registerCommand(() -> CommandHandlers.shuffleInventory(sender), "shuffle");
-            // UPDATE: moved here from if-else block
-            registerCommand(() -> CommandHandlers.showMessagebox(message), "messagebox");
-            registerCommand(() -> CommandHandlers.addToMessages(message), "addmessage");
-            registerCommand(() -> CommandHandlers.placeSign(message), "sign");
-            registerCommand(() -> CommandHandlers.renameItem(message), "rename");
+            initDynamicCommands(argString, sender);
 
             try {
                 // Invoke command from command map
@@ -354,15 +355,14 @@ public class ChatPicker {
         registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.SATURATION, 200, 255)}), "saturation", "feed");
         registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.JUMP_BOOST, 400, 2)}), "jumpboost", "yeet");
         registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.HASTE, 400, 2)}), "haste", "diggydiggy");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.BAD_OMEN, 400, 0)}), "badomen", "pillager");
-        registerCommand(CommandHandlers::clearEffects, "cleareffects", "milk");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.BAD_OMEN, 400, 0)}), "badomen", "pillager", "raid");
+        registerCommand(() -> PlayerHelper.player().clearActivePotions(), "cleareffects", "milk");
         registerCommand(CommandHandlers::setOnFire, "fire", "burn");
         registerCommand(CommandHandlers::floorIsLava, "lava", "floorislava");
         registerCommand(CommandHandlers::placeWater, "water", "watersbroke");
         registerCommand(CommandHandlers::placeSponge, "sponge");
         registerCommand(CommandHandlers::deathTimer, "timer", "deathtimer");
         registerCommand(CommandHandlers::graceTimer, "peacetimer", "timeout");
-        registerCommand(CommandHandlers::frenzyTimer, "frenzy", "frenzymode", "suddendeath");
         registerCommand(CommandHandlers::drainHealth, "drain", "halfhealth");
         registerCommand(CommandHandlers::spawnAnvil, "anvil"); // Gaiet's favourite command <3
         registerCommand(() -> CommandHandlers.spawnMobBehind(EntityType.CREEPER.create(PlayerHelper.player().world)), "creeper", "awman");
@@ -387,9 +387,9 @@ public class ChatPicker {
         registerCommand(CommandHandlers::breakBlock, "break");
         registerCommand(CommandHandlers::dismount, "dismount", "getoff");
         registerCommand(CommandHandlers::dropItem, "drop", "throw");
-        registerCommand(CommandHandlers::dropAll, "dropall");
+        registerCommand(() -> PlayerHelper.player().inventory.dropAllItems(), "dropall");
         registerCommand(CommandHandlers::infestBlock, "silverfish");
-        registerCommand(CommandHandlers::setRainAndThunder, "rain", "shaun");
+        registerCommand(CommandHandlers::setRainAndThunder, "rain");
         registerCommand(() -> CommandHandlers.setDifficulty(Difficulty.HARD), "hardmode", "isthiseasymode");
         registerCommand(() -> CommandHandlers.setDifficulty(Difficulty.PEACEFUL), "peaceful", "peacefulmode");
         registerCommand(CommandHandlers::placeChest, "chest", "lootbox");
@@ -401,6 +401,28 @@ public class ChatPicker {
         registerCommand(CommandHandlers::enchantItem, "enchant");
         registerCommand(CommandHandlers::curseItem, "bind", "curse");
         registerCommand(CommandHandlers::startWritingBook, "book", "chatlog");
+        registerCommand(CommandHandlers::toggleCrouch, "togglecrouch", "crouch");
+        registerCommand(CommandHandlers::toggleSprint, "togglesprint", "sprint");
+        registerCommand(CommandHandlers::pumpkin, "pumpkin");
+
+    }
+
+    /**
+     * Commands that are registered here need to be re-added to the command registry every time they run because they have changing ("dynamic") arguments.
+     *
+     * @param argString the argument for the command
+     * @param sender    the name of the command sender
+     */
+    public static void initDynamicCommands(String argString, String sender) {
+
+        registerCommand(() -> CommandHandlers.messWithInventory(sender), "itemroulette", "roulette");
+        registerCommand(() -> CommandHandlers.shuffleInventory(sender), "shuffle");
+        registerCommand(() -> CommandHandlers.showMessagebox(argString), "messagebox");
+        registerCommand(() -> CommandHandlers.messagesList.add(argString), "addmessage");
+        registerCommand(() -> CommandHandlers.placeSign(argString), "sign");
+        registerCommand(() -> CommandHandlers.renameItem(argString), "rename");
+        registerCommand(() -> CommandHandlers.rollTheDice(sender), "rtd", "roll", "dice");
+        registerCommand(() -> FrenzyVote.vote(sender), "frenzy", "frenzymode", "suddendeath");
 
     }
 

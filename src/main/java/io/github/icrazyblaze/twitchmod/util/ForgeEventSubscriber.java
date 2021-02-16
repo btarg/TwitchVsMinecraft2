@@ -2,7 +2,6 @@ package io.github.icrazyblaze.twitchmod.util;
 
 import com.mojang.brigadier.CommandDispatcher;
 import io.github.icrazyblaze.twitchmod.Main;
-import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.command.*;
 import io.github.icrazyblaze.twitchmod.discord.DiscordConnectCommand;
 import io.github.icrazyblaze.twitchmod.discord.DiscordConnectionHelper;
@@ -11,9 +10,9 @@ import io.github.icrazyblaze.twitchmod.discord.TokenCommand;
 import io.github.icrazyblaze.twitchmod.irc.TwitchConnectionHelper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 
 /**
@@ -25,11 +24,9 @@ import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 public class ForgeEventSubscriber {
 
     @SubscribeEvent
-    public static void serverStarting(FMLServerStartingEvent event) {
+    public static void registerCommands(RegisterCommandsEvent event) {
 
-        // Register commands
-        // Dispatcher is now a variable, like it should be
-        CommandDispatcher<CommandSource> dispatcher = event.getServer().getCommandManager().getDispatcher();
+        CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
         dispatcher.register(Commands.literal("ttv")
                 .then(ConnectCommand.register())
                 .then(DisconnectCommand.register())
@@ -48,7 +45,6 @@ public class ForgeEventSubscriber {
         );
 
         Main.updateConfig();
-        ChatPicker.initCommands();
 
     }
 

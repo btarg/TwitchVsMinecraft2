@@ -14,13 +14,12 @@ public class MessageboxPacket {
         fromBytes(buf);
     }
 
-    public void fromBytes(PacketBuffer buf) {
-        toSend = buf.readString(32767);
-    }
-
-
     public MessageboxPacket(String message) {
         this.toSend = message;
+    }
+
+    public void fromBytes(PacketBuffer buf) {
+        toSend = buf.readString(32767);
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {

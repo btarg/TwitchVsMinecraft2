@@ -102,7 +102,7 @@ public class TickHandler {
                 }
                 if (deathTimerSeconds == 0) {
 
-                    CommandHandlers.killPlayer();
+                    PlayerHelper.player().onKillCommand();
                     deathTimer = false;
 
                 }

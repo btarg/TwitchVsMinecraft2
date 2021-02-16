@@ -12,6 +12,7 @@ buildscript {
 apply plugin: "java"
 apply plugin: "net.minecraftforge.gradle"
 apply plugin: "com.github.johnrengelman.shadow"
+import net.minecraftforge.gradle.common.task.SignJar
 
 version = "${mod_version}"
 group = "io.github.icrazyblaze.twitchmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -34,15 +35,13 @@ minecraft {
     runs {
         client {
             workingDirectory project.file("run")
-            // Recommended logging data for a userdev environment
-//            property "forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP"
+
             mods { twitchmod { source sourceSets.main } }
         }
 
         server {
             workingDirectory project.file("run")
-            // Recommended logging data for a userdev environment
-//            property "forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP"
+
             mods { twitchmod { source sourceSets.main } }
         }
     }
@@ -112,4 +111,23 @@ jar {
 
 }
 
+task signJar(type: SignJar, dependsOn: jar) {
+
+    // Skips if the keyStore property is missing.
+    onlyIf {
+        project.hasProperty('keyStore')
+    }
+
+    // findProperty allows us to reference the property without it existing.
+    // Using project.propName would cause the script to fail validation if
+    // the property did not exist.
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStoreKeyPass')
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+}
+
 tasks.assemble.dependsOn shadowJar
+tasks.build.dependsOn signJar

@@ -10,10 +10,13 @@ import io.github.icrazyblaze.twitchmod.util.BotConfig;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 
 public class TestCommand implements Command<CommandSource> {
 
     private static final TestCommand CMD = new TestCommand();
+    private static final ThreadLocalRandom rand = ThreadLocalRandom.current();
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("test")
@@ -33,7 +36,7 @@ public class TestCommand implements Command<CommandSource> {
         }
 
         ChatPicker.forceCommands = true;
-        ChatPicker.checkChat(message, "TestUser");
+        ChatPicker.checkChat(message, "TestUser" + rand.nextInt());
 
         return SINGLE_SUCCESS;
 
