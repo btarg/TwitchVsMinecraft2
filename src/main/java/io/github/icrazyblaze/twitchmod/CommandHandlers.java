@@ -107,7 +107,7 @@ public class CommandHandlers {
 
         List<String> commands = ChatPicker.getRegisteredCommands();
         String randomCommand = commands.get(rand.nextInt(commands.toArray().length));
-        broadcastMessage(new StringTextComponent("The dice was rolled!"));
+        broadcastMessage(new StringTextComponent(sender + " rolled the dice!"));
         ChatPicker.checkChat(randomCommand, sender);
 
     }
@@ -736,10 +736,40 @@ public class CommandHandlers {
 
         ServerPlayerEntity player = player();
 
-        if (player.isOnePlayerRiding()) {
+        if (player.isPassenger()) {
             player.stopRiding();
         }
 
+    }
+
+    public static void chorusTeleport() {
+
+        ServerPlayerEntity player = player();
+        World world = player.world;
+
+        // Code taken from ChorusFruitItem in vanilla
+        if (!world.isRemote) {
+            double d0 = player.getPosX();
+            double d1 = player.getPosY();
+            double d2 = player.getPosZ();
+
+            for (int i = 0; i < 16; ++i) {
+                double d3 = player.getPosX() + (player.getRNG().nextDouble() - 0.5D) * 16.0D;
+                double d4 = MathHelper.clamp(player.getPosY() + (double) (player.getRNG().nextInt(16) - 8), 0.0D, world.func_234938_ad_() - 1);
+                double d5 = player.getPosZ() + (player.getRNG().nextDouble() - 0.5D) * 16.0D;
+                if (player.isPassenger()) {
+                    player.stopRiding();
+                }
+
+                if (player.attemptTeleport(d3, d4, d5, true)) {
+                    SoundEvent soundevent = SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT;
+                    world.playSound(player, d0, d1, d2, soundevent, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                    player.playSound(soundevent, 1.0F, 1.0F);
+                    break;
+                }
+            }
+
+        }
     }
 
     public static void showMessagebox(String message) {

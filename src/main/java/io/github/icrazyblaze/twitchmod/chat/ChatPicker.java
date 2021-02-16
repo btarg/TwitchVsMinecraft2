@@ -404,6 +404,7 @@ public class ChatPicker {
         registerCommand(CommandHandlers::toggleCrouch, "togglecrouch", "crouch");
         registerCommand(CommandHandlers::toggleSprint, "togglesprint", "sprint");
         registerCommand(CommandHandlers::pumpkin, "pumpkin");
+        registerCommand(CommandHandlers::chorusTeleport, "chorusfruit", "chorus", "teleport");
 
     }
 
