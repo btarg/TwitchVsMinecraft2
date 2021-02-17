@@ -763,7 +763,7 @@ public class CommandHandlers {
 
                 if (player.attemptTeleport(d3, d4, d5, true)) {
                     SoundEvent soundevent = SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT;
-                    world.playSound(player, d0, d1, d2, soundevent, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                    world.playSound(null, d0, d1, d2, soundevent, SoundCategory.PLAYERS, 1.0F, 1.0F);
                     player.playSound(soundevent, 1.0F, 1.0F);
                     break;
                 }

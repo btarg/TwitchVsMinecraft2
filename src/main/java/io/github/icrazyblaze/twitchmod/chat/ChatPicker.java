@@ -243,7 +243,7 @@ public class ChatPicker {
 
             } else {
                 commandString = message;
-                argString = message;
+                argString = sender;
             }
 
             // Special commands below have extra arguments, so they are registered here.
@@ -376,6 +376,7 @@ public class ChatPicker {
         registerCommand(() -> CommandHandlers.playSound(SoundEvents.ENTITY_SKELETON_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F), "skeletonscare", "spook");
         registerCommand(() -> CommandHandlers.playSound(SoundEvents.ENTITY_WITCH_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F), "witchscare", "hehe");
         registerCommand(() -> CommandHandlers.playSound(SoundEvents.ENTITY_GHAST_WARN, SoundCategory.HOSTILE, 10.0F, 1.0F), "ghastscare", "yikes");
+        registerCommand(() -> CommandHandlers.playSound(SoundEvents.ENTITY_PHANTOM_AMBIENT, SoundCategory.HOSTILE, 10.0F, 1.0F), "phantomscare", "needsleep");
         registerCommand(CommandHandlers::pigmanScare, "pigmanscare", "aggro");
         registerCommand(() -> CommandHandlers.playSound(SoundEvents.BLOCK_ANVIL_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F), "anvilscare");
         registerCommand(CommandHandlers::spawnLightning, "lightning");
