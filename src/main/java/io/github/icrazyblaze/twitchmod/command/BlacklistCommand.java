@@ -17,20 +17,29 @@ public class BlacklistCommand implements Command<CommandSource> {
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("blacklist")
                 .requires(cs -> cs.hasPermissionLevel(0))
-                .then(Commands.argument("toadd", StringArgumentType.greedyString()).executes(CMD));
+                .executes(CMD::showMessage)
+                .then(Commands.argument("command", StringArgumentType.greedyString()).executes(CMD));
     }
 
     @Override
     public int run(CommandContext<CommandSource> context) {
 
         // Get message and simulate command
-        String message = StringArgumentType.getString(context, "toadd");
+        String message = StringArgumentType.getString(context, "command");
 
         // Add to blacklist
         ChatPicker.addToBlacklist(message);
-        context.getSource().sendFeedback(new StringTextComponent("New blacklist: " + ChatPicker.blacklist.toString()), false);
+
+        showMessage(context);
 
         return SINGLE_SUCCESS;
 
+    }
+
+    public int showMessage(CommandContext<CommandSource> context) {
+
+        context.getSource().sendFeedback(new StringTextComponent("Blacklisted commands: " + ChatPicker.blacklist.toString()), false);
+
+        return SINGLE_SUCCESS;
     }
 }

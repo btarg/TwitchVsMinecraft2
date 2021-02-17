@@ -27,6 +27,7 @@ import java.util.function.Supplier;
 
 /**
  * This class is responsible for picking commands from chat and running them.
+ * Command registering and blacklist operations are done in this class.
  */
 public class ChatPicker {
 
@@ -50,6 +51,10 @@ public class ChatPicker {
      * @param toAdd The string to add to the blacklist file.
      */
     public static void addToBlacklist(String toAdd) {
+
+        if (blacklist.contains(toAdd)) {
+            return;
+        }
 
         try {
 
@@ -84,6 +89,15 @@ public class ChatPicker {
             // Remove all empty objects
             blacklist.removeAll(Arrays.asList("", null));
 
+            // Remove prefixes from the start of commands in the blacklist
+            for (int i = 0; i < blacklist.size(); i++) {
+                if (blacklist.get(i).startsWith(BotConfig.prefix)) {
+
+                    blacklist.set(i, blacklist.get(i).substring(BotConfig.prefix.length()));
+
+                }
+            }
+
         } catch (IOException e) {
             Main.logger.error(e);
         }
@@ -115,6 +129,16 @@ public class ChatPicker {
 
     }
 
+    public static boolean isBlacklisted(String command) {
+
+        if (!blacklist.isEmpty()) {
+            return blacklist.contains(command);
+        } else {
+            return false;
+        }
+
+    }
+
     /**
      * Checks the command against the blacklist, unless force commands is enabled.
      *
@@ -129,6 +153,10 @@ public class ChatPicker {
         // Remove the prefix
         if (message.startsWith(BotConfig.prefix)) {
             message = message.substring(BotConfig.prefix.length());
+
+            if (!commands.containsKey(message))
+                return;
+
         } else if (tempLogMessages) {
 
             // If a message is not a command and temp logging is enabled, log the message
@@ -157,58 +185,25 @@ public class ChatPicker {
 
 
         // Only add the message if it is not blacklisted, and if the command isn't the same as the last
-        loadBlacklistFile();
-
-        if (!blacklist.isEmpty()) {
-
-            for (String str : blacklist) {
-
-                if (message.contains(str)) {
-                    Main.logger.info("Command not executed: command is blacklisted.");
-                } else {
-
-                    if (lastCommand != null && cooldownEnabled) {
-
-                        if (!message.equalsIgnoreCase(lastCommand)) {
-
-                            newChats.add(message);
-                            newChatSenders.add(sender);
-
-                        } else {
-                            Main.logger.info(String.format("Command not executed: cooldown is active for this command (%s).", message));
-                        }
-
-                    } else {
-
-                        newChats.add(message);
-                        newChatSenders.add(sender);
-
-                    }
-                }
-                break;
-            }
-
+        if (isBlacklisted(message)) {
+            Main.logger.info("Command not executed: command is blacklisted.");
+            return;
         }
-        // Fix for empty blacklist bug: accept any message (also runs cooldown check)
-        else {
+        if (lastCommand != null && cooldownEnabled) {
 
-            if (lastCommand != null && cooldownEnabled) {
-
-                if (!message.equalsIgnoreCase(lastCommand)) {
-
-                    newChats.add(message);
-                    newChatSenders.add(sender);
-
-                } else {
-                    Main.logger.info(String.format("Command not executed: cooldown is active for this command (%s).", message));
-                }
-
-            } else {
+            if (!message.equalsIgnoreCase(lastCommand)) {
 
                 newChats.add(message);
                 newChatSenders.add(sender);
 
+            } else {
+                Main.logger.info(String.format("Command not executed: cooldown is active for this command (%s).", message));
             }
+
+        } else {
+
+            newChats.add(message);
+            newChatSenders.add(sender);
 
         }
 
@@ -243,7 +238,7 @@ public class ChatPicker {
 
             } else {
                 commandString = message;
-                argString = sender;
+                argString = sender + " says hello!";
             }
 
             // Special commands below have extra arguments, so they are registered here.
@@ -400,7 +395,7 @@ public class ChatPicker {
         registerCommand(CommandHandlers::setSpawn, "spawnpoint", "setspawn");
         registerCommand(CommandHandlers::placeGlass, "glass");
         registerCommand(CommandHandlers::enchantItem, "enchant");
-        registerCommand(CommandHandlers::curseItem, "bind", "curse");
+        registerCommand(CommandHandlers::curseArmour, "bind", "curse");
         registerCommand(CommandHandlers::startWritingBook, "book", "chatlog");
         registerCommand(CommandHandlers::toggleCrouch, "togglecrouch", "crouch");
         registerCommand(CommandHandlers::toggleSprint, "togglesprint", "sprint");

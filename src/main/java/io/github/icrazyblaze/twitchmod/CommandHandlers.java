@@ -70,6 +70,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * @see io.github.icrazyblaze.twitchmod.chat.ChatPicker
  */
+@SuppressWarnings("unchecked")
 public class CommandHandlers {
 
     private static final ThreadLocalRandom rand = ThreadLocalRandom.current();
@@ -356,7 +357,7 @@ public class CommandHandlers {
         double dz = player.getPosZ() + (lookVector.z * 2);
 
         Entity ent = new FireballEntity(EntityType.FIREBALL, player.world);
-        ent.setPosition(dx, player.getPosY(), dz);
+        ent.setPosition(dx, player.getPosYEye(), dz);
         ent.setVelocity(lookVector.x * 3, lookVector.y, lookVector.z * 3);
 
         player.world.addEntity(ent);
@@ -427,10 +428,9 @@ public class CommandHandlers {
         ServerPlayerEntity player = player();
 
         int range = 50;
-        BlockPos bpos;
 
         Vector3d lookVector = player.getLookVec();
-        Vector3d posVector = new Vector3d(player.getPosX(), player.getPosY() + player.getEyeHeight(), player.getPosZ());
+        Vector3d posVector = new Vector3d(player.getPosX(), player.getPosYEye(), player.getPosZ());
 
         RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player);
         RayTraceResult rayTrace = player.world.rayTraceBlocks(context);
@@ -439,7 +439,7 @@ public class CommandHandlers {
             return;
         }
 
-        bpos = new BlockPos(rayTrace.getHitVec());
+        BlockPos bpos = new BlockPos(rayTrace.getHitVec());
 
         player.world.destroyBlock(bpos, false);
 
@@ -450,7 +450,6 @@ public class CommandHandlers {
         ServerPlayerEntity player = player();
 
         int range = 50;
-        BlockPos bpos;
 
         Vector3d lookVector = player.getLookVec();
         Vector3d posVector = new Vector3d(player.getPosX(), player.getPosY() + player.getEyeHeight(), player.getPosZ());
@@ -462,7 +461,7 @@ public class CommandHandlers {
             return;
         }
 
-        bpos = new BlockPos(rayTrace.getHitVec());
+        BlockPos bpos = new BlockPos(rayTrace.getHitVec());
 
         Block thisBlock = player.world.getBlockState(bpos).getBlock();
 
@@ -515,6 +514,11 @@ public class CommandHandlers {
     public static void removeRandom() {
 
         ServerPlayerEntity player = player();
+
+        // Prevent loop
+        if (player.inventory.isEmpty()) {
+            return;
+        }
 
         // Delete a random item
         int r = rand.nextInt(player.inventory.getSizeInventory());
@@ -576,8 +580,8 @@ public class CommandHandlers {
 
         ServerPlayerEntity player = player();
 
-        ItemStack tempItem = ItemStack.EMPTY;
-        int tempRandNum = 0;
+        ItemStack tempItem;
+        int tempRandNum;
 
         for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
 
@@ -674,7 +678,7 @@ public class CommandHandlers {
 
     }
 
-    public static void curseItem() {
+    public static void curseArmour() {
 
         ServerPlayerEntity player = player();
 
@@ -838,15 +842,8 @@ public class CommandHandlers {
         int maxlength = 15;
         String[] splitMessage = message.split("(?<=\\G.{" + maxlength + "})");
 
-
         BlockPos bpos = player.getPosition();
-
-        double xpos = player.getPosX();
-        double ypos = player.getPosY();
-        double zpos = player.getPosZ();
-
-        BlockPos bposBelow = new BlockPos(xpos, ypos - 1, zpos);
-
+        BlockPos bposBelow = new BlockPos(bpos.getX(), bpos.getY() - 1, bpos.getZ());
 
         // Rotate the sign to face the player
         int playerFace = MathHelper.floor((double) ((player.rotationYaw + 180.0F) * 16.0F / 360.0F) + 0.5D) & 15;
@@ -894,9 +891,7 @@ public class CommandHandlers {
 
             if (tileEntity instanceof ChestTileEntity) {
 
-                List<ResourceLocation> lootList = Arrays.asList(lootArray);
-
-                ((ChestTileEntity) tileEntity).setLootTable(lootList.get(rand.nextInt(lootList.size())), rand.nextLong());
+                ((ChestTileEntity) tileEntity).setLootTable(lootArray[rand.nextInt(lootArray.length)], rand.nextLong());
                 ((ChestTileEntity) tileEntity).fillWithLoot(player);
 
             }

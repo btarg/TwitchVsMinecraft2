@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "3.+", changing: true
-        classpath "com.github.jengelman.gradle.plugins:shadow:4.0.4"
+        classpath "com.github.jengelman.gradle.plugins:shadow:5.2.0"
     }
 }
 apply plugin: "java"
@@ -14,9 +14,9 @@ apply plugin: "net.minecraftforge.gradle"
 apply plugin: "com.github.johnrengelman.shadow"
 import net.minecraftforge.gradle.common.task.SignJar
 
-version = "${mod_version}"
-group = "io.github.icrazyblaze.twitchmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "twitchmod"
+version = mod_version
+group = package_group
+archivesBaseName = mod_id
 
 repositories {
     // Put remote maven repositories here
@@ -100,11 +100,11 @@ jar {
     manifest {
         attributes([
                 "Specification-Title"     : "${archivesBaseName}",
-                "Specification-Vendor"    : "icrazyblaze",
+                "Specification-Vendor"    : "${author}",
                 "Specification-Version"   : "1",
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : "${version}",
-                "Implementation-Vendor"   : "icrazyblaze",
+                "Implementation-Vendor"   : "${author}",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
