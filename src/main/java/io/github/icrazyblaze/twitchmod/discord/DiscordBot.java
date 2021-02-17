@@ -106,7 +106,7 @@ public class DiscordBot extends ListenerAdapter {
 
             message = message.substring(BotConfig.prefix.length());
 
-            // Moved adding to and clearing blacklist to the Twitch chat (only for mods and broadcasters)
+            // Add to and clear blacklist from Discord (admins only)
             if (message.startsWith("blacklist ")) {
 
                 if (isAdmin) {

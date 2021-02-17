@@ -25,7 +25,7 @@ public class TestCommand implements Command<CommandSource> {
                 .requires(cs -> cs.hasPermissionLevel(0))
                 .then(Commands.argument("runAndIgnoreBlacklist", BoolArgumentType.bool())
                 .then(Commands.argument("command", StringArgumentType.greedyString())
-                
+
                 .executes(CMD)));
     }
 

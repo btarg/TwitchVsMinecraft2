@@ -35,6 +35,7 @@ public final class Main {
 
         // Initialise system property
         System.setProperty("twitch_oauth_key", "");
+        System.setProperty("discord_bot_token", "");
 
         // Register event subscribers
         MinecraftForge.EVENT_BUS.register(ForgeEventSubscriber.class);
