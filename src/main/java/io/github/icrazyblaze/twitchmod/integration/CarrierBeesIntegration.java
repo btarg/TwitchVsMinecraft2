@@ -4,7 +4,7 @@ import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import net.minecraftforge.fml.ModList;
 import noobanidus.mods.carrierbees.init.ModEntities;
 
-import static io.github.icrazyblaze.twitchmod.chat.ChatPicker.registerCommand;
+import static io.github.icrazyblaze.twitchmod.chat.ChatCommands.registerCommand;
 
 public class CarrierBeesIntegration {
 

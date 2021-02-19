@@ -1,5 +1,6 @@
 package io.github.icrazyblaze.twitchmod;
 
+import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.gui.MessageboxScreen;
@@ -108,7 +109,7 @@ public class CommandHandlers {
 
     public static void rollTheDice(String sender) {
 
-        List<String> commands = ChatPicker.getRegisteredCommands();
+        List<String> commands = ChatCommands.getRegisteredCommands();
         String randomCommand = commands.get(rand.nextInt(commands.toArray().length));
         broadcastMessage(new StringTextComponent(sender + " rolled the dice!"));
         ChatPicker.checkChat(randomCommand, sender);

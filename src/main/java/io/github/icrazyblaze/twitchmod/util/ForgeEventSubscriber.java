@@ -2,6 +2,7 @@ package io.github.icrazyblaze.twitchmod.util;
 
 import com.mojang.brigadier.CommandDispatcher;
 import io.github.icrazyblaze.twitchmod.Main;
+import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.command.*;
 import io.github.icrazyblaze.twitchmod.discord.DiscordConnectCommand;
@@ -75,7 +76,7 @@ public class ForgeEventSubscriber {
 
     @SubscribeEvent
     public static void serverStarted(FMLServerStartedEvent event) {
-        ChatPicker.initCommands();
+        ChatCommands.initCommands();
     }
 
 
