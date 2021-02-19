@@ -10,9 +10,9 @@ import net.minecraft.command.Commands;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
-public class DisconnectCommand implements Command<CommandSource> {
+public class TwitchDisconnectCommand implements Command<CommandSource> {
 
-    private static final DisconnectCommand CMD = new DisconnectCommand();
+    private static final TwitchDisconnectCommand CMD = new TwitchDisconnectCommand();
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("disconnect")

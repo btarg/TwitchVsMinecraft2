@@ -78,7 +78,7 @@ public class DiscordBot extends ListenerAdapter {
 
         boolean isAdmin = event.getMember().hasPermission(Permission.ADMINISTRATOR);
 
-        if ((!message.startsWith(BotConfig.prefix) || BotConfig.showCommands) && BotConfig.showChatMessages) {
+        if ((!message.startsWith(BotConfig.prefix) || BotConfig.showCommandsInChat) && BotConfig.showChatMessages) {
 
             TextFormatting format = CalculateMinecraftColor.findNearestMinecraftColor(userColor);
             List<String> roleNames = new ArrayList<>();
@@ -129,7 +129,7 @@ public class DiscordBot extends ListenerAdapter {
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "disconnect") && isAdmin) {
             jda.shutdown();
 
-        } else if (message.startsWith(BotConfig.prefix) || ChatPicker.tempLogMessages) {
+        } else if (message.startsWith(BotConfig.prefix) || ChatPicker.logMessages) {
 
             String finalMessage = message;
 

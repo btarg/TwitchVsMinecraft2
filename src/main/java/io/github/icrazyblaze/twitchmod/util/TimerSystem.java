@@ -5,7 +5,7 @@ import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class TickHandler {
+public class TimerSystem {
 
     public static boolean enableTimers = true;
 
@@ -15,14 +15,14 @@ public class TickHandler {
 
     public static int deathTimerTicks = 0;
     public static int deathTimerSeconds = 60;
-    public static boolean deathTimer = false;
+    public static boolean deathTimerEnabled = false;
 
     public static int frenzyTimerTicks = 0;
     public static int frenzyTimerSeconds = 10;
 
     public static int peaceTimerTicks = 0;
     public static int peaceTimerSeconds = 30;
-    public static boolean peaceTimer = false;
+    public static boolean peaceTimerEnabled = false;
 
     public static int messageTicks = 0;
     public static int messageSecondsTrigger = 240;
@@ -87,7 +87,7 @@ public class TickHandler {
 
             }
 
-            if (deathTimer) {
+            if (deathTimerEnabled) {
 
                 deathTimerTicks++;
 
@@ -103,7 +103,7 @@ public class TickHandler {
                 if (deathTimerSeconds == 0) {
 
                     PlayerHelper.player().onKillCommand();
-                    deathTimer = false;
+                    deathTimerEnabled = false;
 
                 }
             }
@@ -128,7 +128,7 @@ public class TickHandler {
                 }
             }
 
-            if (peaceTimer) {
+            if (peaceTimerEnabled) {
 
                 peaceTimerTicks++;
 

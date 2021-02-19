@@ -40,8 +40,8 @@ public class ForgeEventSubscriber {
 
         CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
         dispatcher.register(Commands.literal("ttv")
-                .then(ConnectCommand.register())
-                .then(DisconnectCommand.register())
+                .then(TwitchConnectCommand.register())
+                .then(TwitchDisconnectCommand.register())
                 .then(SetKeyCommand.register())
                 .then(TestCommand.register())
                 .then(StatusCommand.register())
@@ -67,7 +67,7 @@ public class ForgeEventSubscriber {
 
             // Set the server reference for PlayerHelper
             PlayerHelper.defaultServer = event.world.getServer();
-            TickHandler.enableTimers = true;
+            TimerSystem.enableTimers = true;
 
         }
 
@@ -89,7 +89,7 @@ public class ForgeEventSubscriber {
             DiscordConnectionHelper.disconnectDiscord();
         }
 
-        TickHandler.enableTimers = false;
+        TimerSystem.enableTimers = false;
         PlayerHelper.defaultServer = null; // Set to null again to avoid errors when restarting world
 
     }

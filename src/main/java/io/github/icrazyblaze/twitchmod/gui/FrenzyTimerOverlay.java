@@ -2,7 +2,7 @@ package io.github.icrazyblaze.twitchmod.gui;
 
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.util.Reference;
-import io.github.icrazyblaze.twitchmod.util.TickHandler;
+import io.github.icrazyblaze.twitchmod.util.TimerSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
@@ -24,7 +24,7 @@ public class FrenzyTimerOverlay {
         if (ChatPicker.instantCommands) {
 
             Minecraft mc = Minecraft.getInstance();
-            String text = "FRENZY MODE: " + TickHandler.frenzyTimerSeconds;
+            String text = "FRENZY MODE: " + TimerSystem.frenzyTimerSeconds;
 
             mc.fontRenderer.drawStringWithShadow(event.getMatrixStack(), text, 4, 4, TextFormatting.GOLD.getColor());
 

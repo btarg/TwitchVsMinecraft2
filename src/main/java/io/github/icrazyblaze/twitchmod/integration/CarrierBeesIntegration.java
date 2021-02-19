@@ -8,13 +8,9 @@ import static io.github.icrazyblaze.twitchmod.chat.ChatPicker.registerCommand;
 
 public class CarrierBeesIntegration {
 
-    public static boolean isCarrierBeesLoaded() {
-        return ModList.get().isLoaded("carrierbees");
-    }
-
     public static void initDynamicCommands(String sender) {
 
-        if (!isCarrierBeesLoaded())
+        if (!ModList.get().isLoaded("carrierbees"))
             return;
 
         registerCommand(() -> CommandHandlers.spawnCarrierBee(sender, ModEntities.CARRIER_BEE.get()), "carrierbee", "bee");

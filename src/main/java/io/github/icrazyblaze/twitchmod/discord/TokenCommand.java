@@ -19,14 +19,14 @@ public class TokenCommand implements Command<CommandSource> {
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("token")
                 .requires(cs -> cs.hasPermissionLevel(0))
-                .then(Commands.argument("tokenstring", StringArgumentType.greedyString()).executes(CMD));
+                .then(Commands.argument("token", StringArgumentType.greedyString()).executes(CMD));
     }
 
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
 
         // Get key and store in system properties
-        String key = StringArgumentType.getString(context, "tokenstring");
+        String key = StringArgumentType.getString(context, "token");
 
         System.setProperty("discord_bot_token", key);
 

@@ -1,7 +1,7 @@
 package io.github.icrazyblaze.twitchmod.gui;
 
 import io.github.icrazyblaze.twitchmod.util.Reference;
-import io.github.icrazyblaze.twitchmod.util.TickHandler;
+import io.github.icrazyblaze.twitchmod.util.TimerSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -19,10 +19,10 @@ public class DeathTimerOverlay {
             return;
         }
 
-        if (TickHandler.deathTimer) {
+        if (TimerSystem.deathTimerEnabled) {
 
             Minecraft mc = Minecraft.getInstance();
-            String text = "TIMER: " + TickHandler.deathTimerSeconds;
+            String text = "TIMER: " + TimerSystem.deathTimerSeconds;
 
             mc.fontRenderer.drawStringWithShadow(event.getMatrixStack(), text, 4, 4, Integer.parseInt("AA0000", 16));
 

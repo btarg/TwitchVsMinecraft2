@@ -21,7 +21,7 @@ public class QueueCommand implements Command<CommandSource> {
     @Override
     public int run(CommandContext<CommandSource> context) {
 
-        context.getSource().sendFeedback(new StringTextComponent("Possible commands: " + ChatPicker.newChats.toString()), false);
+        context.getSource().sendFeedback(new StringTextComponent("Possible commands: " + ChatPicker.chatBuffer.toString()), false);
         return SINGLE_SUCCESS;
     }
 }

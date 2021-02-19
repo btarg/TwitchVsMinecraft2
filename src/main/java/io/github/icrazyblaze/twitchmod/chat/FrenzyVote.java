@@ -26,8 +26,6 @@ public class FrenzyVote {
             }
 
 
-        } else {
-            return;
         }
 
     }

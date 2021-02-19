@@ -14,7 +14,7 @@ public class ListCommand implements Command<CommandSource> {
     private static final ListCommand CMD = new ListCommand();
 
     public static ArgumentBuilder<CommandSource, ?> register() {
-        return Commands.literal("allcommands")
+        return Commands.literal("list")
                 .requires(cs -> cs.hasPermissionLevel(0))
                 .executes(CMD);
     }

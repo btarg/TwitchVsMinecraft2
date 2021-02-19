@@ -9,6 +9,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -24,18 +25,19 @@ public class MessageboxScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
 
         this.renderBackground(stack);
 
         RenderSystem.color4f(1f, 1f, 1f, 1f);
+        assert minecraft != null;
         minecraft.getTextureManager().bindTexture(BG_TEXTURE);
 
         // Show the background
         blit(stack, (width / 2) - 88, (height / 2) - 83, 0, 0, 256, 256);
 
         // Draw title
-        minecraft.fontRenderer.drawString(stack, "Message Box", width / 2f - 32, height / 2f - 78, 4210752);
+        font.drawString(stack, "Message Box", width / 2f - 32, height / 2f - 78, 4210752);
 
         // Draw message
         List<IReorderingProcessor> text = font.trimStringToWidth(new StringTextComponent(message), 165);
@@ -50,7 +52,7 @@ public class MessageboxScreen extends Screen {
     @Override
     public void init() {
 
-        Button btn = new Button(width / 2 - 75, height / 2 + 55, 150, 20, new StringTextComponent(I18n.format("gui.done")), button -> stopDisplay());
+        Button btn = new Button(width / 2 - 75, height / 2 + 55, 150, 20, new StringTextComponent(I18n.format("gui.done")), button -> minecraft.player.closeScreen());
         addButton(btn);
 
     }
@@ -60,7 +62,4 @@ public class MessageboxScreen extends Screen {
         return true;
     }
 
-    private void stopDisplay() {
-        minecraft.player.closeScreen();
-    }
 }

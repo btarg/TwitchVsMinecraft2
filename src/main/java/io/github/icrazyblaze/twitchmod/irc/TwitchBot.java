@@ -78,7 +78,7 @@ public class TwitchBot extends ListenerAdapter {
 
             }
 
-            if (!message.startsWith(BotConfig.prefix) || BotConfig.showCommands) {
+            if (!message.startsWith(BotConfig.prefix) || BotConfig.showCommandsInChat) {
 
                 showText = new StringTextComponent(String.format("%s<%sTwitch %s%s%s> %s", TextFormatting.WHITE, TextFormatting.DARK_PURPLE, format, sender, TextFormatting.WHITE, message));
 
@@ -127,9 +127,9 @@ public class TwitchBot extends ListenerAdapter {
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "reconnect")) {
 
-            TwitchConnectionHelper.tryConnect();
+            TwitchConnectionHelper.login();
 
-        } else if (message.startsWith(BotConfig.prefix) || ChatPicker.tempLogMessages) {
+        } else if (message.startsWith(BotConfig.prefix) || ChatPicker.logMessages) {
 
             String finalMessage = message;
 

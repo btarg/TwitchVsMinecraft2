@@ -7,9 +7,9 @@ import io.github.icrazyblaze.twitchmod.irc.TwitchConnectionHelper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 
-public class ConnectCommand implements Command<CommandSource> {
+public class TwitchConnectCommand implements Command<CommandSource> {
 
-    private static final ConnectCommand CMD = new ConnectCommand();
+    private static final TwitchConnectCommand CMD = new TwitchConnectCommand();
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("connect")
@@ -19,7 +19,7 @@ public class ConnectCommand implements Command<CommandSource> {
 
     @Override
     public int run(CommandContext<CommandSource> context) {
-        TwitchConnectionHelper.tryConnect();
+        TwitchConnectionHelper.login();
         return SINGLE_SUCCESS;
     }
 }

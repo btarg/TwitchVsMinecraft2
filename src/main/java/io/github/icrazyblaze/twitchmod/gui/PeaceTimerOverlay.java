@@ -1,7 +1,7 @@
 package io.github.icrazyblaze.twitchmod.gui;
 
 import io.github.icrazyblaze.twitchmod.util.Reference;
-import io.github.icrazyblaze.twitchmod.util.TickHandler;
+import io.github.icrazyblaze.twitchmod.util.TimerSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
@@ -20,10 +20,10 @@ public class PeaceTimerOverlay {
             return;
         }
 
-        if (TickHandler.peaceTimer) {
+        if (TimerSystem.peaceTimerEnabled) {
 
             Minecraft mc = Minecraft.getInstance();
-            String text = "COMMANDS DISABLED: " + TickHandler.peaceTimerSeconds;
+            String text = "COMMANDS DISABLED: " + TimerSystem.peaceTimerSeconds;
 
             mc.fontRenderer.drawStringWithShadow(event.getMatrixStack(), text, 4, 4, TextFormatting.AQUA.getColor());
 

@@ -14,7 +14,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Difficulty;
 import net.minecraftforge.fml.loading.FMLPaths;
-import noobanidus.mods.carrierbees.init.ModEntities;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -33,20 +32,20 @@ import java.util.function.Supplier;
  */
 public class ChatPicker {
 
-    private static final Supplier<Path> path = () -> FMLPaths.CONFIGDIR.get().resolve("twitch-blacklist.txt");
-    private static final Map<String, Runnable> commands = new HashMap<>();
+    private static final Supplier<Path> blacklistPath = () -> FMLPaths.CONFIGDIR.get().resolve("twitch-blacklist.txt");
+    private static final Map<String, Runnable> commandMap = new HashMap<>();
     public static List<String> blacklist;
-    public static ArrayList<String> newChats = new ArrayList<>();
-    public static ArrayList<String> newChatSenders = new ArrayList<>();
+    public static ArrayList<String> chatBuffer = new ArrayList<>();
+    public static ArrayList<String> chatSenderBuffer = new ArrayList<>();
     public static boolean cooldownEnabled = false;
     public static boolean forceCommands = false;
     public static boolean instantCommands = false;
     public static boolean enabled = true;
-    public static boolean tempLogMessages = false;
+    public static boolean logMessages = false;
     public static ArrayList<String> tempChatLog = new ArrayList<>();
     public static int chatLogLength = 10;
-    private static File textfile;
-    private static boolean hasExecuted = false;
+    private static File blacklistTextFile;
+    private static boolean commandHasExecuted = false;
     private static String lastCommand = null;
 
     /**
@@ -61,7 +60,7 @@ public class ChatPicker {
         try {
 
             // Append to file
-            FileWriter fr = new FileWriter(textfile, true);
+            FileWriter fr = new FileWriter(blacklistTextFile, true);
 
             // New line fix
             fr.write(System.lineSeparator() + toAdd);
@@ -82,11 +81,11 @@ public class ChatPicker {
      */
     public static void loadBlacklistFile() {
 
-        textfile = path.get().toFile();
+        blacklistTextFile = blacklistPath.get().toFile();
         try {
 
-            textfile.createNewFile(); // Create file if it doesn't already exist
-            blacklist = Files.readAllLines(path.get()); // Read into list
+            blacklistTextFile.createNewFile(); // Create file if it doesn't already exist
+            blacklist = Files.readAllLines(blacklistPath.get()); // Read into list
 
             // Remove all empty objects
             blacklist.removeAll(Arrays.asList("", null));
@@ -119,7 +118,7 @@ public class ChatPicker {
         try {
 
             // Clear text file using PrintWriter
-            PrintWriter pr = new PrintWriter(textfile);
+            PrintWriter pr = new PrintWriter(blacklistTextFile);
             pr.close();
 
             // Update from file
@@ -156,10 +155,10 @@ public class ChatPicker {
         if (message.startsWith(BotConfig.prefix)) {
             message = message.substring(BotConfig.prefix.length());
 
-            if (!commands.containsKey(message))
+            if (!commandMap.containsKey(message))
                 return;
 
-        } else if (tempLogMessages) {
+        } else if (logMessages) {
 
             // If a message is not a command and temp logging is enabled, log the message
             String timeStamp = new SimpleDateFormat("[HH:mm:ss] ").format(new Date());
@@ -171,7 +170,7 @@ public class ChatPicker {
                 // Add the chat messages to the book then stop recording chat
                 CommandHandlers.createBook(tempChatLog);
                 tempChatLog.clear();
-                tempLogMessages = false;
+                logMessages = false;
 
             }
             return;
@@ -195,8 +194,8 @@ public class ChatPicker {
 
             if (!message.equalsIgnoreCase(lastCommand)) {
 
-                newChats.add(message);
-                newChatSenders.add(sender);
+                chatBuffer.add(message);
+                chatSenderBuffer.add(sender);
 
             } else {
                 Main.logger.info(String.format("Command not executed: cooldown is active for this command (%s).", message));
@@ -204,8 +203,8 @@ public class ChatPicker {
 
         } else {
 
-            newChats.add(message);
-            newChatSenders.add(sender);
+            chatBuffer.add(message);
+            chatSenderBuffer.add(sender);
 
         }
 
@@ -248,9 +247,9 @@ public class ChatPicker {
 
             try {
                 // Invoke command from command map
-                commands.get(commandString).run();
+                commandMap.get(commandString).run();
 
-                if (BotConfig.showChatMessages && BotConfig.showCommands) {
+                if (BotConfig.showChatMessages && BotConfig.showCommandsInChat) {
                     CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
                 }
 
@@ -273,7 +272,7 @@ public class ChatPicker {
      * The registerCommand method takes two arguments: a runnable, and any number of command aliases.
      * <pre>
      * {@code
-     *     registerCommand(() -> BotCommands.myCommand(), "mycommand", "mycommandalias");
+     *     registerCommand(() -> CommandHandlers.myCommand(), "mycommand", "mycommandalias");
      * }
      * </pre>
      * If an entry with the same runnable or alias already exists, it will be replaced.
@@ -291,10 +290,10 @@ public class ChatPicker {
         for (String key : keys) {
 
             // Don't register exactly the same command every time
-            if (commands.containsKey(key) && commands.containsValue(runnable)) {
-                commands.replace(key, runnable);
+            if (commandMap.containsKey(key) && commandMap.containsValue(runnable)) {
+                commandMap.replace(key, runnable);
             } else {
-                commands.put(key, runnable);
+                commandMap.put(key, runnable);
             }
 
         }
@@ -307,27 +306,27 @@ public class ChatPicker {
      */
     public static void pickRandomChat() {
 
-        if (!newChats.isEmpty()) {
+        if (!chatBuffer.isEmpty()) {
 
             String message;
             String sender;
             Random rand = new Random();
-            int listRandom = rand.nextInt(newChats.size());
+            int listRandom = rand.nextInt(chatBuffer.size());
 
-            message = newChats.get(listRandom);
-            sender = newChatSenders.get(listRandom);
+            message = chatBuffer.get(listRandom);
+            sender = chatSenderBuffer.get(listRandom);
 
-            hasExecuted = doCommand(message, sender);
+            commandHasExecuted = doCommand(message, sender);
 
             // If command is invalid
-            if (!hasExecuted) {
+            if (!commandHasExecuted) {
 
-                newChats.remove(listRandom);
+                chatBuffer.remove(listRandom);
                 commandFailed();
 
             }
 
-            newChats.clear();
+            chatBuffer.clear();
 
         }
 
@@ -380,9 +379,9 @@ public class ChatPicker {
         registerCommand(CommandHandlers::spawnLightning, "lightning");
         registerCommand(CommandHandlers::spawnFireball, "fireball");
         registerCommand(() -> CommandHandlers.oresExplode = true, "oresexplode");
-        registerCommand(() -> CommandHandlers.placeBedrock = true, "bedrock");
-        registerCommand(() -> CommandHandlers.killVillagers = true, "villagersburn", "burnthemall");
-        registerCommand(() -> CommandHandlers.destroyWorkbenches = true, "nocrafting", "breakworkbench");
+        registerCommand(() -> CommandHandlers.placeBedrockOnBreak = true, "bedrock");
+        registerCommand(() -> CommandHandlers.burnVillagersOnInteract = true, "villagersburn", "burnthemall");
+        registerCommand(() -> CommandHandlers.destroyWorkbenchesOnInteract = true, "nocrafting", "breakworkbench");
         registerCommand(CommandHandlers::breakBlock, "break");
         registerCommand(CommandHandlers::dismount, "dismount", "getoff");
         registerCommand(CommandHandlers::dropItem, "drop", "throw");
@@ -408,7 +407,7 @@ public class ChatPicker {
     }
 
     /**
-     * Commands that are registered here need to be re-added to the command registry every time they run because they have changing ("dynamic") arguments.
+     * Commands that are registered here need to be re-added to the command registry every time they run because they have changing ("dynamic") elements.
      *
      * @param argString the argument for the command
      * @param sender    the name of the command sender
@@ -433,7 +432,7 @@ public class ChatPicker {
 
         List<String> commandList = new ArrayList<>();
 
-        for (String key : commands.keySet()) {
+        for (String key : commandMap.keySet()) {
 
             if (!blacklist.contains(key)) {
                 commandList.add(key);
@@ -448,8 +447,8 @@ public class ChatPicker {
 
     public static void commandFailed() {
 
-        if (!hasExecuted) {
-            if (!newChats.isEmpty()) {
+        if (!commandHasExecuted) {
+            if (!chatBuffer.isEmpty()) {
                 // Choose another if the list is big enough
                 pickRandomChat();
             } else {

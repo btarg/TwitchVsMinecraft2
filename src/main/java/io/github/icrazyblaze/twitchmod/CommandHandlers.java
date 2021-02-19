@@ -6,7 +6,7 @@ import io.github.icrazyblaze.twitchmod.gui.MessageboxScreen;
 import io.github.icrazyblaze.twitchmod.network.MessageboxPacket;
 import io.github.icrazyblaze.twitchmod.network.PacketHandler;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
-import io.github.icrazyblaze.twitchmod.util.TickHandler;
+import io.github.icrazyblaze.twitchmod.util.TimerSystem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -77,9 +77,9 @@ public class CommandHandlers {
 
     private static final ThreadLocalRandom rand = ThreadLocalRandom.current();
     public static boolean oresExplode = false;
-    public static boolean placeBedrock = false;
-    public static boolean killVillagers = false;
-    public static boolean destroyWorkbenches = false;
+    public static boolean placeBedrockOnBreak = false;
+    public static boolean burnVillagersOnInteract = false;
+    public static boolean destroyWorkbenchesOnInteract = false;
     public static ArrayList<String> messagesList = new ArrayList<>();
     public static boolean enableFrenzyMode = true;
     private static ResourceLocation[] lootArray = new ResourceLocation[0];
@@ -214,11 +214,11 @@ public class CommandHandlers {
             return;
         }
 
-        TickHandler.deathTimerSeconds = 60;
-        TickHandler.deathTimerTicks = 0;
-        TickHandler.deathTimer = true;
+        TimerSystem.deathTimerSeconds = 60;
+        TimerSystem.deathTimerTicks = 0;
+        TimerSystem.deathTimerEnabled = true;
 
-        player().sendStatusMessage(new StringTextComponent(TextFormatting.DARK_RED + "Chat has given you " + TickHandler.deathTimerSeconds + " seconds to live."), true);
+        player().sendStatusMessage(new StringTextComponent(TextFormatting.DARK_RED + "Chat has given you " + TimerSystem.deathTimerSeconds + " seconds to live."), true);
 
     }
 
@@ -228,14 +228,14 @@ public class CommandHandlers {
             return;
         }
 
-        TickHandler.frenzyTimerSeconds = 10;
-        TickHandler.frenzyTimerTicks = 0;
+        TimerSystem.frenzyTimerSeconds = 10;
+        TimerSystem.frenzyTimerTicks = 0;
         ChatPicker.instantCommands = true;
 
-        previousDeathTimerState = TickHandler.deathTimer;
-        TickHandler.deathTimer = false;
+        previousDeathTimerState = TimerSystem.deathTimerEnabled;
+        TimerSystem.deathTimerEnabled = false;
 
-        player().sendStatusMessage(new StringTextComponent(TextFormatting.GOLD + "FRENZY MODE! All commands are executed for the next " + TickHandler.frenzyTimerSeconds + " seconds."), true);
+        player().sendStatusMessage(new StringTextComponent(TextFormatting.GOLD + "FRENZY MODE! All commands are executed for the next " + TimerSystem.frenzyTimerSeconds + " seconds."), true);
 
     }
 
@@ -246,22 +246,22 @@ public class CommandHandlers {
         }
 
         ChatPicker.enabled = false;
-        TickHandler.peaceTimerSeconds = 30;
-        TickHandler.peaceTimerTicks = 0;
-        TickHandler.peaceTimer = true;
+        TimerSystem.peaceTimerSeconds = 30;
+        TimerSystem.peaceTimerTicks = 0;
+        TimerSystem.peaceTimerEnabled = true;
 
-        previousDeathTimerState = TickHandler.deathTimer;
-        TickHandler.deathTimer = false;
+        previousDeathTimerState = TimerSystem.deathTimerEnabled;
+        TimerSystem.deathTimerEnabled = false;
 
-        player().sendStatusMessage(new StringTextComponent(TextFormatting.AQUA + "Commands are turned off for " + TickHandler.peaceTimerSeconds + " seconds."), true);
+        player().sendStatusMessage(new StringTextComponent(TextFormatting.AQUA + "Commands are turned off for " + TimerSystem.peaceTimerSeconds + " seconds."), true);
 
     }
 
     public static void disableGraceTimer() {
 
         ChatPicker.enabled = true;
-        TickHandler.peaceTimer = false;
-        TickHandler.deathTimer = previousDeathTimerState;
+        TimerSystem.peaceTimerEnabled = false;
+        TimerSystem.deathTimerEnabled = previousDeathTimerState;
 
         player().sendStatusMessage(new StringTextComponent(TextFormatting.AQUA + "Commands are now enabled!"), true);
 
@@ -270,7 +270,7 @@ public class CommandHandlers {
     public static void disableFrenzyTimer() {
 
         ChatPicker.instantCommands = false;
-        TickHandler.deathTimer = previousDeathTimerState;
+        TimerSystem.deathTimerEnabled = previousDeathTimerState;
         player().sendStatusMessage(new StringTextComponent(TextFormatting.GOLD + "Frenzy mode is now disabled."), true);
 
     }
@@ -823,7 +823,7 @@ public class CommandHandlers {
     public static void startWritingBook() {
 
         ChatPicker.tempChatLog.clear();
-        ChatPicker.tempLogMessages = true;
+        ChatPicker.logMessages = true;
         player().sendStatusMessage(new StringTextComponent(TextFormatting.LIGHT_PURPLE + "Chat has started writing a book."), true);
 
     }
@@ -986,11 +986,11 @@ public class CommandHandlers {
 
         BlockPos bpos = event.getPos();
 
-        if (placeBedrock && !event.getWorld().isRemote()) {
+        if (placeBedrockOnBreak && !event.getWorld().isRemote()) {
 
             event.setCanceled(true);
             event.getWorld().setBlockState(bpos, Blocks.BEDROCK.getDefaultState(), 2);
-            placeBedrock = false;
+            placeBedrockOnBreak = false;
 
         }
 
@@ -999,11 +999,11 @@ public class CommandHandlers {
     @SubscribeEvent
     public static void villagersDie(PlayerInteractEvent.EntityInteract event) {
 
-        if (event.getTarget() instanceof VillagerEntity && killVillagers && !event.getWorld().isRemote) {
+        if (event.getTarget() instanceof VillagerEntity && burnVillagersOnInteract && !event.getWorld().isRemote) {
 
             ((VillagerEntity) event.getTarget()).addPotionEffect(new EffectInstance(Effects.INSTANT_DAMAGE, 1, 1));
             event.getTarget().setFire(10);
-            killVillagers = false;
+            burnVillagersOnInteract = false;
 
         }
 
@@ -1015,13 +1015,13 @@ public class CommandHandlers {
         World world = event.getWorld();
         Block block = world.getBlockState(event.getPos()).getBlock();
 
-        if (destroyWorkbenches && !world.isRemote) {
+        if (destroyWorkbenchesOnInteract && !world.isRemote) {
 
             if (block == Blocks.CRAFTING_TABLE || block == Blocks.FURNACE) {
 
                 event.setCanceled(true);
                 world.destroyBlock(event.getPos(), false);
-                destroyWorkbenches = false;
+                destroyWorkbenchesOnInteract = false;
 
             }
 

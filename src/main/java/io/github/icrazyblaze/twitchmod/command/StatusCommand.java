@@ -8,7 +8,7 @@ import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.discord.DiscordConnectionHelper;
 import io.github.icrazyblaze.twitchmod.irc.TwitchConnectionHelper;
-import io.github.icrazyblaze.twitchmod.util.TickHandler;
+import io.github.icrazyblaze.twitchmod.util.TimerSystem;
 import io.github.icrazyblaze.twitchmod.util.UptimeReader;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -50,7 +50,7 @@ public class StatusCommand implements Command<CommandSource> {
         // Display current settings
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Twitch channel name: " + BotConfig.CHANNEL_NAME), false);
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Player affected: " + BotConfig.getUsername()), false);
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.DARK_PURPLE + "A new command will be chosen every " + TickHandler.chatSecondsTrigger + " seconds."), false);
+        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.DARK_PURPLE + "A new command will be chosen every " + TimerSystem.chatSecondsTrigger + " seconds."), false);
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.DARK_PURPLE + "Commands start with " + BotConfig.prefix), false);
 
         // Clickable message to get the key

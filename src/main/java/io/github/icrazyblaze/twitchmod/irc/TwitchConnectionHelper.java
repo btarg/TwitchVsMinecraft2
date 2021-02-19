@@ -19,7 +19,7 @@ public class TwitchConnectionHelper {
     public static PircBotX bot = null;
     private static Thread botThread = null;
 
-    public static void tryConnect() {
+    public static void login() {
 
         // Update settings before connecting
         Main.updateConfig();

@@ -11,7 +11,7 @@ public class BotConfig {
     public static String CHANNEL_NAME = null;
     public static List<? extends String> DISCORD_CHANNELS;
     public static boolean showChatMessages = false;
-    public static boolean showCommands = false;
+    public static boolean showCommandsInChat = false;
     public static String prefix = "!";
 
     private static String username = null;

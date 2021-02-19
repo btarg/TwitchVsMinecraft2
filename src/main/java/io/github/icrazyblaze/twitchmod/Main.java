@@ -7,7 +7,7 @@ import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.network.PacketHandler;
 import io.github.icrazyblaze.twitchmod.util.ForgeEventSubscriber;
 import io.github.icrazyblaze.twitchmod.util.Reference;
-import io.github.icrazyblaze.twitchmod.util.TickHandler;
+import io.github.icrazyblaze.twitchmod.util.TimerSystem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -38,7 +38,7 @@ public final class Main {
 
         // Register event subscribers
         MinecraftForge.EVENT_BUS.register(ForgeEventSubscriber.class);
-        MinecraftForge.EVENT_BUS.register(TickHandler.class);
+        MinecraftForge.EVENT_BUS.register(TimerSystem.class);
         MinecraftForge.EVENT_BUS.register(CommandHandlers.class);
 
         // Register network messages
@@ -57,13 +57,13 @@ public final class Main {
         BotConfig.DISCORD_CHANNELS = ConfigManager.getDiscordChannels();
         BotConfig.CHANNEL_NAME = ConfigManager.getTwitch_channel_name();
         BotConfig.showChatMessages = ConfigManager.isShow_chat_messages();
-        BotConfig.showCommands = ConfigManager.isShow_commands_in_chat();
+        BotConfig.showCommandsInChat = ConfigManager.isShow_commands_in_chat();
         BotConfig.prefix = ConfigManager.getCommand_prefix();
         BotConfig.setUsername(ConfigManager.getMinecraft_username());
-        TickHandler.chatSecondsTrigger = ConfigManager.getChoose_command_delay();
-        TickHandler.chatSeconds = ConfigManager.getChoose_command_delay();
-        TickHandler.messageSecondsTrigger = ConfigManager.getChoose_message_delay();
-        TickHandler.messageSeconds = ConfigManager.getChoose_message_delay();
+        TimerSystem.chatSecondsTrigger = ConfigManager.getChoose_command_delay();
+        TimerSystem.chatSeconds = ConfigManager.getChoose_command_delay();
+        TimerSystem.messageSecondsTrigger = ConfigManager.getChoose_message_delay();
+        TimerSystem.messageSeconds = ConfigManager.getChoose_message_delay();
         CommandHandlers.enableFrenzyMode = ConfigManager.isEnable_frenzy();
         FrenzyVote.votesNeeded = ConfigManager.getVotes_needed();
         ChatPicker.chatLogLength = ConfigManager.getBook_length();
