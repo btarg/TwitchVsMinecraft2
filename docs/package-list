@@ -4,6 +4,7 @@ io.github.icrazyblaze.twitchmod.command
 io.github.icrazyblaze.twitchmod.config
 io.github.icrazyblaze.twitchmod.discord
 io.github.icrazyblaze.twitchmod.gui
+io.github.icrazyblaze.twitchmod.integration
 io.github.icrazyblaze.twitchmod.irc
 io.github.icrazyblaze.twitchmod.network
 io.github.icrazyblaze.twitchmod.util
