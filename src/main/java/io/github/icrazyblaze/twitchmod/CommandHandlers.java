@@ -517,7 +517,6 @@ public class CommandHandlers {
     public static void dropItem() { // Thanks Amoo!
 
         ServerPlayerEntity player = player();
-
         ItemStack currentItem = player.inventory.getCurrentItem();
 
         if (currentItem != ItemStack.EMPTY) {
@@ -529,7 +528,27 @@ public class CommandHandlers {
 
     }
 
-    public static void removeRandom() {
+    public static void changeDurability(boolean repairItem) {
+
+        ServerPlayerEntity player = player();
+        ItemStack currentItem = player.inventory.getCurrentItem();
+
+        int damageAmount = rand.nextInt(currentItem.getMaxDamage() / 3);
+
+        if (currentItem != ItemStack.EMPTY) {
+
+            if (repairItem) {
+                currentItem.attemptDamageItem(damageAmount * -1, rand, player);
+            } else {
+                currentItem.attemptDamageItem(damageAmount, rand, player);
+            }
+
+
+        }
+
+    }
+
+    public static void removeRandomItemStack() {
 
         ServerPlayerEntity player = player();
 
@@ -549,7 +568,7 @@ public class CommandHandlers {
 
         } else {
 
-            removeRandom();
+            removeRandomItemStack();
 
         }
 
@@ -573,24 +592,24 @@ public class CommandHandlers {
 
     }
 
-    public static void giveRandom() {
+    public static void giveAndRemoveRandom() {
 
         ItemStack stack = getRandomItemStack();
 
         // Remove the random item here to prevent an item being removed and no item being given to the player
-        removeRandom();
+        removeRandomItemStack();
 
         player().addItemStackToInventory(stack);
 
     }
 
-    public static void messWithInventory(String sender) {
+    public static void itemRoulette(String sender) {
 
         ServerPlayerEntity player = player();
 
         if (!player.inventory.isEmpty()) {
 
-            giveRandom();
+            giveAndRemoveRandom();
 
             // Show chat message
             player.sendStatusMessage(new StringTextComponent(TextFormatting.RED + sender + " giveth, and " + sender + " taketh away."), true);

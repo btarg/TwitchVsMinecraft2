@@ -48,14 +48,14 @@ public class StatusCommand implements Command<CommandSource> {
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Twitch stream uptime: " + UptimeReader.getUptimeString(BotConfig.CHANNEL_NAME)), false);
 
         // Display current settings
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.PURPLE + "Twitch channel name: " + BotConfig.CHANNEL_NAME), false);
-		context.getSource().sendFeedback(new StringTextComponent(TextFormatting.LIGHT_BLUE + "Watching Discord channels: " + BotConfig.DISCORD_CHANNELS.toString()), false);
+        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.LIGHT_PURPLE + "Twitch channel name: " + BotConfig.CHANNEL_NAME), false);
+		context.getSource().sendFeedback(new StringTextComponent(TextFormatting.BLUE + "Watching Discord channels: " + BotConfig.DISCORD_CHANNELS.toString()), false);
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Player affected: " + BotConfig.getUsername()), false);
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.DARK_PURPLE + "A new command will be chosen every " + TimerSystem.chatSecondsTrigger + " seconds."), false);
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.DARK_PURPLE + "Commands start with " + BotConfig.prefix), false);
 
         // Click chat message to go to Twitch login page
-        StringTextComponent keyMessage = new StringTextComponent(TextFormatting.AQUA + TextFormatting.UNDERLINE + "Click here to get your Twitch OAuth key!");
+        StringTextComponent keyMessage = new StringTextComponent(TextFormatting.AQUA + "Click here to get your Twitch OAuth key!");
         ClickEvent goLinkEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, "https://twitchapps.com/tmi/");
         HoverEvent goHoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Click to open the link in your browser"));
 
