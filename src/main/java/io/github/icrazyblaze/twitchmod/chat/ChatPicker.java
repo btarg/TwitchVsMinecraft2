@@ -3,7 +3,7 @@ package io.github.icrazyblaze.twitchmod.chat;
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
-import io.github.icrazyblaze.twitchmod.integration.ModDetector;
+import io.github.icrazyblaze.twitchmod.integration.CarrierBeesIntegration;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.potion.EffectInstance;
@@ -367,6 +367,7 @@ public class ChatPicker {
         registerCommand(() -> CommandHandlers.spawnMob(EntityType.ENDERMAN.create(PlayerHelper.player().world)), "enderman");
         registerCommand(() -> CommandHandlers.spawnMobBehind(EntityType.WITCH.create(PlayerHelper.player().world)), "witch");
         registerCommand(() -> CommandHandlers.spawnMobBehind(EntityType.SKELETON.create(PlayerHelper.player().world)), "skeleton");
+        registerCommand(() -> CommandHandlers.spawnMobBehind(EntityType.SLIME.create(PlayerHelper.player().world)), "slime");
         registerCommand(CommandHandlers::spawnArmorStand, "armorstand", "armourstand", "boo");
         registerCommand(() -> CommandHandlers.playSound(SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.HOSTILE, 1.0F, 1.0F), "creeperscare", "behindyou");
         registerCommand(() -> CommandHandlers.playSound(SoundEvents.ENTITY_ZOMBIE_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F), "zombiescare", "bruh");
@@ -423,12 +424,8 @@ public class ChatPicker {
         registerCommand(() -> CommandHandlers.rollTheDice(sender), "rtd", "roll", "dice");
         registerCommand(() -> FrenzyVote.vote(sender), "frenzy", "frenzymode", "suddendeath");
 
-        // Carrier Bees commands
-        if (ModDetector.isCarrierBeesLoaded()) {
-            registerCommand(() -> CommandHandlers.spawnCarrierBee(sender, ModEntities.CARRIER_BEE.get()), "carrierbee", "bee");
-            registerCommand(() -> CommandHandlers.spawnCarrierBee(sender, ModEntities.BOMBLE_BEE.get()), "bomblebee", "bee2");
-            registerCommand(() -> CommandHandlers.spawnCarrierBee(sender, ModEntities.FUMBLE_BEE.get()), "fumblebee", "bee3");
-        }
+        // Carrier bees commands
+        CarrierBeesIntegration.initDynamicCommands(sender);
 
     }
 

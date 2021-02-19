@@ -3,7 +3,6 @@ package io.github.icrazyblaze.twitchmod;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.gui.MessageboxScreen;
-import io.github.icrazyblaze.twitchmod.integration.ModDetector;
 import io.github.icrazyblaze.twitchmod.network.MessageboxPacket;
 import io.github.icrazyblaze.twitchmod.network.PacketHandler;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
