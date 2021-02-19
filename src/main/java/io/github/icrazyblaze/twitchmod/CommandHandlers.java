@@ -1,10 +1,11 @@
 package io.github.icrazyblaze.twitchmod;
 
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
+import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.gui.MessageboxScreen;
+import io.github.icrazyblaze.twitchmod.integration.ModDetector;
 import io.github.icrazyblaze.twitchmod.network.MessageboxPacket;
 import io.github.icrazyblaze.twitchmod.network.PacketHandler;
-import io.github.icrazyblaze.twitchmod.util.BotConfig;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import io.github.icrazyblaze.twitchmod.util.TickHandler;
 import net.minecraft.block.Block;
@@ -21,6 +22,7 @@ import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.FireballEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -57,6 +59,7 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.registries.ForgeRegistries;
+import noobanidus.mods.carrierbees.entities.CarrierBeeEntity;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
@@ -335,6 +338,22 @@ public class CommandHandlers {
 
     }
 
+    public static void spawnCarrierBee(String name, EntityType type) {
+
+        ServerPlayerEntity player = player();
+
+        CarrierBeeEntity bee = new CarrierBeeEntity(type, player.world);
+
+        // Give it an item and name
+        bee.setHeldItem(bee.getActiveHand(), Objects.requireNonNull(getRandomItemStack()));
+        bee.setCustomName(new StringTextComponent(name));
+        bee.setDropChance(EquipmentSlotType.MAINHAND, 1.0F);
+
+        player.sendStatusMessage(new StringTextComponent(TextFormatting.YELLOW + name + " sent some support!"), true);
+        spawnMob(bee);
+
+    }
+
 
     public static void pigmanScare() {
         playSound(SoundEvents.ENTITY_ZOMBIFIED_PIGLIN_ANGRY, SoundCategory.HOSTILE, 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
@@ -537,9 +556,8 @@ public class CommandHandlers {
 
     }
 
-    public static void giveRandom() {
+    public static ItemStack getRandomItemStack() {
 
-        // Give the player a random item
         int length = ForgeRegistries.ITEMS.getKeys().toArray().length;
         int r = rand.nextInt(length);
 
@@ -549,13 +567,21 @@ public class CommandHandlers {
 
             ItemStack stack = new ItemStack(select);
             stack.setCount(rand.nextInt(stack.getMaxStackSize()));
-
-            // Remove the random item here to prevent an item being removed and no item being given to the player
-            removeRandom();
-
-            player().addItemStackToInventory(stack);
+            return stack;
 
         }
+        return null;
+
+    }
+
+    public static void giveRandom() {
+
+        ItemStack stack = getRandomItemStack();
+
+        // Remove the random item here to prevent an item being removed and no item being given to the player
+        removeRandom();
+
+        player().addItemStackToInventory(stack);
 
     }
 
@@ -883,7 +909,7 @@ public class CommandHandlers {
         Block bposBlock = player.world.getBlockState(bpos).getBlock();
 
         // Make sure we don't replace any chests
-        if (bposBlock != Blocks.CHEST || bposBlock != Blocks.TRAPPED_CHEST) {
+        if (bposBlock != Blocks.CHEST && bposBlock != Blocks.TRAPPED_CHEST) {
 
             setBlock(bpos, Blocks.CHEST.getDefaultState());
 

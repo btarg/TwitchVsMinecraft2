@@ -2,7 +2,7 @@ package io.github.icrazyblaze.twitchmod.discord;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
-import io.github.icrazyblaze.twitchmod.util.BotConfig;
+import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.util.CalculateMinecraftColor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -60,9 +60,11 @@ public class DiscordBot extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        // Don't allow bots to interact
-        if (event.getAuthor().isBot() || event.getMessage().isWebhookMessage())
+
+        // Don't allow bots to interact, and only allow specified channels to talk
+        if (event.getAuthor().isBot() || event.getMessage().isWebhookMessage() || !BotConfig.DISCORD_CHANNELS.contains(event.getChannel().getName())) {
             return;
+        }
 
         String message = event.getMessage().getContentRaw();
         String sender = event.getMember().getEffectiveName();

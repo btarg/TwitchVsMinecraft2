@@ -2,6 +2,7 @@ package io.github.icrazyblaze.twitchmod.util;
 
 import com.mojang.brigadier.CommandDispatcher;
 import io.github.icrazyblaze.twitchmod.Main;
+import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.command.*;
 import io.github.icrazyblaze.twitchmod.discord.DiscordConnectCommand;
 import io.github.icrazyblaze.twitchmod.discord.DiscordConnectionHelper;
@@ -13,7 +14,11 @@ import net.minecraft.command.Commands;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
+
+import static io.github.icrazyblaze.twitchmod.config.ConfigManager.COMMON_CONFIG;
 
 /**
  * SubscribeEvents go here to avoid clutter in the main class.
@@ -22,6 +27,13 @@ import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
  */
 
 public class ForgeEventSubscriber {
+
+    @SubscribeEvent
+    public static void configLoaded(ModConfig.ModConfigEvent event) {
+        if (event.getConfig().getSpec() == COMMON_CONFIG) {
+            Main.updateConfig();
+        }
+    }
 
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {
@@ -35,8 +47,9 @@ public class ForgeEventSubscriber {
                 .then(StatusCommand.register())
                 .then(QueueCommand.register())
                 .then(BlacklistCommand.register())
+                .then(ClearBlacklistCommand.register())
                 .then(ListCommand.register())
-                // Register Discord commands under /ttv
+                // Register Discord commands
                 .then(dispatcher.register(Commands.literal("discord")
                         .then(DiscordConnectCommand.register())
                         .then(DiscordDisconnectCommand.register())
@@ -44,8 +57,7 @@ public class ForgeEventSubscriber {
                 ))
         );
 
-        Main.updateConfig();
-
+        ChatPicker.loadBlacklistFile();
     }
 
     @SubscribeEvent
@@ -53,12 +65,17 @@ public class ForgeEventSubscriber {
 
         if (!event.world.isRemote && PlayerHelper.defaultServer == null) {
 
-            // Set the server reference for BotCommands (used to get player entity)
+            // Set the server reference for PlayerHelper
             PlayerHelper.defaultServer = event.world.getServer();
             TickHandler.enableTimers = true;
 
         }
 
+    }
+
+    @SubscribeEvent
+    public static void serverStarted(FMLServerStartedEvent event) {
+        ChatPicker.initCommands();
     }
 
 

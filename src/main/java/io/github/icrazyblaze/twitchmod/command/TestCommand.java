@@ -7,10 +7,9 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
-import io.github.icrazyblaze.twitchmod.util.BotConfig;
+import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.ArgumentTypes;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -24,9 +23,9 @@ public class TestCommand implements Command<CommandSource> {
         return Commands.literal("test")
                 .requires(cs -> cs.hasPermissionLevel(0))
                 .then(Commands.argument("runAndIgnoreBlacklist", BoolArgumentType.bool())
-                .then(Commands.argument("command", StringArgumentType.greedyString())
+                        .then(Commands.argument("command", StringArgumentType.greedyString())
 
-                .executes(CMD)));
+                                .executes(CMD)));
     }
 
     @Override
@@ -41,7 +40,7 @@ public class TestCommand implements Command<CommandSource> {
         if (message.startsWith(BotConfig.prefix)) {
             message = message.substring(BotConfig.prefix.length());
         }
-        ChatPicker.checkChat(message, "TestUser" + rand.nextInt());
+        ChatPicker.checkChat(message, "TestUser" + rand.nextInt(0, 100));
 
         return SINGLE_SUCCESS;
 

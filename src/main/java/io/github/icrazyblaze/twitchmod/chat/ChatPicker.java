@@ -2,7 +2,8 @@ package io.github.icrazyblaze.twitchmod.chat;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.Main;
-import io.github.icrazyblaze.twitchmod.util.BotConfig;
+import io.github.icrazyblaze.twitchmod.config.BotConfig;
+import io.github.icrazyblaze.twitchmod.integration.ModDetector;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.potion.EffectInstance;
@@ -13,6 +14,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Difficulty;
 import net.minecraftforge.fml.loading.FMLPaths;
+import noobanidus.mods.carrierbees.init.ModEntities;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -420,6 +422,13 @@ public class ChatPicker {
         registerCommand(() -> CommandHandlers.renameItem(argString), "rename");
         registerCommand(() -> CommandHandlers.rollTheDice(sender), "rtd", "roll", "dice");
         registerCommand(() -> FrenzyVote.vote(sender), "frenzy", "frenzymode", "suddendeath");
+
+        // Carrier Bees commands
+        if (ModDetector.isCarrierBeesLoaded()) {
+            registerCommand(() -> CommandHandlers.spawnCarrierBee(sender, ModEntities.CARRIER_BEE.get()), "carrierbee", "bee");
+            registerCommand(() -> CommandHandlers.spawnCarrierBee(sender, ModEntities.BOMBLE_BEE.get()), "bomblebee", "bee2");
+            registerCommand(() -> CommandHandlers.spawnCarrierBee(sender, ModEntities.FUMBLE_BEE.get()), "fumblebee", "bee3");
+        }
 
     }
 

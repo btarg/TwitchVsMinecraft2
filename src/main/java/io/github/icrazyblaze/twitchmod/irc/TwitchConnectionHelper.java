@@ -2,7 +2,7 @@ package io.github.icrazyblaze.twitchmod.irc;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.Main;
-import io.github.icrazyblaze.twitchmod.util.BotConfig;
+import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import org.pircbotx.Configuration;

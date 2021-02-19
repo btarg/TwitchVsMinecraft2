@@ -1,10 +1,15 @@
-package io.github.icrazyblaze.twitchmod.util;
+package io.github.icrazyblaze.twitchmod.config;
+
+import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
+
+import java.util.List;
 
 public class BotConfig {
 
     public static String TWITCH_KEY = null;
     public static String DISCORD_TOKEN = null;
     public static String CHANNEL_NAME = null;
+    public static List<? extends String> DISCORD_CHANNELS;
     public static boolean showChatMessages = false;
     public static boolean showCommands = false;
     public static String prefix = "!";
