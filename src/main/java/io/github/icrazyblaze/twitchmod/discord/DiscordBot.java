@@ -1,6 +1,8 @@
 package io.github.icrazyblaze.twitchmod.discord;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
+import io.github.icrazyblaze.twitchmod.Main;
+import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.util.CalculateMinecraftColor;
@@ -62,13 +64,17 @@ public class DiscordBot extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
 
         // Don't allow bots to interact, and only allow specified channels to talk
-        if (event.getAuthor().isBot() || event.getMessage().isWebhookMessage() || !BotConfig.DISCORD_CHANNELS.contains(event.getChannel().getName())) {
+        if (event.getAuthor().isBot() || event.getMessage().isWebhookMessage()) {
             return;
         }
 
         String message = event.getMessage().getContentRaw();
         String sender = event.getMember().getEffectiveName();
         String channel = event.getChannel().getName();
+
+        if (!BotConfig.DISCORD_CHANNELS.contains(channel)) {
+            return;
+        }
 
         Color userColor = event.getMember().getColor();
 
@@ -86,6 +92,10 @@ public class DiscordBot extends ListenerAdapter {
             // Get role names and add them to a hover
             for (Role r : event.getMember().getRoles()) {
                 roleNames.add(r.getName());
+            }
+
+            if (roleNames.contains("bot-tester")) {
+                ChatPicker.forceCommands = true;
             }
 
             StringTextComponent showText = new StringTextComponent(String.format("%s<%s[%s] %s%s%s> %s", TextFormatting.WHITE, TextFormatting.BLUE, channel, format, sender, TextFormatting.WHITE, message));

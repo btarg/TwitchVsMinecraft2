@@ -77,6 +77,7 @@ public class ForgeEventSubscriber {
     @SubscribeEvent
     public static void serverStarted(FMLServerStartedEvent event) {
         ChatCommands.initCommands();
+        ChatCommands.initDynamicCommands("", ""); // this initialisation prevents the dynamic commands not being recognised as real commands
     }
 
 
