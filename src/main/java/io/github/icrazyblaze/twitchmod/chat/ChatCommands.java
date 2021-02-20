@@ -1,7 +1,6 @@
 package io.github.icrazyblaze.twitchmod.chat;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
-import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.integration.CarrierBeesIntegration;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import net.minecraft.entity.EntityType;

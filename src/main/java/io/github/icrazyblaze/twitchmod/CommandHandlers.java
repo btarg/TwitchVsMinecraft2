@@ -11,7 +11,6 @@ import io.github.icrazyblaze.twitchmod.util.TimerSystem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.OreBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
@@ -54,6 +53,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -66,6 +66,8 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static io.github.icrazyblaze.twitchmod.util.PlayerHelper.player;
 
 
 /**
@@ -126,11 +128,6 @@ public class CommandHandlers {
         }
 
     }
-
-    public static ServerPlayerEntity player() {
-        return PlayerHelper.player();
-    }
-
 
     public static void setBlock(BlockPos bpos, BlockState state) {
         player().world.setBlockState(bpos, state);
@@ -985,9 +982,7 @@ public class CommandHandlers {
 
         Block thisBlock = event.getState().getBlock();
 
-        if (!(thisBlock instanceof OreBlock)) {
-            return;
-        } else if (oresExplode && !event.getWorld().isRemote()) {
+        if (Tags.Blocks.ORES.contains(thisBlock) && oresExplode && !event.getWorld().isRemote()) {
 
             double dx = event.getPos().getX();
             double dy = event.getPos().getY();
