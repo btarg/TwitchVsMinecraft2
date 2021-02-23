@@ -1,7 +1,7 @@
 package io.github.icrazyblaze.twitchmod.gui;
 
+import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
-import io.github.icrazyblaze.twitchmod.util.Reference;
 import io.github.icrazyblaze.twitchmod.util.TimerSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
@@ -11,7 +11,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 // Thanks Silk!
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Reference.MOD_ID)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Main.MOD_ID)
 public class FrenzyTimerOverlay {
 
     @SubscribeEvent

@@ -6,7 +6,6 @@ import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.network.PacketHandler;
 import io.github.icrazyblaze.twitchmod.util.ForgeEventSubscriber;
-import io.github.icrazyblaze.twitchmod.util.Reference;
 import io.github.icrazyblaze.twitchmod.util.TimerSystem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -19,10 +18,11 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author iCrazyBlaze
  */
-@Mod(Reference.MOD_ID)
+@Mod(Main.MOD_ID)
 public final class Main {
 
-    public static final Logger logger = LogManager.getLogger(Reference.MOD_ID);
+    public static final String MOD_ID = "twitchmod";
+    public static final Logger logger = LogManager.getLogger(MOD_ID);
 
     public Main() {
 
