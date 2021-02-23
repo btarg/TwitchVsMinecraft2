@@ -29,6 +29,9 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        url "https://maven.tterrag.com/"
+    }
 }
 
 minecraft {

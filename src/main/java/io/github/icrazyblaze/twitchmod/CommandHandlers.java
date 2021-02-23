@@ -6,7 +6,6 @@ import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.gui.MessageboxScreen;
 import io.github.icrazyblaze.twitchmod.network.MessageboxPacket;
 import io.github.icrazyblaze.twitchmod.network.PacketHandler;
-import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import io.github.icrazyblaze.twitchmod.util.TimerSystem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -143,7 +142,7 @@ public class CommandHandlers {
 
         ServerPlayerEntity player = player();
 
-        BlockPos bpos = player.getPosition();
+        BlockPos bpos = player.getBlockPos();
         BlockState bposState = player.world.getBlockState(bpos);
 
         if (bposState == Blocks.AIR.getDefaultState()) {
@@ -160,7 +159,7 @@ public class CommandHandlers {
         player.world.getWorldInfo().setRaining(true);
 
         if (!player.world.isRemote) {
-            player.getServerWorld().func_241113_a_(0, 6000, true, true);
+            player.getServerWorld().setWeather(0, 6000, true, true);
         }
     }
 
@@ -175,7 +174,7 @@ public class CommandHandlers {
         Iterable<ServerWorld> worlds = player().server.getWorlds();
 
         for (ServerWorld world : worlds) {
-            world.setDayTime(time);
+            world.setTimeOfDay(time);
         }
 
     }
@@ -200,9 +199,9 @@ public class CommandHandlers {
 
         ServerPlayerEntity player = player();
 
-        BlockPos bpos = new BlockPos(player.getPosX(), player.getPosY(), player.getPosZ());
+        BlockPos bpos = new BlockPos(player.getX(), player.getY(), player.getZ());
         // SetSpawn
-        player.func_242111_a(player.world.getDimensionKey(), bpos, 0.0F, false, true);
+        player.setSpawnPoint(player.world.getRegistryKey(), bpos, 0.0F, false, true);
 
     }
 
@@ -277,7 +276,7 @@ public class CommandHandlers {
 
         ServerPlayerEntity player = player();
 
-        BlockPos bpos = new BlockPos(player.getPosX(), player.getPosY() - 1, player.getPosZ());
+        BlockPos bpos = new BlockPos(player.getX(), player.getY() - 1, player.getZ());
         setBlock(bpos, Blocks.LAVA.getDefaultState());
 
     }
@@ -286,7 +285,7 @@ public class CommandHandlers {
 
         ServerPlayerEntity player = player();
 
-        BlockPos bpos = player.getPosition();
+        BlockPos bpos = player.getBlockPos();
         setBlock(bpos, Blocks.WATER.getDefaultState());
 
     }
@@ -295,7 +294,7 @@ public class CommandHandlers {
 
         ServerPlayerEntity player = player();
 
-        BlockPos bpos = new BlockPos(player.getPosX(), player.getPosY(), player.getPosZ());
+        BlockPos bpos = new BlockPos(player.getX(), player.getY(), player.getZ());
 
         setBlock(bpos, Blocks.SPONGE.getDefaultState());
 
@@ -305,7 +304,7 @@ public class CommandHandlers {
 
         ServerPlayerEntity player = player();
 
-        BlockPos bpos = new BlockPos(player.getPosX(), player.getPosY() + 16, player.getPosZ());
+        BlockPos bpos = new BlockPos(player.getX(), player.getY() + 16, player.getZ());
 
         setBlock(bpos, Blocks.ANVIL.getDefaultState());
 
@@ -315,8 +314,8 @@ public class CommandHandlers {
 
         ServerPlayerEntity player = player();
 
-        setBlock(new BlockPos(player.getPosX(), player.getPosY() + 1, player.getPosZ()), Blocks.COBWEB.getDefaultState());
-        setBlock(new BlockPos(player.getPosX(), player.getPosY(), player.getPosZ()), Blocks.COBWEB.getDefaultState());
+        setBlock(new BlockPos(player.getX(), player.getY() + 1, player.getZ()), Blocks.COBWEB.getDefaultState());
+        setBlock(new BlockPos(player.getX(), player.getY(), player.getZ()), Blocks.COBWEB.getDefaultState());
 
     }
 
@@ -326,10 +325,10 @@ public class CommandHandlers {
 
         Vector3d lookVector = player.getLookVec();
 
-        double dx = player.getPosX() + (lookVector.x * 4);
-        double dz = player.getPosZ() + (lookVector.z * 4);
+        double dx = player.getX() + (lookVector.x * 4);
+        double dz = player.getZ() + (lookVector.z * 4);
 
-        ent.setPosition(dx, player.getPosY(), dz);
+        ent.setPosition(dx, player.getY(), dz);
 
         player.world.addEntity(ent);
 
@@ -359,7 +358,7 @@ public class CommandHandlers {
     public static void playSound(SoundEvent sound, SoundCategory category, float volume, float pitch) {
 
         ServerPlayerEntity player = player();
-        player.world.playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), sound, category, volume, pitch);
+        player.world.playSound(null, player.getX(), player.getY(), player.getZ(), sound, category, volume, pitch);
 
     }
 
@@ -369,11 +368,11 @@ public class CommandHandlers {
 
         Vector3d lookVector = player.getLookVec();
 
-        double dx = player.getPosX() + (lookVector.x * 2);
-        double dz = player.getPosZ() + (lookVector.z * 2);
+        double dx = player.getX() + (lookVector.x * 2);
+        double dz = player.getZ() + (lookVector.z * 2);
 
         Entity ent = new FireballEntity(EntityType.FIREBALL, player.world);
-        ent.setPosition(dx, player.getPosYEye(), dz);
+        ent.setPosition(dx, player.getEyeY(), dz);
         ent.setVelocity(lookVector.x * 3, lookVector.y, lookVector.z * 3);
 
         player.world.addEntity(ent);
@@ -384,7 +383,7 @@ public class CommandHandlers {
 
         ServerPlayerEntity player = player();
         LightningBoltEntity ent = new LightningBoltEntity(EntityType.LIGHTNING_BOLT, player.world);
-        ent.setPosition(player.getPosX(), player.getPosY(), player.getPosZ());
+        ent.setPosition(player.getX(), player.getY(), player.getZ());
         player.world.addEntity(ent);
 
     }
@@ -393,9 +392,9 @@ public class CommandHandlers {
 
         ServerPlayerEntity player = player();
 
-        double d0 = player.getPosX();
-        double d1 = player.getPosY();
-        double d2 = player.getPosZ();
+        double d0 = player.getX();
+        double d1 = player.getY();
+        double d2 = player.getZ();
 
         // Face where player is looking (Modified from vanilla ArmorStandItem)
         ArmorStandEntity armorstandentity = new ArmorStandEntity(player.world, d0 + 0.5, d1 + 0.5, d2 + 0.5);
@@ -430,10 +429,10 @@ public class CommandHandlers {
 
         Vector3d lookVector = player.getLookVec();
 
-        double dx = player.getPosX() - (lookVector.x * 3);
-        double dz = player.getPosZ() - (lookVector.z * 3);
+        double dx = player.getX() - (lookVector.x * 3);
+        double dz = player.getZ() - (lookVector.z * 3);
 
-        ent.setPosition(dx, player.getPosY(), dz);
+        ent.setPosition(dx, player.getY(), dz);
 
         player.world.addEntity(ent);
 
@@ -446,7 +445,7 @@ public class CommandHandlers {
         int range = 50;
 
         Vector3d lookVector = player.getLookVec();
-        Vector3d posVector = new Vector3d(player.getPosX(), player.getPosYEye(), player.getPosZ());
+        Vector3d posVector = new Vector3d(player.getX(), player.getEyeY(), player.getZ());
 
         RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player);
         RayTraceResult rayTrace = player.world.rayTraceBlocks(context);
@@ -468,7 +467,7 @@ public class CommandHandlers {
         int range = 50;
 
         Vector3d lookVector = player.getLookVec();
-        Vector3d posVector = new Vector3d(player.getPosX(), player.getPosY() + player.getEyeHeight(), player.getPosZ());
+        Vector3d posVector = new Vector3d(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
 
         RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player);
         RayTraceResult rayTrace = player.world.rayTraceBlocks(context);
@@ -501,9 +500,9 @@ public class CommandHandlers {
 
         ServerPlayerEntity player = player();
 
-        double dx = player.getPosX();
-        double dy = player.getPosY();
-        double dz = player.getPosZ();
+        double dx = player.getX();
+        double dy = player.getY();
+        double dz = player.getZ();
 
         // TODO: This code is shit, replace it
         BlockPos[] positions = {new BlockPos(dx, dy + 2, dz), new BlockPos(dx, dy, dz - 1), new BlockPos(dx, dy + 1, dz - 1), new BlockPos(dx, dy, dz + 1), new BlockPos(dx, dy + 1, dz + 1), new BlockPos(dx - 1, dy, dz), new BlockPos(dx - 1, dy + 1, dz), new BlockPos(dx + 1, dy, dz), new BlockPos(dx + 1, dy + 1, dz), new BlockPos(dx, dy - 1, dz)};
@@ -795,14 +794,14 @@ public class CommandHandlers {
 
         // Code taken from ChorusFruitItem in vanilla
         if (!world.isRemote) {
-            double d0 = player.getPosX();
-            double d1 = player.getPosY();
-            double d2 = player.getPosZ();
+            double d0 = player.getX();
+            double d1 = player.getY();
+            double d2 = player.getZ();
 
             for (int i = 0; i < 16; ++i) {
-                double d3 = player.getPosX() + (player.getRNG().nextDouble() - 0.5D) * 16.0D;
-                double d4 = MathHelper.clamp(player.getPosY() + (double) (player.getRNG().nextInt(16) - 8), 0.0D, world.func_234938_ad_() - 1);
-                double d5 = player.getPosZ() + (player.getRNG().nextDouble() - 0.5D) * 16.0D;
+                double d3 = player.getX() + (player.getRNG().nextDouble() - 0.5D) * 16.0D;
+                double d4 = MathHelper.clamp(player.getY() + (double) (player.getRNG().nextInt(16) - 8), 0.0D, world.getDimensionHeight() - 1);
+                double d5 = player.getZ() + (player.getRNG().nextDouble() - 0.5D) * 16.0D;
                 if (player.isPassenger()) {
                     player.stopRiding();
                 }
@@ -861,7 +860,7 @@ public class CommandHandlers {
             nbt.putString("title", "Chat Log " + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
 
             for (String str : text) {
-                pages.add(StringNBT.valueOf(str));
+                pages.add(StringNBT.of(str));
             }
 
             nbt.put("pages", pages);
@@ -884,7 +883,7 @@ public class CommandHandlers {
         int maxlength = 15;
         String[] splitMessage = message.split("(?<=\\G.{" + maxlength + "})");
 
-        BlockPos bpos = player.getPosition();
+        BlockPos bpos = player.getBlockPos();
         BlockPos bposBelow = new BlockPos(bpos.getX(), bpos.getY() - 1, bpos.getZ());
 
         // Rotate the sign to face the player
@@ -921,7 +920,7 @@ public class CommandHandlers {
 
         ServerPlayerEntity player = player();
 
-        BlockPos bpos = player.getPosition();
+        BlockPos bpos = player.getBlockPos();
         Block bposBlock = player.world.getBlockState(bpos).getBlock();
 
         // Make sure we don't replace any chests

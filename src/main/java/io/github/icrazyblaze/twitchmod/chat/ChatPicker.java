@@ -21,8 +21,9 @@ import java.util.function.Supplier;
 /**
  * This class is responsible for picking commands from chat and running them.
  * Blacklist operations are done in this class.
- *
+ * <p>
  * As of version 3.4.0, command registering is now done in a separate class.
+ *
  * @see io.github.icrazyblaze.twitchmod.chat.ChatCommands
  */
 public class ChatPicker {
