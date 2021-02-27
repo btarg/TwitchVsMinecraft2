@@ -1,6 +1,7 @@
 package io.github.icrazyblaze.twitchmod.integration;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
+import io.github.icrazyblaze.twitchmod.Main;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -18,27 +19,30 @@ import static io.github.icrazyblaze.twitchmod.util.PlayerHelper.player;
 
 public class CarrierBeesIntegration {
 
-    private static final RegistryObject<EntityType<?>> CARRIER_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "carrier_bee"), ForgeRegistries.ENTITIES);
-    private static final RegistryObject<EntityType<?>> BOMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "bomble_bee"), ForgeRegistries.ENTITIES);
-    private static final RegistryObject<EntityType<?>> FUMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "fumble_bee"), ForgeRegistries.ENTITIES);
+    private final RegistryObject<EntityType<?>> CARRIER_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "carrier_bee"), ForgeRegistries.ENTITIES);
+    private final RegistryObject<EntityType<?>> BOMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "bomble_bee"), ForgeRegistries.ENTITIES);
+    private final RegistryObject<EntityType<?>> FUMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "fumble_bee"), ForgeRegistries.ENTITIES);
 
 
     public static void initDynamicCommands(String sender) {
+        Main.carrierBeesProxy.ifPresent(proxy -> {
 
-        registerCommand(() -> spawnCarrierBee(sender, CARRIER_BEE.get()), "carrierbee", "bee");
-        registerCommand(() -> spawnCarrierBee(sender, BOMBLE_BEE.get()), "bomblebee", "bee2");
-        registerCommand(() -> spawnCarrierBee(sender, FUMBLE_BEE.get()), "fumblebee", "bee3");
+            registerCommand(() -> spawnCarrierBee(sender, proxy.CARRIER_BEE.get()), "carrierbee", "bee");
+            registerCommand(() -> spawnCarrierBee(sender, proxy.BOMBLE_BEE.get()), "bomblebee", "bee2");
+            registerCommand(() -> spawnCarrierBee(sender, proxy.FUMBLE_BEE.get()), "fumblebee", "bee3");
 
+        });
     }
 
-    public static void spawnCarrierBee(String name, EntityType type) {
+    public static void spawnCarrierBee(String name, EntityType<?> type) {
 
         ServerPlayerEntity player = player();
 
         // Get the entity without referencing CarrierBeeEntity explicitly
-        MobEntity bee = (MobEntity) CARRIER_BEE.get().create(player.world);
+        MobEntity bee = (MobEntity) type.create(player.world);
 
         // Give it an item and name
+        assert bee != null;
         bee.setHeldItem(bee.getActiveHand(), Objects.requireNonNull(CommandHandlers.getRandomItemStack()));
         bee.setCustomName(new StringTextComponent(name));
         bee.setDropChance(EquipmentSlotType.MAINHAND, 1.0F);

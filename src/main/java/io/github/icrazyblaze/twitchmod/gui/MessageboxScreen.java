@@ -30,6 +30,7 @@ public class MessageboxScreen extends Screen {
         renderBackground(stack);
 
         RenderSystem.color4f(1f, 1f, 1f, 1f);
+        assert client != null;
         client.getTextureManager().bindTexture(BG_TEXTURE);
 
         // Show the background
