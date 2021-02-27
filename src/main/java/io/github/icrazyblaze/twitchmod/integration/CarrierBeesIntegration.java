@@ -42,11 +42,11 @@ public class CarrierBeesIntegration {
 
         // Give it an item and name
         assert bee != null;
-        bee.setHeldItem(bee.getActiveHand(), Objects.requireNonNull(CommandHandlers.getRandomItemStack()));
+        bee.setHeldItem(bee.getActiveHand(), Objects.requireNonNull(CommandHandlers.getRandomItemStack(true)));
         bee.setCustomName(new StringTextComponent(name));
         bee.setDropChance(EquipmentSlotType.MAINHAND, 1.0F);
 
-        player.sendStatusMessage(new StringTextComponent(TextFormatting.YELLOW + name + " sent some support!"), true);
+        player.sendStatusMessage(new StringTextComponent(TextFormatting.YELLOW + name + " sent you a bee!"), true);
         CommandHandlers.spawnMob(bee);
 
     }

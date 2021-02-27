@@ -553,7 +553,7 @@ public class CommandHandlers {
 
     }
 
-    public static ItemStack getRandomItemStack() {
+    public static ItemStack getRandomItemStack(boolean randomCount) {
 
         int length = ForgeRegistries.ITEMS.getKeys().toArray().length;
         int r = rand.nextInt(length);
@@ -563,7 +563,13 @@ public class CommandHandlers {
         if (select != null) {
 
             ItemStack stack = new ItemStack(select);
-            stack.setCount(rand.nextInt(stack.getMaxStackSize()));
+
+            if (randomCount) {
+                stack.setCount(rand.nextInt(stack.getMaxStackSize()));
+            } else {
+                stack.setCount(1);
+            }
+
             return stack;
 
         }
@@ -573,7 +579,7 @@ public class CommandHandlers {
 
     public static void giveAndRemoveRandom() {
 
-        ItemStack stack = getRandomItemStack();
+        ItemStack stack = getRandomItemStack(true);
 
         // Remove the random item here to prevent an item being removed and no item being given to the player
         removeRandomItemStack();
