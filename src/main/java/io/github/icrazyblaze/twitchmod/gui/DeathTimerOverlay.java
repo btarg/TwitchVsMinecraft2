@@ -24,7 +24,7 @@ public class DeathTimerOverlay {
             Minecraft mc = Minecraft.getInstance();
             String text = "TIMER: " + TimerSystem.deathTimerSeconds;
 
-            mc.fontRenderer.drawStringWithShadow(event.getMatrixStack(), text, 4, 4, Integer.parseInt("AA0000", 16));
+            mc.fontRenderer.drawWithShadow(event.getMatrixStack(), text, 4, 4, Integer.parseInt("AA0000", 16));
 
         }
 

@@ -59,8 +59,8 @@ public class StatusCommand implements Command<CommandSource> {
         ClickEvent goLinkEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, "https://twitchapps.com/tmi/");
         HoverEvent goHoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Click to open the link in your browser"));
 
-        keyMessage.setStyle(keyMessage.getStyle().setClickEvent(goLinkEvent));
-        keyMessage.setStyle(keyMessage.getStyle().setHoverEvent(goHoverEvent));
+        keyMessage.setStyle(keyMessage.getStyle().withClickEvent(goLinkEvent));
+        keyMessage.setStyle(keyMessage.getStyle().withHoverEvent(goHoverEvent));
 
         context.getSource().sendFeedback(keyMessage, false);
 

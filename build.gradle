@@ -77,7 +77,7 @@ dependencies {
         exclude group: "org.slf4j", module: "slf4j-api" // we already have this
     }
 
-    implementation fg.deobf("curse.maven:carrierbees-372939:3187210") // Carrier Bees 1.16.3-0.0.2.3
+    //implementation fg.deobf("curse.maven:carrierbees-372939:3187210") // Carrier Bees 1.16.3-0.0.2.3
 
 }
 

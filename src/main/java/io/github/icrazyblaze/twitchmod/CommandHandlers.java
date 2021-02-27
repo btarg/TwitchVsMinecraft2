@@ -20,7 +20,6 @@ import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.FireballEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -58,7 +57,6 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.registries.ForgeRegistries;
-import noobanidus.mods.carrierbees.entities.CarrierBeeEntity;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
@@ -331,22 +329,6 @@ public class CommandHandlers {
         ent.setPosition(dx, player.getY(), dz);
 
         player.world.addEntity(ent);
-
-    }
-
-    public static void spawnCarrierBee(String name, EntityType type) {
-
-        ServerPlayerEntity player = player();
-
-        CarrierBeeEntity bee = new CarrierBeeEntity(type, player.world);
-
-        // Give it an item and name
-        bee.setHeldItem(bee.getActiveHand(), Objects.requireNonNull(getRandomItemStack()));
-        bee.setCustomName(new StringTextComponent(name));
-        bee.setDropChance(EquipmentSlotType.MAINHAND, 1.0F);
-
-        player.sendStatusMessage(new StringTextComponent(TextFormatting.YELLOW + name + " sent some support!"), true);
-        spawnMob(bee);
 
     }
 

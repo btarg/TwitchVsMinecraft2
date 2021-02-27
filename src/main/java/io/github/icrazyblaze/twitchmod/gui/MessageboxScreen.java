@@ -27,22 +27,21 @@ public class MessageboxScreen extends Screen {
     @Override
     public void render(@NotNull MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
 
-        this.renderBackground(stack);
+        renderBackground(stack);
 
         RenderSystem.color4f(1f, 1f, 1f, 1f);
-        assert minecraft != null;
-        minecraft.getTextureManager().bindTexture(BG_TEXTURE);
+        client.getTextureManager().bindTexture(BG_TEXTURE);
 
         // Show the background
-        blit(stack, (width / 2) - 88, (height / 2) - 83, 0, 0, 256, 256);
+        drawTexture(stack, (width / 2) - 87, (height / 2) - 83, 0, 0, 256, 256);
 
         // Draw title
-        font.drawString(stack, "Message Box", width / 2f - 32, height / 2f - 78, 4210752);
+        client.fontRenderer.draw(stack, "Message Box", width / 2f - 32, height / 2f - 78, 4210752);
 
-        // Draw message
-        List<IReorderingProcessor> text = font.trimStringToWidth(new StringTextComponent(message), 165);
+        // Draw wrapped text
+        List<IReorderingProcessor> text = client.fontRenderer.wrapLines(new StringTextComponent(message), 165);
         for (int i = 0; i < text.size(); i++) {
-            minecraft.fontRenderer.func_238422_b_(stack, text.get(i), (width / 2f) - (minecraft.fontRenderer.func_243245_a(text.get(i)) / 2f), (height / 2f - 60) + (minecraft.fontRenderer.FONT_HEIGHT * i), 4210752);
+            client.fontRenderer.draw(stack, text.get(i), (width / 2f) - (client.fontRenderer.getWidth(text.get(i)) / 2f), (height / 2f - 60) + (client.fontRenderer.FONT_HEIGHT * i), 4210752);
         }
 
         super.render(stack, mouseX, mouseY, partialTicks);
@@ -52,7 +51,7 @@ public class MessageboxScreen extends Screen {
     @Override
     public void init() {
 
-        Button btn = new Button(width / 2 - 75, height / 2 + 55, 150, 20, new StringTextComponent(I18n.format("gui.done")), button -> minecraft.player.closeScreen());
+        Button btn = new Button(width / 2 - 75, height / 2 + 55, 150, 20, new StringTextComponent(I18n.format("gui.done")), button -> client.player.closeScreen());
         addButton(btn);
 
     }

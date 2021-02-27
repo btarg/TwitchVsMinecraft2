@@ -26,7 +26,7 @@ public class FrenzyTimerOverlay {
             Minecraft mc = Minecraft.getInstance();
             String text = "FRENZY MODE: " + TimerSystem.frenzyTimerSeconds;
 
-            mc.fontRenderer.drawStringWithShadow(event.getMatrixStack(), text, 4, 4, TextFormatting.GOLD.getColor());
+            mc.fontRenderer.drawWithShadow(event.getMatrixStack(), text, 4, 4, TextFormatting.GOLD.getColor());
 
         }
 

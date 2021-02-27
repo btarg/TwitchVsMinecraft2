@@ -10,13 +10,8 @@ import net.minecraft.util.text.TextFormatting;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 
 public class CalculateMinecraftColor {
-    public static final TextFormatting[] MINECRAFT_COLORS = Arrays.stream(TextFormatting.values()).filter(TextFormatting::isColor).toArray(TextFormatting[]::new);
-    // Code from here https://discuss.dev.twitch.tv/t/default-user-color-in-chat/385/2 but a little bit adjusted.
-    public static Map<String, TextFormatting> cachedNames = new HashMap<>();
 
     /**
      * Takes a Color object and returns the closest Minecraft colour code.
@@ -42,18 +37,6 @@ public class CalculateMinecraftColor {
                 .orElse(TextFormatting.WHITE);
     }
 
-    public static TextFormatting getDefaultUserColor(String username) {
-        if (cachedNames.containsKey(username)) {
-            return cachedNames.get(username);
-        } else {
-            // If we don't have the color cached, calculate it.
-            char firstChar = username.charAt(0);
-            char lastChar = username.charAt(username.length() - 1);
-
-            int n = ((int) firstChar) + ((int) lastChar);
-            return MINECRAFT_COLORS[n % MINECRAFT_COLORS.length];
-        }
-    }
 
     private static class FormattingAndDistance {
         private final TextFormatting formatting;

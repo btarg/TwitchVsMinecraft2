@@ -98,7 +98,7 @@ public class DiscordBot extends ListenerAdapter {
 
             StringTextComponent showText = new StringTextComponent(String.format("%s<%s[%s] %s%s%s> %s", TextFormatting.WHITE, TextFormatting.BLUE, channel, format, sender, TextFormatting.WHITE, message));
 
-            showText.setStyle(showText.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(format + StringUtils.join(roleNames, ", ")))));
+            showText.setStyle(showText.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(format + StringUtils.join(roleNames, ", ")))));
 
             CommandHandlers.broadcastMessage(showText);
 

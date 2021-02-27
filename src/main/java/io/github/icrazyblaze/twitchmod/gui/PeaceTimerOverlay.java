@@ -25,7 +25,7 @@ public class PeaceTimerOverlay {
             Minecraft mc = Minecraft.getInstance();
             String text = "COMMANDS DISABLED: " + TimerSystem.peaceTimerSeconds;
 
-            mc.fontRenderer.drawStringWithShadow(event.getMatrixStack(), text, 4, 4, TextFormatting.AQUA.getColor());
+            mc.fontRenderer.drawWithShadow(event.getMatrixStack(), text, 4, 4, TextFormatting.AQUA.getColor());
 
         }
 

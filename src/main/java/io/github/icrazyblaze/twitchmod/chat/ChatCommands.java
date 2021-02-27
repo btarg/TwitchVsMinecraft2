@@ -1,7 +1,7 @@
 package io.github.icrazyblaze.twitchmod.chat;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
-import io.github.icrazyblaze.twitchmod.integration.CarrierBeesIntegration;
+import io.github.icrazyblaze.twitchmod.integration.IntegrationWrapper;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.potion.EffectInstance;
@@ -149,7 +149,7 @@ public class ChatCommands {
         registerCommand(() -> FrenzyVote.vote(sender), "frenzy", "frenzymode", "suddendeath");
 
         // Carrier bees commands
-        CarrierBeesIntegration.initDynamicCommands(sender);
+        IntegrationWrapper.initModDynamicCommands(sender);
 
     }
 
