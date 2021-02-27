@@ -1,7 +1,6 @@
 package io.github.icrazyblaze.twitchmod.integration;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
-import io.github.icrazyblaze.twitchmod.Main;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -25,7 +24,7 @@ public class CarrierBeesIntegration {
 
 
     public static void initDynamicCommands(String sender) {
-        Main.carrierBeesProxy.ifPresent(proxy -> {
+        ModProxy.carrierBeesProxy.ifPresent(proxy -> {
 
             registerCommand(() -> spawnCarrierBee(sender, proxy.CARRIER_BEE.get()), "carrierbee", "bee");
             registerCommand(() -> spawnCarrierBee(sender, proxy.BOMBLE_BEE.get()), "bomblebee", "bee2");
