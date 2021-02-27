@@ -12,5 +12,13 @@ public class IntegrationWrapper {
         }
 
     }
+    public static void initModCommands() {
+
+        if (ModList.get().isLoaded("chancecubes")) {
+            ModProxy.chanceCubesProxy.get();
+            ChanceCubesIntegration.initCommands();
+        }
+
+    }
 
 }

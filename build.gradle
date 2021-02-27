@@ -78,6 +78,7 @@ dependencies {
     }
 
     implementation fg.deobf("curse.maven:carrierbees-372939:3187210") // Carrier Bees 1.16.3-0.0.2.3
+    implementation fg.deobf("curse.maven:chance-cubes-233113:3078792") // Chance Cubes 1.16.3-5.0.2.394
 
 }
 

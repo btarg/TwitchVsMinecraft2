@@ -9,6 +9,7 @@ import io.github.icrazyblaze.twitchmod.discord.DiscordConnectCommand;
 import io.github.icrazyblaze.twitchmod.discord.DiscordConnectionHelper;
 import io.github.icrazyblaze.twitchmod.discord.DiscordDisconnectCommand;
 import io.github.icrazyblaze.twitchmod.discord.TokenCommand;
+import io.github.icrazyblaze.twitchmod.integration.IntegrationWrapper;
 import io.github.icrazyblaze.twitchmod.irc.TwitchConnectionHelper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -77,6 +78,7 @@ public class ForgeEventSubscriber {
     @SubscribeEvent
     public static void serverStarted(FMLServerStartedEvent event) {
         ChatCommands.initCommands();
+        IntegrationWrapper.initModCommands();
         ChatCommands.initDynamicCommands("", ""); // this initialisation prevents the dynamic commands not being recognised as real commands
     }
 
