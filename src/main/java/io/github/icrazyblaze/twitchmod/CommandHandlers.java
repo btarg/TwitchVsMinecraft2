@@ -308,12 +308,12 @@ public class CommandHandlers {
 
     }
 
-    public static void spawnCobweb() {
+    public static void placeCobweb() {
 
         ServerPlayerEntity player = player();
 
-        setBlock(new BlockPos(player.getX(), player.getY() + 1, player.getZ()), Blocks.COBWEB.getDefaultState());
-        setBlock(new BlockPos(player.getX(), player.getY(), player.getZ()), Blocks.COBWEB.getDefaultState());
+        setBlock(player.getBlockPos().up(), Blocks.COBWEB.getDefaultState());
+        setBlock(player.getBlockPos(), Blocks.COBWEB.getDefaultState());
 
     }
 
@@ -449,7 +449,7 @@ public class CommandHandlers {
         int range = 50;
 
         Vector3d lookVector = player.getLookVec();
-        Vector3d posVector = new Vector3d(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
+        Vector3d posVector = new Vector3d(player.getX(), player.getEyeY(), player.getZ());
 
         RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player);
         RayTraceResult rayTrace = player.world.rayTraceBlocks(context);
@@ -478,7 +478,7 @@ public class CommandHandlers {
 
     }
 
-    public static void placeGlass() {
+    public static void surroundPlayer(BlockState block) {
 
         ServerPlayerEntity player = player();
 
@@ -486,10 +486,9 @@ public class CommandHandlers {
         double dy = player.getY();
         double dz = player.getZ();
 
-        // TODO: This code is shit, replace it
         BlockPos[] positions = {new BlockPos(dx, dy + 2, dz), new BlockPos(dx, dy, dz - 1), new BlockPos(dx, dy + 1, dz - 1), new BlockPos(dx, dy, dz + 1), new BlockPos(dx, dy + 1, dz + 1), new BlockPos(dx - 1, dy, dz), new BlockPos(dx - 1, dy + 1, dz), new BlockPos(dx + 1, dy, dz), new BlockPos(dx + 1, dy + 1, dz), new BlockPos(dx, dy - 1, dz)};
 
-        setBlocks(positions, Blocks.GLASS.getDefaultState());
+        setBlocks(positions, block);
 
     }
 
