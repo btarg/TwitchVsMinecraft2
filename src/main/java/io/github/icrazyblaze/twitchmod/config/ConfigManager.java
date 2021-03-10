@@ -26,7 +26,7 @@ public class ConfigManager {
     static {
 
         COMMON_BUILDER.push("general");
-        TWITCH_CHANNEL_NAME = COMMON_BUILDER.comment("Name of Twitch channel").define("twitch_channel_name", "");
+        TWITCH_CHANNEL_NAME = COMMON_BUILDER.comment("Name of Twitch channel").define("twitch_channel_name", "channel");
         DISCORD_CHANNELS = COMMON_BUILDER.comment("Names of Discord channels to read commands from ['separated', 'like', 'this']").define("discord_channels", Lists.newArrayList("general"));
 
         SHOW_CHAT_MESSAGES = COMMON_BUILDER.comment("Should chat messages from Twitch or Discord be show in-game?").define("show_chat_messages", false);
@@ -34,7 +34,7 @@ public class ConfigManager {
         CHOOSE_COMMAND_DELAY = COMMON_BUILDER.comment("How many seconds until the next command is chosen").define("choose_command_delay", 20);
         CHOOSE_MESSAGE_DELAY = COMMON_BUILDER.comment("How many seconds until a random viewer-written message is shown on screen").define("choose_message_delay", 240);
 
-        MINECRAFT_USERNAME = COMMON_BUILDER.comment("The player's Minecraft username").define("minecraft_username", "");
+        MINECRAFT_USERNAME = COMMON_BUILDER.comment("The player's Minecraft username").define("minecraft_username", "name");
         COMMAND_PREFIX = COMMON_BUILDER.comment("The prefix for commands in Twitch or Discord").define("command_prefix", "!");
 
         ENABLE_COOLDOWN = COMMON_BUILDER.comment("Prevent the same command from being executed twice in a row").define("enable_cooldown", false);
