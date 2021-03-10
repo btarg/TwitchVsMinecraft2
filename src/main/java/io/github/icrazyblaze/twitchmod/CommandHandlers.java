@@ -55,11 +55,11 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -97,12 +97,16 @@ public class CommandHandlers {
 
         // Reflect LootTables class to get the private set that contains all the vanilla loot tables
         Class<LootTables> obj = LootTables.class;
-        Field lootField = obj.getDeclaredField("LOOT_TABLES");
-        lootField.setAccessible(true);
 
-        Set<ResourceLocation> tables = (Set<ResourceLocation>) lootField.get("LOOT_TABLES");
+        // New reflection: fixed crash in production
+        Set<ResourceLocation> tables = ObfuscationReflectionHelper.getPrivateValue(obj, null, "field_186391_ap");
 
-        return tables.toArray(new ResourceLocation[0]);
+        if (tables != null) {
+            return tables.toArray(new ResourceLocation[0]);
+        }
+
+        Main.logger.error("Could not get loot tables.");
+        return new ResourceLocation[]{};
 
     }
 
