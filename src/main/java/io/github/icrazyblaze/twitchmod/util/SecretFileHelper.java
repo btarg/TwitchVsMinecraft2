@@ -11,6 +11,8 @@ import java.util.Base64;
 import java.util.function.Supplier;
 
 /**
+ * SUCK = Somewhat Unreadable Connection Key files. 
+ * <br>
  * This class is responsible for reading from and writing to base64-encoded serialised files that contain keys.
  * This new system allows for the keys to be hidden, without requiring the keys to be entered every time the game starts.
  * No real encryption is done in this class: this system is entirely designed for idiot-proofing and preventing the keys from being leaked!
@@ -20,8 +22,8 @@ import java.util.function.Supplier;
  */
 public class SecretFileHelper implements Serializable {
 
-    private static final Supplier<Path> path_twitch = () -> FMLPaths.CONFIGDIR.get().resolve("twitch_key");
-    private static final Supplier<Path> path_discord = () -> FMLPaths.CONFIGDIR.get().resolve("discord_token");
+    private static final Supplier<Path> path_twitch = () -> FMLPaths.CONFIGDIR.get().resolve("twitch_key.suck");
+    private static final Supplier<Path> path_discord = () -> FMLPaths.CONFIGDIR.get().resolve("discord_token.suck");
 
 
     public static void setValuesFromFiles() {
