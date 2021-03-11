@@ -45,10 +45,8 @@ public class StatusCommand implements Command<CommandSource> {
             context.getSource().sendFeedback(new StringTextComponent(TextFormatting.RED + "Discord bot not connected."), false);
         }
 
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Twitch stream uptime: " + UptimeReader.getUptimeString(BotConfig.CHANNEL_NAME)), false);
-
-        // Display current settings
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Twitch channel name: " + BotConfig.CHANNEL_NAME), false);
+        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Twitch stream uptime: " + UptimeReader.getUptimeString(BotConfig.CHANNEL_NAME)), false);
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.BLUE + "Watching Discord channels: " + BotConfig.DISCORD_CHANNELS.toString()), false);
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Player affected: " + BotConfig.getUsername()), false);
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.DARK_PURPLE + "A new command will be chosen every " + TimerSystem.chatSecondsTrigger + " seconds."), false);

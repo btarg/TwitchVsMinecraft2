@@ -1,7 +1,6 @@
 package io.github.icrazyblaze.twitchmod.util;
 
 import com.mojang.brigadier.CommandDispatcher;
-import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.command.*;
@@ -16,11 +15,8 @@ import net.minecraft.command.Commands;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
-
-import static io.github.icrazyblaze.twitchmod.config.ConfigManager.COMMON_CONFIG;
 
 /**
  * SubscribeEvents go here to avoid clutter in the main class.
@@ -29,13 +25,6 @@ import static io.github.icrazyblaze.twitchmod.config.ConfigManager.COMMON_CONFIG
  */
 
 public class ForgeEventSubscriber {
-
-    @SubscribeEvent
-    public static void configLoaded(ModConfig.ModConfigEvent event) {
-        if (event.getConfig().getSpec() == COMMON_CONFIG) {
-            Main.updateConfig();
-        }
-    }
 
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {

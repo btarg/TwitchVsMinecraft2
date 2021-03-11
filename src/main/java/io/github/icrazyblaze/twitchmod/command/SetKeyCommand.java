@@ -7,6 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.icrazyblaze.twitchmod.Main;
+import io.github.icrazyblaze.twitchmod.util.SecretFileHelper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.util.text.StringTextComponent;
@@ -32,7 +33,10 @@ public class SetKeyCommand implements Command<CommandSource> {
         // UPDATE: check if key is valid (starts with oauth and is 30 characters long)
         // This command should be more idiot-proof now.
         if (key.startsWith("oauth:") && key.length() == 36) {
-            System.setProperty("twitch_oauth_key", key);
+
+            //System.setProperty("twitch_oauth_key", key);
+            SecretFileHelper.setTwitchKey(key);
+
         } else {
             throw new CommandSyntaxException(new SimpleCommandExceptionType(() -> ""), () -> "Invalid OAuth key.");
         }
