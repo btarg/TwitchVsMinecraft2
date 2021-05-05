@@ -21,7 +21,9 @@ public class CarrierBeesIntegration {
     private final RegistryObject<EntityType<?>> CARRIER_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "carrier_bee"), ForgeRegistries.ENTITIES);
     private final RegistryObject<EntityType<?>> BOMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "bomble_bee"), ForgeRegistries.ENTITIES);
     private final RegistryObject<EntityType<?>> FUMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "fumble_bee"), ForgeRegistries.ENTITIES);
-
+    private final RegistryObject<EntityType<?>> STUMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "stumble_bee"), ForgeRegistries.ENTITIES);
+    private final RegistryObject<EntityType<?>> TUMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "tumble_bee"), ForgeRegistries.ENTITIES);
+    private final RegistryObject<EntityType<?>> CRUMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "crumble_bee"), ForgeRegistries.ENTITIES);
 
     public static void initDynamicCommands(String sender) {
         ModProxy.carrierBeesProxy.ifPresent(proxy -> {
@@ -29,6 +31,9 @@ public class CarrierBeesIntegration {
             registerCommand(() -> spawnCarrierBee(sender, proxy.CARRIER_BEE.get()), "carrierbee", "bee");
             registerCommand(() -> spawnCarrierBee(sender, proxy.BOMBLE_BEE.get()), "bomblebee", "bee2");
             registerCommand(() -> spawnCarrierBee(sender, proxy.FUMBLE_BEE.get()), "fumblebee", "bee3");
+            registerCommand(() -> spawnCarrierBee(sender, proxy.STUMBLE_BEE.get()), "stumblebee", "bee4");
+            registerCommand(() -> spawnCarrierBee(sender, proxy.TUMBLE_BEE.get()), "tumblebee", "bee5");
+            registerCommand(() -> spawnCarrierBee(sender, proxy.CRUMBLE_BEE.get()), "crumblebee", "bee6");
 
         });
     }

@@ -111,7 +111,7 @@ public class ChatCommands {
         registerCommand(CommandHandlers::dropItem, "drop", "throw");
         registerCommand(() -> PlayerHelper.player().inventory.dropAllItems(), "dropall");
         registerCommand(CommandHandlers::infestBlock, "silverfish");
-        registerCommand(CommandHandlers::setRainAndThunder, "rain");
+        registerCommand(CommandHandlers::setRainAndThunder, "rain", "makeitrain");
         registerCommand(() -> CommandHandlers.setDifficulty(Difficulty.HARD), "hard", "hardmode");
         registerCommand(() -> CommandHandlers.setDifficulty(Difficulty.PEACEFUL), "peaceful", "peacefulmode");
         registerCommand(CommandHandlers::placeChest, "chest", "lootbox");

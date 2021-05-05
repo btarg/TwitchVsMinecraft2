@@ -4,8 +4,8 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
+import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.discord.DiscordConnectionHelper;
 import io.github.icrazyblaze.twitchmod.irc.TwitchConnectionHelper;
 import io.github.icrazyblaze.twitchmod.util.TimerSystem;
@@ -30,7 +30,7 @@ public class StatusCommand implements Command<CommandSource> {
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
 
-        Main.updateConfig();
+        ConfigManager.updateFromConfig();
 
         // Display current status and uptime
         if (TwitchConnectionHelper.isConnected()) {

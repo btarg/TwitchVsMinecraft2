@@ -11,9 +11,9 @@ updateJSONURL = "https://raw.githubusercontent.com/iCrazyBlaze/TwitchVsMinecraft
 displayURL = "https://bit.ly/TwitchVsMinecraft"
 logoFile = "logo.png"
 credits = "Idea from Kaze Emanuar. Thanks to iGoodie, Commoble and MMD."
-authors = "iCrazyBlaze"
+authors = "iCrazyBlaze (RonaRage)"
 description = '''
-Be at your viewers' mercy! Random commands are chosen from the Twitch chat.
+Be at your viewers' mercy! Random commands are chosen from Twitch chat or Discord.
 '''
 
 [[dependencies.twitchmod]]

@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.icrazyblaze.twitchmod.Main;
+import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.util.SecretFileHelper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -33,7 +33,7 @@ public class TokenCommand implements Command<CommandSource> {
         SecretFileHelper.setDiscordToken(key);
 
         // Update config
-        Main.updateConfig();
+        ConfigManager.updateFromConfig();
 
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Discord Bot Token set. Use /discord connect to start!"), false);
         return SINGLE_SUCCESS;

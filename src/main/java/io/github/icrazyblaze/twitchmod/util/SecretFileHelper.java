@@ -1,5 +1,6 @@
 package io.github.icrazyblaze.twitchmod.util;
 
+import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.lang3.SerializationUtils;
@@ -11,7 +12,7 @@ import java.util.Base64;
 import java.util.function.Supplier;
 
 /**
- * SUCK = Somewhat Unreadable Connection Key files. 
+ * SUCK = Serialised Unreadable Connection Key
  * <br>
  * This class is responsible for reading from and writing to base64-encoded serialised files that contain keys.
  * This new system allows for the keys to be hidden, without requiring the keys to be entered every time the game starts.
@@ -29,12 +30,15 @@ public class SecretFileHelper implements Serializable {
     public static void setValuesFromFiles() {
 
         try {
-
             BotConfig.TWITCH_KEY = getStringFromFile(path_twitch);
-            BotConfig.DISCORD_TOKEN = getStringFromFile(path_discord);
-
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.logger.error("No Twitch credentials found");
+        }
+
+        try {
+            BotConfig.DISCORD_TOKEN = getStringFromFile(path_discord);
+        } catch (Exception e) {
+            Main.logger.info("No Discord credentials found");
         }
 
     }
@@ -46,9 +50,11 @@ public class SecretFileHelper implements Serializable {
 
         // Encode into base64
         String encoded = Base64.getEncoder().encodeToString(toWrite.getBytes());
+        // Now with reversing!
+        String reversed = new StringBuilder(encoded).reverse().toString();
 
         // Write to file
-        SerializationUtils.serialize(encoded, obj_out);
+        SerializationUtils.serialize(reversed, obj_out);
 
     }
 
@@ -76,9 +82,10 @@ public class SecretFileHelper implements Serializable {
 
             // Read string from file
             String encoded = SerializationUtils.deserialize(obj_in);
+            String reversed = new StringBuilder(encoded).reverse().toString();
 
             // Decode and convert bytes to string
-            byte[] decoded = Base64.getDecoder().decode(encoded);
+            byte[] decoded = Base64.getDecoder().decode(reversed);
             return new String(decoded);
 
         }

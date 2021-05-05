@@ -6,7 +6,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import io.github.icrazyblaze.twitchmod.Main;
+import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.util.SecretFileHelper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -42,7 +42,7 @@ public class SetKeyCommand implements Command<CommandSource> {
         }
 
         // Update config
-        Main.updateConfig();
+        ConfigManager.updateFromConfig();
 
         context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Twitch OAuth key set. Use /ttv connect to start!"), false);
         return SINGLE_SUCCESS;

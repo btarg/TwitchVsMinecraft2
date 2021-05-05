@@ -1,13 +1,9 @@
 package io.github.icrazyblaze.twitchmod;
 
-import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
-import io.github.icrazyblaze.twitchmod.chat.FrenzyVote;
-import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.integration.ModProxy;
 import io.github.icrazyblaze.twitchmod.network.PacketHandler;
 import io.github.icrazyblaze.twitchmod.util.ForgeEventSubscriber;
-import io.github.icrazyblaze.twitchmod.util.SecretFileHelper;
 import io.github.icrazyblaze.twitchmod.util.TimerSystem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -61,34 +57,8 @@ public final class Main {
     @SubscribeEvent
     public static void configLoaded(ModConfig.ModConfigEvent event) {
         if (event.getConfig().getSpec() == COMMON_CONFIG) {
-            updateConfig();
+            ConfigManager.updateFromConfig();
         }
-    }
-
-    public static void updateConfig() {
-
-//        // System properties
-//        BotConfig.TWITCH_KEY = System.getProperty("twitch_oauth_key");
-//        BotConfig.DISCORD_TOKEN = System.getProperty("discord_bot_token");
-
-        SecretFileHelper.setValuesFromFiles();
-
-        // From common config file
-        BotConfig.DISCORD_CHANNELS = ConfigManager.getDiscordChannels();
-        BotConfig.CHANNEL_NAME = ConfigManager.getTwitch_channel_name();
-        BotConfig.showChatMessages = ConfigManager.isShow_chat_messages();
-        BotConfig.showCommandsInChat = ConfigManager.isShow_commands_in_chat();
-        BotConfig.prefix = ConfigManager.getCommand_prefix();
-        BotConfig.setUsername(ConfigManager.getMinecraft_username());
-        TimerSystem.chatSecondsTrigger = ConfigManager.getChoose_command_delay();
-        TimerSystem.chatSeconds = ConfigManager.getChoose_command_delay();
-        TimerSystem.messageSecondsTrigger = ConfigManager.getChoose_message_delay();
-        TimerSystem.messageSeconds = ConfigManager.getChoose_message_delay();
-        CommandHandlers.enableFrenzyMode = ConfigManager.isEnable_frenzy();
-        FrenzyVote.votesNeeded = ConfigManager.getVotes_needed();
-        ChatPicker.chatLogLength = ConfigManager.getBook_length();
-        ChatPicker.cooldownEnabled = ConfigManager.isEnable_cooldown();
-
     }
 
 

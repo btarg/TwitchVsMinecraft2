@@ -1,8 +1,8 @@
 package io.github.icrazyblaze.twitchmod.irc;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
-import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
+import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import org.pircbotx.Configuration;
@@ -22,7 +22,7 @@ public class TwitchConnectionHelper {
     public static void login() {
 
         // Update settings before connecting
-        Main.updateConfig();
+        ConfigManager.updateFromConfig();
 
         if (BotConfig.TWITCH_KEY.isEmpty()) {
             CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.RED + "No OAuth key provided. Use /ttv key to set the key."));

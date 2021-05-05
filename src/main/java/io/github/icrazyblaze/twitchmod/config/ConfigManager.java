@@ -2,25 +2,30 @@ package io.github.icrazyblaze.twitchmod.config;
 
 
 import com.google.common.collect.Lists;
+import io.github.icrazyblaze.twitchmod.CommandHandlers;
+import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
+import io.github.icrazyblaze.twitchmod.chat.FrenzyVote;
+import io.github.icrazyblaze.twitchmod.util.SecretFileHelper;
+import io.github.icrazyblaze.twitchmod.util.TimerSystem;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
 
 public class ConfigManager {
 
-    public static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
-    private static final ForgeConfigSpec.ConfigValue<String> TWITCH_CHANNEL_NAME;
-    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISCORD_CHANNELS;
-    private static final ForgeConfigSpec.BooleanValue SHOW_COMMANDS_IN_CHAT;
-    private static final ForgeConfigSpec.ConfigValue<Integer> CHOOSE_COMMAND_DELAY;
-    private static final ForgeConfigSpec.ConfigValue<Integer> CHOOSE_MESSAGE_DELAY;
-    private static final ForgeConfigSpec.ConfigValue<String> MINECRAFT_USERNAME;
-    private static final ForgeConfigSpec.ConfigValue<String> COMMAND_PREFIX;
-    private static final ForgeConfigSpec.BooleanValue ENABLE_COOLDOWN;
-    private static final ForgeConfigSpec.BooleanValue ENABLE_FRENZY;
-    private static final ForgeConfigSpec.ConfigValue<Integer> VOTES_NEEDED;
-    private static final ForgeConfigSpec.ConfigValue<Integer> BOOK_LENGTH;
-    private static final ForgeConfigSpec.BooleanValue SHOW_CHAT_MESSAGES;
+    static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
+    static final ForgeConfigSpec.ConfigValue<String> TWITCH_CHANNEL_NAME;
+    static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISCORD_CHANNELS;
+    static final ForgeConfigSpec.BooleanValue SHOW_COMMANDS_IN_CHAT;
+    static final ForgeConfigSpec.ConfigValue<Integer> CHOOSE_COMMAND_DELAY;
+    static final ForgeConfigSpec.ConfigValue<Integer> CHOOSE_MESSAGE_DELAY;
+    static final ForgeConfigSpec.ConfigValue<String> MINECRAFT_USERNAME;
+    static final ForgeConfigSpec.ConfigValue<String> COMMAND_PREFIX;
+    static final ForgeConfigSpec.BooleanValue ENABLE_COOLDOWN;
+    static final ForgeConfigSpec.BooleanValue ENABLE_FRENZY;
+    static final ForgeConfigSpec.ConfigValue<Integer> VOTES_NEEDED;
+    static final ForgeConfigSpec.ConfigValue<Integer> BOOK_LENGTH;
+    static final ForgeConfigSpec.BooleanValue SHOW_CHAT_MESSAGES;
     public static ForgeConfigSpec COMMON_CONFIG;
 
     static {
@@ -48,52 +53,26 @@ public class ConfigManager {
 
     }
 
-    public static String getTwitch_channel_name() {
-        return TWITCH_CHANNEL_NAME.get();
-    }
+    public static void updateFromConfig() {
 
-    public static boolean isShow_chat_messages() {
-        return SHOW_CHAT_MESSAGES.get();
-    }
+        SecretFileHelper.setValuesFromFiles();
 
-    public static boolean isShow_commands_in_chat() {
-        return SHOW_COMMANDS_IN_CHAT.get();
-    }
+        // From common config file
+        BotConfig.DISCORD_CHANNELS = DISCORD_CHANNELS.get();
+        BotConfig.CHANNEL_NAME = TWITCH_CHANNEL_NAME.get();
+        BotConfig.showChatMessages = SHOW_CHAT_MESSAGES.get();
+        BotConfig.showCommandsInChat = SHOW_COMMANDS_IN_CHAT.get();
+        BotConfig.prefix = COMMAND_PREFIX.get();
+        BotConfig.setUsername(MINECRAFT_USERNAME.get());
+        TimerSystem.chatSecondsTrigger = CHOOSE_COMMAND_DELAY.get();
+        TimerSystem.chatSeconds = CHOOSE_COMMAND_DELAY.get();
+        TimerSystem.messageSecondsTrigger = CHOOSE_MESSAGE_DELAY.get();
+        TimerSystem.messageSeconds = CHOOSE_MESSAGE_DELAY.get();
+        CommandHandlers.enableFrenzyMode = ENABLE_FRENZY.get();
+        FrenzyVote.votesNeeded = VOTES_NEEDED.get();
+        ChatPicker.chatLogLength = BOOK_LENGTH.get();
+        ChatPicker.cooldownEnabled = ENABLE_COOLDOWN.get();
 
-    public static int getChoose_command_delay() {
-        return CHOOSE_COMMAND_DELAY.get();
-    }
-
-    public static int getChoose_message_delay() {
-        return CHOOSE_MESSAGE_DELAY.get();
-    }
-
-    public static String getMinecraft_username() {
-        return MINECRAFT_USERNAME.get();
-    }
-
-    public static String getCommand_prefix() {
-        return COMMAND_PREFIX.get();
-    }
-
-    public static boolean isEnable_cooldown() {
-        return ENABLE_COOLDOWN.get();
-    }
-
-    public static boolean isEnable_frenzy() {
-        return ENABLE_FRENZY.get();
-    }
-
-    public static int getVotes_needed() {
-        return VOTES_NEEDED.get();
-    }
-
-    public static int getBook_length() {
-        return BOOK_LENGTH.get();
-    }
-
-    public static List<? extends String> getDiscordChannels() {
-        return DISCORD_CHANNELS.get();
     }
 
 }
