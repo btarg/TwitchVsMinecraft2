@@ -2,14 +2,15 @@ package io.github.icrazyblaze.twitchmod;
 
 import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
-import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.gui.MessageboxScreen;
 import io.github.icrazyblaze.twitchmod.network.MessageboxPacket;
 import io.github.icrazyblaze.twitchmod.network.PacketHandler;
-import io.github.icrazyblaze.twitchmod.util.TimerSystem;
+import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
+import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.SilverfishBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
@@ -27,6 +28,7 @@ import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
+import net.minecraft.network.play.server.SChangeGameStatePacket;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -134,11 +136,6 @@ public class CommandHandlers {
         player().world.setBlockState(bpos, state);
     }
 
-    public static void setBlocks(BlockPos[] positions, BlockState state) {
-        for (BlockPos bpos : positions) {
-            setBlock(bpos, state);
-        }
-    }
 
     public static void setOnFire() {
 
@@ -214,7 +211,6 @@ public class CommandHandlers {
         }
 
         TimerSystem.deathTimerSeconds = 60;
-        TimerSystem.deathTimerTicks = 0;
         TimerSystem.deathTimerEnabled = true;
 
         player().sendStatusMessage(new StringTextComponent(TextFormatting.DARK_RED + "Chat has given you " + TimerSystem.deathTimerSeconds + " seconds to live."), true);
@@ -228,7 +224,6 @@ public class CommandHandlers {
         }
 
         TimerSystem.frenzyTimerSeconds = 10;
-        TimerSystem.frenzyTimerTicks = 0;
         ChatPicker.instantCommands = true;
 
         previousDeathTimerState = TimerSystem.deathTimerEnabled;
@@ -246,7 +241,6 @@ public class CommandHandlers {
 
         ChatPicker.enabled = false;
         TimerSystem.peaceTimerSeconds = 30;
-        TimerSystem.peaceTimerTicks = 0;
         TimerSystem.peaceTimerEnabled = true;
 
         previousDeathTimerState = TimerSystem.deathTimerEnabled;
@@ -341,6 +335,10 @@ public class CommandHandlers {
         playSound(SoundEvents.ENTITY_ZOMBIFIED_PIGLIN_ANGRY, SoundCategory.HOSTILE, 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
     }
 
+    public static void elderGuardianScare() {
+        player().connection.sendPacket(new SChangeGameStatePacket(SChangeGameStatePacket.ELDER_GUARDIAN_EFFECT, 1.0F));
+    }
+
     public static void playSound(SoundEvent sound, SoundCategory category, float volume, float pitch) {
 
         ServerPlayerEntity player = player();
@@ -391,10 +389,10 @@ public class CommandHandlers {
         ItemStack item = new ItemStack(Items.PLAYER_HEAD, 1);
 
         // Add NBT if we can
-        if (BotConfig.getUsername() != null) {
+        if (PlayerHelper.getUsername() != null) {
 
             CompoundNBT nbt = item.getOrCreateTag();
-            nbt.putString("SkullOwner", BotConfig.getUsername());
+            nbt.putString("SkullOwner", PlayerHelper.getUsername());
             item.write(nbt);
 
         }
@@ -428,7 +426,7 @@ public class CommandHandlers {
 
         ServerPlayerEntity player = player();
 
-        int range = 50;
+        int range = 64;
 
         Vector3d lookVector = player.getLookVec();
         Vector3d posVector = new Vector3d(player.getX(), player.getEyeY(), player.getZ());
@@ -450,7 +448,7 @@ public class CommandHandlers {
 
         ServerPlayerEntity player = player();
 
-        int range = 50;
+        int range = 64;
 
         Vector3d lookVector = player.getLookVec();
         Vector3d posVector = new Vector3d(player.getX(), player.getEyeY(), player.getZ());
@@ -463,36 +461,29 @@ public class CommandHandlers {
         }
 
         BlockPos bpos = new BlockPos(rayTrace.getHitVec());
-
         Block thisBlock = player.world.getBlockState(bpos).getBlock();
 
-        if (thisBlock == Blocks.COBBLESTONE) {
-            setBlock(bpos, Blocks.INFESTED_COBBLESTONE.getDefaultState());
-        } else if (thisBlock == Blocks.STONE) {
-            setBlock(bpos, Blocks.INFESTED_STONE.getDefaultState());
-        } else if (thisBlock == Blocks.STONE_BRICKS) {
-            setBlock(bpos, Blocks.INFESTED_STONE_BRICKS.getDefaultState());
-        } else if (thisBlock == Blocks.MOSSY_STONE_BRICKS) {
-            setBlock(bpos, Blocks.INFESTED_MOSSY_STONE_BRICKS.getDefaultState());
-        } else if (thisBlock == Blocks.CRACKED_STONE_BRICKS) {
-            setBlock(bpos, Blocks.INFESTED_CRACKED_STONE_BRICKS.getDefaultState());
-        } else if (thisBlock == Blocks.CHISELED_STONE_BRICKS) {
-            setBlock(bpos, Blocks.INFESTED_CHISELED_STONE_BRICKS.getDefaultState());
-        }
+        setBlock(bpos, SilverfishBlock.infest(thisBlock));
 
     }
 
     public static void surroundPlayer(BlockState block) {
 
         ServerPlayerEntity player = player();
+        BlockPos playerPos = player.getBlockPos();
 
-        double dx = player.getX();
-        double dy = player.getY();
-        double dz = player.getZ();
+        BlockPos[] positions = {playerPos.north(), playerPos.east(), playerPos.south(), playerPos.west()};
 
-        BlockPos[] positions = {new BlockPos(dx, dy + 2, dz), new BlockPos(dx, dy, dz - 1), new BlockPos(dx, dy + 1, dz - 1), new BlockPos(dx, dy, dz + 1), new BlockPos(dx, dy + 1, dz + 1), new BlockPos(dx - 1, dy, dz), new BlockPos(dx - 1, dy + 1, dz), new BlockPos(dx + 1, dy, dz), new BlockPos(dx + 1, dy + 1, dz), new BlockPos(dx, dy - 1, dz)};
+        for (BlockPos bpos : positions) {
+            setBlock(bpos, block);
+            setBlock(bpos.up(), block);
+        }
 
-        setBlocks(positions, block);
+        setBlock(playerPos.up().up(), block);
+
+        if (player.world.getBlockState(playerPos.down()) == Blocks.AIR.getDefaultState()) {
+            setBlock(playerPos.down(), block);
+        }
 
     }
 
@@ -775,6 +766,9 @@ public class CommandHandlers {
         if (player.isPassenger()) {
             player.stopRiding();
         }
+        if (player.isSleeping()) {
+            player.wakeUp();
+        }
 
     }
 
@@ -847,7 +841,7 @@ public class CommandHandlers {
 
             ListNBT pages = new ListNBT();
 
-            nbt.putString("author", BotConfig.getUsername());
+            nbt.putString("author", PlayerHelper.getUsername());
             nbt.putString("title", "Chat Log " + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
 
             for (String str : text) {

@@ -2,7 +2,7 @@ package io.github.icrazyblaze.twitchmod.gui;
 
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
-import io.github.icrazyblaze.twitchmod.util.TimerSystem;
+import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;

@@ -173,7 +173,7 @@ public class ChatPicker {
         // Skip checking if force commands is enabled
         if (forceCommands || instantCommands) {
 
-            doCommand(message, sender);
+            doCommandMultiplayer(message, sender);
             return;
 
         }
@@ -204,6 +204,42 @@ public class ChatPicker {
 
     }
 
+
+    /**
+     * Attempts to run doCommand for every player in the affected players list.
+     *
+     * @param message The chat command, e.g. "!creeper"
+     * @param sender  The sender's name, which is used in some commands.
+     * @return If the command doesn't run, then this method returns false.
+     * @since 3.5.0
+     */
+    public static boolean doCommandMultiplayer(String message, String sender) {
+
+        // Get all of the players from a list and set the player's username before executing.
+        // This means we can have multiple players affected!
+
+        if (PlayerHelper.defaultServer.getPlayerList().getPlayers().size() < 2 || PlayerHelper.affectedPlayers.size() > 2) {
+            return doCommand(message, sender);
+        }
+
+        try {
+            for (String playername : PlayerHelper.affectedPlayers) {
+
+                PlayerHelper.setUsername(playername);
+
+                if (!doCommand(message, sender)) {
+                    return false;
+                }
+
+            }
+
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     /**
      * Attempts to parse and then execute a command.
      *
@@ -220,10 +256,10 @@ public class ChatPicker {
 
             // UPDATE: we now use the second part of this split to avoid cutting the commands off the beginning in actual functions.
             // e.g. before, showMessageBox() would be sent the whole message from twitch chat, and then substring the word "messagebox".
-            
+
             // Trim to avoid splitting on accidental spaces
             message = message.trim();
-            
+
             String commandString;
             String argString;
             if (message.contains(" ")) {
@@ -249,13 +285,14 @@ public class ChatPicker {
                 if (BotConfig.showChatMessages && BotConfig.showCommandsInChat) {
                     CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
                 }
+                Main.logger.info("Command Chosen: " + BotConfig.prefix + message);
 
                 // Below will not be executed if the command does not run
                 lastCommand = message;
                 return true;
 
             } catch (Exception e) {
-                e.printStackTrace();
+                commandFailed();
             }
 
         }
@@ -280,7 +317,7 @@ public class ChatPicker {
             message = chatBuffer.get(listRandom);
             sender = chatSenderBuffer.get(listRandom);
 
-            ChatCommands.commandHasExecuted = doCommand(message, sender);
+            ChatCommands.commandHasExecuted = doCommandMultiplayer(message, sender);
 
             // If command is invalid
             if (!ChatCommands.commandHasExecuted) {

@@ -8,6 +8,7 @@ public class IntegrationWrapper {
         CarrierBeesIntegration.initDynamicCommands(sender);
 
     }
+
     public static void initModCommands() {
 
         ChanceCubesIntegration.initCommands();

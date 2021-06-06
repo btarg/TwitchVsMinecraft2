@@ -35,6 +35,7 @@ public class ChatCommands {
      *
      * @param runnable The function linked to the command
      * @param keys     Aliases for the command
+     * @see ChatPicker
      */
     public static void registerCommand(Runnable runnable, String... keys) {
 
@@ -98,7 +99,9 @@ public class ChatCommands {
         registerCommand(() -> CommandHandlers.playSound(SoundEvents.ENTITY_WITCH_AMBIENT, SoundCategory.HOSTILE, 1.0F, 1.0F), "witchscare", "hehe");
         registerCommand(() -> CommandHandlers.playSound(SoundEvents.ENTITY_GHAST_WARN, SoundCategory.HOSTILE, 10.0F, 1.0F), "ghastscare", "yikes");
         registerCommand(() -> CommandHandlers.playSound(SoundEvents.ENTITY_PHANTOM_AMBIENT, SoundCategory.HOSTILE, 10.0F, 1.0F), "phantomscare", "needsleep");
+        registerCommand(() -> CommandHandlers.playSound(SoundEvents.ENTITY_WITHER_AMBIENT, SoundCategory.HOSTILE, 10.0F, 1.0F), "witherscare", "wither");
         registerCommand(CommandHandlers::pigmanScare, "pigmanscare", "aggro");
+        registerCommand(CommandHandlers::elderGuardianScare, "guardian", "guardianscare");
         registerCommand(() -> CommandHandlers.playSound(SoundEvents.BLOCK_ANVIL_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F), "anvilscare");
         registerCommand(CommandHandlers::spawnLightning, "lightning");
         registerCommand(CommandHandlers::spawnFireball, "fireball");
@@ -149,7 +152,7 @@ public class ChatCommands {
         registerCommand(() -> CommandHandlers.rollTheDice(sender), "rtd", "roll", "dice");
         registerCommand(() -> FrenzyVote.vote(sender), "frenzy", "frenzymode", "suddendeath");
 
-        // Carrier bees commands
+        // Mod dynamic commands
         IntegrationWrapper.initModDynamicCommands(sender);
 
     }

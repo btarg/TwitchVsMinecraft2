@@ -1,7 +1,7 @@
 package io.github.icrazyblaze.twitchmod.gui;
 
 import io.github.icrazyblaze.twitchmod.Main;
-import io.github.icrazyblaze.twitchmod.util.TimerSystem;
+import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;

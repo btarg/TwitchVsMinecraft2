@@ -4,7 +4,7 @@ import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.integration.ModProxy;
 import io.github.icrazyblaze.twitchmod.network.PacketHandler;
 import io.github.icrazyblaze.twitchmod.util.ForgeEventSubscriber;
-import io.github.icrazyblaze.twitchmod.util.TimerSystem;
+import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -33,10 +33,6 @@ public final class Main {
 
         // Instantiate and subscribe our config instance
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigManager.COMMON_CONFIG);
-
-        // Initialise system property
-        System.setProperty("twitch_oauth_key", "");
-        System.setProperty("discord_bot_token", "");
 
         // Register event subscribers
         MinecraftForge.EVENT_BUS.register(ForgeEventSubscriber.class);

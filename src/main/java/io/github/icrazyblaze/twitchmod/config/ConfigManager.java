@@ -5,8 +5,9 @@ import com.google.common.collect.Lists;
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.chat.FrenzyVote;
+import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import io.github.icrazyblaze.twitchmod.util.SecretFileHelper;
-import io.github.icrazyblaze.twitchmod.util.TimerSystem;
+import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class ConfigManager {
     static final ForgeConfigSpec.BooleanValue SHOW_COMMANDS_IN_CHAT;
     static final ForgeConfigSpec.ConfigValue<Integer> CHOOSE_COMMAND_DELAY;
     static final ForgeConfigSpec.ConfigValue<Integer> CHOOSE_MESSAGE_DELAY;
-    static final ForgeConfigSpec.ConfigValue<String> MINECRAFT_USERNAME;
+    static final ForgeConfigSpec.ConfigValue<List<? extends String>> MINECRAFT_USERNAME;
     static final ForgeConfigSpec.ConfigValue<String> COMMAND_PREFIX;
     static final ForgeConfigSpec.BooleanValue ENABLE_COOLDOWN;
     static final ForgeConfigSpec.BooleanValue ENABLE_FRENZY;
@@ -39,7 +40,7 @@ public class ConfigManager {
         CHOOSE_COMMAND_DELAY = COMMON_BUILDER.comment("How many seconds until the next command is chosen").define("choose_command_delay", 20);
         CHOOSE_MESSAGE_DELAY = COMMON_BUILDER.comment("How many seconds until a random viewer-written message is shown on screen").define("choose_message_delay", 240);
 
-        MINECRAFT_USERNAME = COMMON_BUILDER.comment("The player's Minecraft username").define("minecraft_username", "name");
+        MINECRAFT_USERNAME = COMMON_BUILDER.comment("The players' Minecraft usernames that will be effected").define("minecraft_username", Lists.newArrayList("Dev", "Test"));
         COMMAND_PREFIX = COMMON_BUILDER.comment("The prefix for commands in Twitch or Discord").define("command_prefix", "!");
 
         ENABLE_COOLDOWN = COMMON_BUILDER.comment("Prevent the same command from being executed twice in a row").define("enable_cooldown", false);
@@ -63,7 +64,11 @@ public class ConfigManager {
         BotConfig.showChatMessages = SHOW_CHAT_MESSAGES.get();
         BotConfig.showCommandsInChat = SHOW_COMMANDS_IN_CHAT.get();
         BotConfig.prefix = COMMAND_PREFIX.get();
-        BotConfig.setUsername(MINECRAFT_USERNAME.get());
+
+        // Default affected player is the first in the list
+        PlayerHelper.setUsername(MINECRAFT_USERNAME.get().get(0));
+        PlayerHelper.affectedPlayers = MINECRAFT_USERNAME.get();
+
         TimerSystem.chatSecondsTrigger = CHOOSE_COMMAND_DELAY.get();
         TimerSystem.chatSeconds = CHOOSE_COMMAND_DELAY.get();
         TimerSystem.messageSecondsTrigger = CHOOSE_MESSAGE_DELAY.get();
