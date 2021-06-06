@@ -220,7 +220,10 @@ public class ChatPicker {
 
             // UPDATE: we now use the second part of this split to avoid cutting the commands off the beginning in actual functions.
             // e.g. before, showMessageBox() would be sent the whole message from twitch chat, and then substring the word "messagebox".
-
+            
+            // Trim to avoid splitting on accidental spaces
+            message = message.trim();
+            
             String commandString;
             String argString;
             if (message.contains(" ")) {
