@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         maven { url = "https://files.minecraftforge.net/maven" }
-        jcenter()
+        maven { url = "https://plugins.gradle.org/m2/" }
         mavenCentral()
     }
     dependencies {
@@ -25,7 +25,7 @@ repositories {
     }
     mavenCentral()
     maven { url "https://jitpack.io" }
-    jcenter()
+    maven { url "https://plugins.gradle.org/m2/" }
     maven {
         url "https://www.cursemaven.com"
         content {
@@ -80,9 +80,9 @@ dependencies {
 
 //    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.32')
 //
-    implementation fg.deobf("curse.maven:carrierbees-372939:3377243") // Carrier Bees 1.16.3-0.0.2.3
-//    implementation fg.deobf("curse.maven:chance-cubes-233113:3078792") // Chance Cubes 1.16.3-5.0.2.394
-//    implementation fg.deobf("curse.maven:mimic-mod-475842:3292290") // Mimic Mod 1.11.2
+    implementation fg.deobf("curse.maven:carrierbees-372939:3377243") // Carrier Bees
+//    implementation fg.deobf("curse.maven:chance-cubes-233113:3078792") // Chance Cubes
+//    implementation fg.deobf("curse.maven:mimic-mod-475842:3292290") // Mimic Mod
 
 }
 
