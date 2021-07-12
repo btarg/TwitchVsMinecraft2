@@ -29,6 +29,7 @@ public class CarrierBeesIntegration {
     private final RegistryObject<EntityType<?>> JUMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "jumble_bee"), ForgeRegistries.ENTITIES);
     private final RegistryObject<EntityType<?>> THIMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "thimble_bee"), ForgeRegistries.ENTITIES);
     private final RegistryObject<EntityType<?>> BOOGER_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "thimble_bee"), ForgeRegistries.ENTITIES);
+    private final RegistryObject<EntityType<?>> BEEHEMOTH = RegistryObject.of(new ResourceLocation("carrierbees", "beehemoth"), ForgeRegistries.ENTITIES);
 
 
     public static void initDynamicCommands(String sender) {
@@ -44,6 +45,7 @@ public class CarrierBeesIntegration {
             registerCommand(() -> spawnCarrierBee(sender, proxy.JUMBLE_BEE.get()), "jumblebee", "bee8");
             registerCommand(() -> spawnCarrierBee(sender, proxy.THIMBLE_BEE.get()), "thimblebee", "bee9");
             registerCommand(() -> spawnCarrierBee(sender, proxy.BOOGER_BEE.get()), "boogerbee", "bee10");
+            registerCommand(() -> spawnCarrierBee(sender, proxy.BEEHEMOTH.get()), "beehemoth", "bigbee");
 
         });
     }
