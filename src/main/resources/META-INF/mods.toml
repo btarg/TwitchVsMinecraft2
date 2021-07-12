@@ -7,11 +7,11 @@ issueTrackerURL = "http://github.com/iCrazyBlaze/TwitchVsMinecraft2/issues"
 modId = "twitchmod"
 version = "${file.jarVersion}"
 displayName = "Twitch Vs Minecraft Reloaded"
-updateJSONURL = "https://raw.githubusercontent.com/iCrazyBlaze/TwitchVsMinecraft2/1.16/update.json"
+updateJSONURL = "https://raw.githubusercontent.com/iCrazyBlaze/TwitchVsMinecraft2/main/update.json"
 displayURL = "https://bit.ly/TwitchVsMinecraft"
 logoFile = "logo.png"
 credits = "Idea from Kaze Emanuar. Thanks to iGoodie, Commoble and MMD."
-authors = "iCrazyBlaze (RonaRage)"
+authors = "RonaRage (iCrazyBlaze)"
 description = '''
 Be at your viewers' mercy! Random commands are chosen from Twitch chat or Discord.
 '''

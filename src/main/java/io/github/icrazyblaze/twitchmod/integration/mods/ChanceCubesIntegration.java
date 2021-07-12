@@ -1,6 +1,7 @@
-package io.github.icrazyblaze.twitchmod.integration;
+package io.github.icrazyblaze.twitchmod.integration.mods;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
+import io.github.icrazyblaze.twitchmod.integration.ModProxy;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;

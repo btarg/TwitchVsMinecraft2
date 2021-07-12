@@ -122,7 +122,7 @@ public class CommandHandlers {
     }
 
 
-    public static void addPotionEffects(EffectInstance[] effectInstances) {
+    public static void addPotionEffects(EffectInstance... effectInstances) {
 
         ServerPlayerEntity player = player();
 
@@ -434,7 +434,7 @@ public class CommandHandlers {
         RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player);
         RayTraceResult rayTrace = player.world.rayTraceBlocks(context);
 
-        if (rayTrace == null || rayTrace.getType() == RayTraceResult.Type.MISS) {
+        if (rayTrace.getType() != RayTraceResult.Type.BLOCK) {
             return;
         }
 
@@ -456,7 +456,7 @@ public class CommandHandlers {
         RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player);
         RayTraceResult rayTrace = player.world.rayTraceBlocks(context);
 
-        if (rayTrace == null || rayTrace.getType() == RayTraceResult.Type.MISS) {
+        if (rayTrace.getType() != RayTraceResult.Type.BLOCK) {
             return;
         }
 

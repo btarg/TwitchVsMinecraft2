@@ -1,7 +1,8 @@
-package io.github.icrazyblaze.twitchmod.discord;
+package io.github.icrazyblaze.twitchmod.bots.discord;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
+import io.github.icrazyblaze.twitchmod.chat.ChatPickerHelper;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.util.CalculateMinecraftColor;
 import net.dv8tion.jda.api.JDA;
@@ -13,12 +14,9 @@ import net.dv8tion.jda.api.events.DisconnectEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.minecraft.util.concurrent.ThreadTaskExecutor;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -139,22 +137,7 @@ public class DiscordBot extends ListenerAdapter {
 
         } else if (message.startsWith(BotConfig.prefix) || ChatPicker.logMessages) {
 
-            String finalMessage = message;
-
-            Runnable runnable = (() -> {
-
-                // Add command to queue
-                ChatPicker.checkChat(finalMessage, sender);
-
-            });
-
-            // Only run on main thread
-            ThreadTaskExecutor executor = LogicalSidedProvider.WORKQUEUE.get(LogicalSide.SERVER);
-            if (!executor.isOnExecutionThread()) {
-                executor.deferTask(runnable);
-            } else {
-                runnable.run();
-            }
+            ChatPickerHelper.checkChatThreaded(message, sender);
 
         }
     }

@@ -1,18 +1,16 @@
-package io.github.icrazyblaze.twitchmod.irc;
+package io.github.icrazyblaze.twitchmod.bots.irc;
 
 
 import com.google.common.collect.ImmutableMap;
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
+import io.github.icrazyblaze.twitchmod.chat.ChatPickerHelper;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.util.CalculateMinecraftColor;
-import net.minecraft.util.concurrent.ThreadTaskExecutor;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.ConnectEvent;
 import org.pircbotx.hooks.events.DisconnectEvent;
@@ -131,22 +129,7 @@ public class TwitchBot extends ListenerAdapter {
 
         } else if (message.startsWith(BotConfig.prefix) || ChatPicker.logMessages) {
 
-            String finalMessage = message;
-
-            Runnable runnable = (() -> {
-
-                // Add command to queue
-                ChatPicker.checkChat(finalMessage, sender);
-
-            });
-
-            // Only run on main thread
-            ThreadTaskExecutor executor = LogicalSidedProvider.WORKQUEUE.get(LogicalSide.SERVER);
-            if (!executor.isOnExecutionThread()) {
-                executor.deferTask(runnable);
-            } else {
-                runnable.run();
-            }
+            ChatPickerHelper.checkChatThreaded(message, sender);
 
         }
 

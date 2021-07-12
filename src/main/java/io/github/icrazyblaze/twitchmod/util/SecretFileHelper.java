@@ -19,7 +19,7 @@ import java.util.function.Supplier;
  * No real encryption is done in this class: this system is entirely designed for idiot-proofing and preventing the keys from being leaked!
  *
  * @see io.github.icrazyblaze.twitchmod.config.BotConfig
- * @since 3.4.3
+ * @since 3.5.0
  */
 public class SecretFileHelper implements Serializable {
 

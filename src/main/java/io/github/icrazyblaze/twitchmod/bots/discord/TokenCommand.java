@@ -1,4 +1,4 @@
-package io.github.icrazyblaze.twitchmod.discord;
+package io.github.icrazyblaze.twitchmod.bots.discord;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -29,7 +29,6 @@ public class TokenCommand implements Command<CommandSource> {
         // Get key and store in system properties
         String key = StringArgumentType.getString(context, "token");
 
-        //System.setProperty("discord_bot_token", key);
         SecretFileHelper.setDiscordToken(key);
 
         // Update config

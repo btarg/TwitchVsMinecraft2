@@ -1,4 +1,4 @@
-package io.github.icrazyblaze.twitchmod.irc;
+package io.github.icrazyblaze.twitchmod.bots.irc;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
@@ -71,7 +71,7 @@ public class TwitchConnectionHelper {
 
         } catch (Exception e) {
             e.printStackTrace();
-            CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.RED + "Could not connect: " + e.toString()));
+            CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.RED + "Could not connect: " + e));
         }
     }
 

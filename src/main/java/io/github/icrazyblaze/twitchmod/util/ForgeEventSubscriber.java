@@ -1,15 +1,15 @@
 package io.github.icrazyblaze.twitchmod.util;
 
 import com.mojang.brigadier.CommandDispatcher;
+import io.github.icrazyblaze.twitchmod.bots.discord.DiscordConnectCommand;
+import io.github.icrazyblaze.twitchmod.bots.discord.DiscordConnectionHelper;
+import io.github.icrazyblaze.twitchmod.bots.discord.DiscordDisconnectCommand;
+import io.github.icrazyblaze.twitchmod.bots.discord.TokenCommand;
+import io.github.icrazyblaze.twitchmod.bots.irc.TwitchConnectionHelper;
 import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.command.*;
-import io.github.icrazyblaze.twitchmod.discord.DiscordConnectCommand;
-import io.github.icrazyblaze.twitchmod.discord.DiscordConnectionHelper;
-import io.github.icrazyblaze.twitchmod.discord.DiscordDisconnectCommand;
-import io.github.icrazyblaze.twitchmod.discord.TokenCommand;
 import io.github.icrazyblaze.twitchmod.integration.IntegrationWrapper;
-import io.github.icrazyblaze.twitchmod.irc.TwitchConnectionHelper;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;

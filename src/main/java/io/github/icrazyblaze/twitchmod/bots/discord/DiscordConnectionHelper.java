@@ -1,4 +1,4 @@
-package io.github.icrazyblaze.twitchmod.discord;
+package io.github.icrazyblaze.twitchmod.bots.discord;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;

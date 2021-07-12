@@ -61,22 +61,22 @@ public class ChatCommands {
      */
     public static void initCommands() {
 
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.POISON, 400, 0)}), "poison");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.HUNGER, 400, 255)}), "hunger");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.SLOWNESS, 400, 5)}), "slowness");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.BLINDNESS, 400, 0)}), "blindness", "jinkies");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.SPEED, 400, 10)}), "speed", "gottagofast");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.NAUSEA, 400, 0)}), "nausea", "dontfeelsogood");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.MINING_FATIGUE, 400, 0)}), "fatigue");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.LEVITATION, 200, 1)}), "levitate", "fly");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.LEVITATION, 400, 255)}), "nofall", "float");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.LEVITATION, 200, 1)}), "levitate", "fly");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.HEALTH_BOOST, 400, 1), new EffectInstance(Effects.REGENERATION, 400, 1)}), "regen", "heal", "health");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.SATURATION, 200, 255)}), "saturation", "feed");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.JUMP_BOOST, 400, 2)}), "jumpboost", "yeet");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.HASTE, 400, 2)}), "haste", "diggydiggy");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.BAD_OMEN, 400, 0)}), "badomen", "pillager", "raid");
-        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance[]{new EffectInstance(Effects.FIRE_RESISTANCE, 800, 0), new EffectInstance(Effects.RESISTANCE, 800, 4)}), "resistance");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.POISON, 400, 0)), "poison");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.HUNGER, 400, 255)), "hunger");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.SLOWNESS, 400, 5)), "slowness");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.BLINDNESS, 400, 0)), "blindness", "jinkies");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.SPEED, 400, 10)), "speed", "gottagofast");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.NAUSEA, 400, 0)), "nausea", "dontfeelsogood");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.MINING_FATIGUE, 400, 0)), "fatigue");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.LEVITATION, 200, 1)), "levitate", "fly");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.LEVITATION, 400, 255)), "nofall", "float");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.LEVITATION, 200, 1)), "levitate", "fly");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.HEALTH_BOOST, 400, 1), new EffectInstance(Effects.REGENERATION, 400, 1)), "regen", "heal", "health");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.SATURATION, 200, 255)), "saturation", "feed");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.JUMP_BOOST, 400, 2)), "jumpboost", "yeet");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.HASTE, 400, 2)), "haste", "diggydiggy");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.BAD_OMEN, 400, 0)), "badomen", "pillager", "raid");
+        registerCommand(() -> CommandHandlers.addPotionEffects(new EffectInstance(Effects.FIRE_RESISTANCE, 800, 0), new EffectInstance(Effects.RESISTANCE, 800, 4)), "resistance");
         registerCommand(() -> PlayerHelper.player().clearActivePotions(), "cleareffects", "milk");
         registerCommand(CommandHandlers::setOnFire, "fire", "burn");
         registerCommand(CommandHandlers::floorIsLava, "lava", "floorislava");

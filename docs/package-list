@@ -1,10 +1,12 @@
 io.github.icrazyblaze.twitchmod
+io.github.icrazyblaze.twitchmod.bots.discord
+io.github.icrazyblaze.twitchmod.bots.irc
 io.github.icrazyblaze.twitchmod.chat
 io.github.icrazyblaze.twitchmod.command
 io.github.icrazyblaze.twitchmod.config
-io.github.icrazyblaze.twitchmod.discord
 io.github.icrazyblaze.twitchmod.gui
 io.github.icrazyblaze.twitchmod.integration
-io.github.icrazyblaze.twitchmod.irc
+io.github.icrazyblaze.twitchmod.integration.mods
 io.github.icrazyblaze.twitchmod.network
 io.github.icrazyblaze.twitchmod.util
+io.github.icrazyblaze.twitchmod.util.timers

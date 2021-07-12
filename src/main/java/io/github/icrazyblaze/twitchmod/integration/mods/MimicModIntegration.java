@@ -1,5 +1,6 @@
-package io.github.icrazyblaze.twitchmod.integration;
+package io.github.icrazyblaze.twitchmod.integration.mods;
 
+import io.github.icrazyblaze.twitchmod.integration.ModProxy;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;

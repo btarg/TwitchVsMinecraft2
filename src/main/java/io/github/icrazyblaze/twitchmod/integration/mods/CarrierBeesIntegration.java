@@ -1,6 +1,7 @@
-package io.github.icrazyblaze.twitchmod.integration;
+package io.github.icrazyblaze.twitchmod.integration.mods;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
+import io.github.icrazyblaze.twitchmod.integration.ModProxy;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -24,6 +25,11 @@ public class CarrierBeesIntegration {
     private final RegistryObject<EntityType<?>> STUMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "stumble_bee"), ForgeRegistries.ENTITIES);
     private final RegistryObject<EntityType<?>> TUMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "tumble_bee"), ForgeRegistries.ENTITIES);
     private final RegistryObject<EntityType<?>> CRUMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "crumble_bee"), ForgeRegistries.ENTITIES);
+    private final RegistryObject<EntityType<?>> DRUMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "drumble_bee"), ForgeRegistries.ENTITIES);
+    private final RegistryObject<EntityType<?>> JUMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "jumble_bee"), ForgeRegistries.ENTITIES);
+    private final RegistryObject<EntityType<?>> THIMBLE_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "thimble_bee"), ForgeRegistries.ENTITIES);
+    private final RegistryObject<EntityType<?>> BOOGER_BEE = RegistryObject.of(new ResourceLocation("carrierbees", "thimble_bee"), ForgeRegistries.ENTITIES);
+
 
     public static void initDynamicCommands(String sender) {
         ModProxy.carrierBeesProxy.ifPresent(proxy -> {
@@ -34,6 +40,10 @@ public class CarrierBeesIntegration {
             registerCommand(() -> spawnCarrierBee(sender, proxy.STUMBLE_BEE.get()), "stumblebee", "bee4");
             registerCommand(() -> spawnCarrierBee(sender, proxy.TUMBLE_BEE.get()), "tumblebee", "bee5");
             registerCommand(() -> spawnCarrierBee(sender, proxy.CRUMBLE_BEE.get()), "crumblebee", "bee6");
+            registerCommand(() -> spawnCarrierBee(sender, proxy.DRUMBLE_BEE.get()), "drumblebee", "bee7");
+            registerCommand(() -> spawnCarrierBee(sender, proxy.JUMBLE_BEE.get()), "jumblebee", "bee8");
+            registerCommand(() -> spawnCarrierBee(sender, proxy.THIMBLE_BEE.get()), "thimblebee", "bee9");
+            registerCommand(() -> spawnCarrierBee(sender, proxy.BOOGER_BEE.get()), "boogerbee", "bee10");
 
         });
     }

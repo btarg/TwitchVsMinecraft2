@@ -3,7 +3,7 @@ package io.github.icrazyblaze.twitchmod.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import io.github.icrazyblaze.twitchmod.irc.TwitchConnectionHelper;
+import io.github.icrazyblaze.twitchmod.bots.irc.TwitchConnectionHelper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 

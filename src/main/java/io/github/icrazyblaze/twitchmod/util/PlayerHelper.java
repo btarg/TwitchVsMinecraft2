@@ -47,7 +47,7 @@ public class PlayerHelper {
             return username;
 
         } catch (Exception e) {
-            return null;
+            return "";
         }
 
     }

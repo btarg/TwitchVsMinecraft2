@@ -29,6 +29,7 @@ public class TimerSystem {
 
             if (ticks == 20) { // 20 serverticks = 1 second
                 second();
+                ticks = 0;
             }
 
         }
