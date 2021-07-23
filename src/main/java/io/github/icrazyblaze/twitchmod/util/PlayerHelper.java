@@ -1,10 +1,12 @@
 package io.github.icrazyblaze.twitchmod.util;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
+
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.PlayerList;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
+
+import net.minecraft.server.players.PlayerList;
 
 public class PlayerHelper {
 
@@ -17,10 +19,10 @@ public class PlayerHelper {
      *
      * @return player
      */
-    public static ServerPlayerEntity player() {
+    public static ServerPlayer player() {
 
         PlayerList playerList = defaultServer.getPlayerList();
-        ServerPlayerEntity player = playerList.getPlayerByName(getUsername());
+        ServerPlayer player = playerList.getPlayerByName(getUsername());
 
         if (player == null) {
             player = getDefaultPlayer();
@@ -30,7 +32,7 @@ public class PlayerHelper {
 
     }
 
-    private static ServerPlayerEntity getDefaultPlayer() {
+    private static ServerPlayer getDefaultPlayer() {
 
         PlayerList playerList = defaultServer.getPlayerList();
         return playerList.getPlayers().get(0);

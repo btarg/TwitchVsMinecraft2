@@ -8,8 +8,8 @@ import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.chat.ChatPickerHelper;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.util.CalculateMinecraftColor;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.ChatFormatting;
 import net.minecraft.util.text.event.HoverEvent;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.ConnectEvent;
@@ -28,12 +28,12 @@ public class TwitchBot extends ListenerAdapter {
     }
 
     public void onConnect(ConnectEvent event) {
-        CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Bot connected! Use /ttv status to see details."));
+        CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.DARK_GREEN + "Bot connected! Use /ttv status to see details."));
         Main.logger.info("IRC Bot connected.");
     }
 
     public void onDisconnect(DisconnectEvent event) {
-        CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.DARK_RED + "Bot disconnected."));
+        CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.DARK_RED + "Bot disconnected."));
         Main.logger.info("IRC Bot disconnected: " + event.getDisconnectException());
     }
 
@@ -44,9 +44,9 @@ public class TwitchBot extends ListenerAdapter {
         String sender = Objects.requireNonNull(event.getUser()).getNick();
         ImmutableMap<String, String> tags = event.getV3Tags();
 
-        TextFormatting format = TextFormatting.WHITE;
+        ChatFormatting format = ChatFormatting.WHITE;
 
-        StringTextComponent showText;
+        TextComponent showText;
         String role = null;
 
         if (BotConfig.showChatMessages) {
@@ -78,10 +78,10 @@ public class TwitchBot extends ListenerAdapter {
 
             if (!message.startsWith(BotConfig.prefix) || BotConfig.showCommandsInChat) {
 
-                showText = new StringTextComponent(String.format("%s<%sTwitch %s%s%s> %s", TextFormatting.WHITE, TextFormatting.DARK_PURPLE, format, sender, TextFormatting.WHITE, message));
+                showText = new TextComponent(String.format("%s<%sTwitch %s%s%s> %s", ChatFormatting.WHITE, ChatFormatting.DARK_PURPLE, format, sender, ChatFormatting.WHITE, message));
 
                 if (role != null) {
-                    showText.setStyle(showText.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(format + role))));
+                    showText.setStyle(showText.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(format + role))));
                 }
 
                 CommandHandlers.broadcastMessage(showText);

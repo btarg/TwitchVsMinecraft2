@@ -4,8 +4,8 @@ import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.ChatFormatting;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;
@@ -283,7 +283,7 @@ public class ChatPicker {
                 ChatCommands.commandMap.get(commandString).run();
 
                 if (BotConfig.showChatMessages && BotConfig.showCommandsInChat) {
-                    CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
+                    CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
                 }
                 Main.logger.info("Command Chosen: " + BotConfig.prefix + message);
 

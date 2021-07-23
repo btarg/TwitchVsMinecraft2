@@ -7,58 +7,60 @@ import io.github.icrazyblaze.twitchmod.network.MessageboxPacket;
 import io.github.icrazyblaze.twitchmod.network.PacketHandler;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SilverfishBlock;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.item.ArmorStandEntity;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.FireballEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootTables;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
-import net.minecraft.network.play.server.SChangeGameStatePacket;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.ChestTileEntity;
-import net.minecraft.tileentity.SignTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.renderer.EffectInstance;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.projectile.LargeFireball;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.InfestedBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.loot.LootTables;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
 
@@ -67,7 +69,6 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static io.github.icrazyblaze.twitchmod.util.PlayerHelper.player;
-
 
 /**
  * This class contains every method used by commands registered in the ChatPicker class.
@@ -116,17 +117,17 @@ public class CommandHandlers {
 
         List<String> commands = ChatCommands.getRegisteredCommands();
         String randomCommand = commands.get(rand.nextInt(commands.toArray().length));
-        broadcastMessage(new StringTextComponent(sender + " rolled the dice!"));
+        broadcastMessage(new TextComponent(sender + " rolled the dice!"));
         ChatPicker.checkChat(randomCommand, sender);
 
     }
 
 
-    public static void addPotionEffects(EffectInstance... effectInstances) {
+    public static void addPotionEffects(MobEffectInstance... effectInstances) {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
-        for (EffectInstance effect : effectInstances) {
+        for (MobEffectInstance effect : effectInstances) {
             player.addEffect(effect);
         }
 
@@ -139,7 +140,7 @@ public class CommandHandlers {
 
     public static void setOnFire() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         BlockPos bpos = player.blockPosition();
 
@@ -155,7 +156,7 @@ public class CommandHandlers {
 
     public static void setRainAndThunder() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
         player.level.getLevelData().setRaining(true);
 
         if (!player.level.isClientSide()) {
@@ -171,9 +172,9 @@ public class CommandHandlers {
 
     public static void setTime(long time) {
 
-        Iterable<ServerWorld> worlds = player().server.getAllLevels();
+        Iterable<ServerLevel> worlds = player().server.getAllLevels();
 
-        for (ServerWorld world : worlds) {
+        for (ServerLevel world : worlds) {
             world.setDayTime(time);
         }
 
@@ -181,7 +182,7 @@ public class CommandHandlers {
 
     public static void drainHealth() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         // Half the player's health
         float halfhealth = player.getHealth() / 2;
@@ -197,7 +198,7 @@ public class CommandHandlers {
 
     public static void setSpawn() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         BlockPos bpos = new BlockPos(player.getX(), player.getY(), player.getZ());
         // SetSpawn
@@ -214,7 +215,7 @@ public class CommandHandlers {
         TimerSystem.deathTimerSeconds = 60;
         TimerSystem.deathTimerEnabled = true;
 
-        player().displayClientMessage(new StringTextComponent(TextFormatting.DARK_RED + "Chat has given you " + TimerSystem.deathTimerSeconds + " seconds to live."), true);
+        player().displayClientMessage(new TextComponent(ChatFormatting.DARK_RED + "Chat has given you " + TimerSystem.deathTimerSeconds + " seconds to live."), true);
 
     }
 
@@ -230,7 +231,7 @@ public class CommandHandlers {
         previousDeathTimerState = TimerSystem.deathTimerEnabled;
         TimerSystem.deathTimerEnabled = false;
 
-        player().displayClientMessage(new StringTextComponent(TextFormatting.GOLD + "FRENZY MODE! All commands are executed for the next " + TimerSystem.frenzyTimerSeconds + " seconds."), true);
+        player().displayClientMessage(new TextComponent(ChatFormatting.GOLD + "FRENZY MODE! All commands are executed for the next " + TimerSystem.frenzyTimerSeconds + " seconds."), true);
 
     }
 
@@ -247,7 +248,7 @@ public class CommandHandlers {
         previousDeathTimerState = TimerSystem.deathTimerEnabled;
         TimerSystem.deathTimerEnabled = false;
 
-        player().displayClientMessage(new StringTextComponent(TextFormatting.AQUA + "Commands are turned off for " + TimerSystem.peaceTimerSeconds + " seconds."), true);
+        player().displayClientMessage(new TextComponent(ChatFormatting.AQUA + "Commands are turned off for " + TimerSystem.peaceTimerSeconds + " seconds."), true);
 
     }
 
@@ -257,7 +258,7 @@ public class CommandHandlers {
         TimerSystem.peaceTimerEnabled = false;
         TimerSystem.deathTimerEnabled = previousDeathTimerState;
 
-        player().displayClientMessage(new StringTextComponent(TextFormatting.AQUA + "Commands are now enabled!"), true);
+        player().displayClientMessage(new TextComponent(ChatFormatting.AQUA + "Commands are now enabled!"), true);
 
     }
 
@@ -265,13 +266,13 @@ public class CommandHandlers {
 
         ChatPicker.instantCommands = false;
         TimerSystem.deathTimerEnabled = previousDeathTimerState;
-        player().displayClientMessage(new StringTextComponent(TextFormatting.GOLD + "Frenzy mode is now disabled."), true);
+        player().displayClientMessage(new TextComponent(ChatFormatting.GOLD + "Frenzy mode is now disabled."), true);
 
     }
 
     public static void floorIsLava() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         BlockPos bpos = new BlockPos(player.getX(), player.getY() - 1, player.getZ());
         setBlock(bpos, Blocks.LAVA.defaultBlockState());
@@ -280,7 +281,7 @@ public class CommandHandlers {
 
     public static void placeWater() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         BlockPos bpos = player.blockPosition();
         setBlock(bpos, Blocks.WATER.defaultBlockState());
@@ -289,7 +290,7 @@ public class CommandHandlers {
 
     public static void placeSponge() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         BlockPos bpos = new BlockPos(player.getX(), player.getY(), player.getZ());
 
@@ -299,7 +300,7 @@ public class CommandHandlers {
 
     public static void spawnAnvil() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         BlockPos bpos = new BlockPos(player.getX(), player.getY() + 16, player.getZ());
 
@@ -309,7 +310,7 @@ public class CommandHandlers {
 
     public static void placeCobweb() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         setBlock(player.blockPosition().above(), Blocks.COBWEB.defaultBlockState());
         setBlock(player.blockPosition(), Blocks.COBWEB.defaultBlockState());
@@ -318,9 +319,9 @@ public class CommandHandlers {
 
     public static void spawnMob(Entity ent) {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
-        Vector3d lookVector = player.getLookAngle();
+        Vec3 lookVector = player.getLookAngle();
 
         double dx = player.getX() + (lookVector.x * 4);
         double dz = player.getZ() + (lookVector.z * 4);
@@ -333,30 +334,30 @@ public class CommandHandlers {
 
 
     public static void pigmanScare() {
-        playSound(SoundEvents.ZOMBIFIED_PIGLIN_ANGRY, SoundCategory.HOSTILE, 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
+        playSound(SoundEvents.ZOMBIFIED_PIGLIN_ANGRY, SoundSource.HOSTILE, 2.0F, ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 1.8F);
     }
 
     public static void elderGuardianScare() {
-        player().connection.send(new SChangeGameStatePacket(SChangeGameStatePacket.GUARDIAN_ELDER_EFFECT, 1.0F));
+        player().connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.GUARDIAN_ELDER_EFFECT, 1.0F));
     }
 
-    public static void playSound(SoundEvent sound, SoundCategory category, float volume, float pitch) {
+    public static void playSound(SoundEvent sound, SoundSource category, float volume, float pitch) {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
         player.level.playSound(null, player.getX(), player.getY(), player.getZ(), sound, category, volume, pitch);
 
     }
 
     public static void spawnFireball() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
-        Vector3d lookVector = player.getLookAngle();
+        Vec3 lookVector = player.getLookAngle();
 
         double dx = player.getX() + (lookVector.x * 2);
         double dz = player.getZ() + (lookVector.z * 2);
 
-        Entity ent = new FireballEntity(EntityType.FIREBALL, player.level);
+        Entity ent = new LargeFireball(EntityType.FIREBALL, player.level);
         ent.setPos(dx, player.getEyeY(), dz);
         ent.lerpMotion(lookVector.x * 3, lookVector.y, lookVector.z * 3);
 
@@ -366,8 +367,8 @@ public class CommandHandlers {
 
     public static void spawnLightning() {
 
-        ServerPlayerEntity player = player();
-        LightningBoltEntity ent = new LightningBoltEntity(EntityType.LIGHTNING_BOLT, player.level);
+        ServerPlayer player = player();
+        LightningBolt ent = new LightningBolt(EntityType.LIGHTNING_BOLT, player.level);
         ent.setPos(player.getX(), player.getY(), player.getZ());
         player.level.addFreshEntity(ent);
 
@@ -375,15 +376,15 @@ public class CommandHandlers {
 
     public static void spawnArmorStand() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         double d0 = player.getX();
         double d1 = player.getY();
         double d2 = player.getZ();
 
         // Face where player is looking (Modified from vanilla ArmorStandItem)
-        ArmorStandEntity armorstandentity = new ArmorStandEntity(player.level, d0 + 0.5, d1 + 0.5, d2 + 0.5);
-        float f = (float) MathHelper.floor((MathHelper.wrapDegrees(player.yRot) + 22.5F) / 45.0F) * 45.0F;
+        ArmorStand armorstandentity = new ArmorStand(player.level, d0 + 0.5, d1 + 0.5, d2 + 0.5);
+        float f = (float) Mth.floor((Mth.wrapDegrees(player.getYRot()) + 22.5F) / 45.0F) * 45.0F;
         armorstandentity.moveTo(d0 + 0.5, d1 + 0.5, d2 + 0.5, f, 0.0F);
 
         // Give the stand a custom player head
@@ -392,27 +393,27 @@ public class CommandHandlers {
         // Add NBT if we can
         if (PlayerHelper.getUsername() != null) {
 
-            CompoundNBT nbt = item.getOrCreateTag();
+            CompoundTag nbt = item.getOrCreateTag();
             nbt.putString("SkullOwner", PlayerHelper.getUsername());
             item.save(nbt);
 
         }
 
-        armorstandentity.setSlot(103, item);
+        armorstandentity.setItemSlot(EquipmentSlot.HEAD, item);
 
         // Access transformer needed for this
         armorstandentity.setShowArms(true);
 
         spawnMobBehind(armorstandentity);
-        playSound(SoundEvents.AMBIENT_CAVE, SoundCategory.AMBIENT, 1, 1);
+        playSound(SoundEvents.AMBIENT_CAVE, SoundSource.AMBIENT, 1, 1);
 
     }
 
     public static void spawnMobBehind(Entity ent) {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
-        Vector3d lookVector = player.getLookAngle();
+        Vec3 lookVector = player.getLookAngle();
 
         double dx = player.getX() - (lookVector.x * 3);
         double dz = player.getZ() - (lookVector.z * 3);
@@ -425,17 +426,17 @@ public class CommandHandlers {
 
     public static void breakBlock() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         int range = 64;
 
-        Vector3d lookVector = player.getLookAngle();
-        Vector3d posVector = new Vector3d(player.getX(), player.getEyeY(), player.getZ());
+        Vec3 lookVector = player.getLookAngle();
+        Vec3 posVector = new Vec3(player.getX(), player.getEyeY(), player.getZ());
 
-        RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player);
-        RayTraceResult rayTrace = player.level.clip(context);
+        ClipContext context = new ClipContext(posVector, lookVector.scale(range).add(posVector), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player);
+        BlockHitResult rayTrace = player.level.clip(context);
 
-        if (rayTrace.getType() != RayTraceResult.Type.BLOCK) {
+        if (rayTrace.getType() != BlockHitResult.Type.BLOCK) {
             return;
         }
 
@@ -447,30 +448,30 @@ public class CommandHandlers {
 
     public static void infestBlock() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         int range = 64;
 
-        Vector3d lookVector = player.getLookAngle();
-        Vector3d posVector = new Vector3d(player.getX(), player.getEyeY(), player.getZ());
+        Vec3 lookVector = player.getLookAngle();
+        Vec3 posVector = new Vec3(player.getX(), player.getEyeY(), player.getZ());
 
-        RayTraceContext context = new RayTraceContext(posVector, lookVector.scale(range).add(posVector), RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player);
-        RayTraceResult rayTrace = player.level.clip(context);
+        ClipContext context = new ClipContext(posVector, lookVector.scale(range).add(posVector), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player);
+        BlockHitResult rayTrace = player.level.clip(context);
 
-        if (rayTrace.getType() != RayTraceResult.Type.BLOCK) {
+        if (rayTrace.getType() != BlockHitResult.Type.BLOCK) {
             return;
         }
 
         BlockPos bpos = new BlockPos(rayTrace.getLocation());
-        Block thisBlock = player.level.getBlockState(bpos).getBlock();
+        BlockState thisBlock = player.level.getBlockState(bpos);
 
-        setBlock(bpos, SilverfishBlock.stateByHostBlock(thisBlock));
+        setBlock(bpos, InfestedBlock.infestedStateByHost(thisBlock));
 
     }
 
     public static void surroundPlayer(BlockState block) {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
         BlockPos playerPos = player.blockPosition();
 
         BlockPos[] positions = {playerPos.north(), playerPos.east(), playerPos.south(), playerPos.west()};
@@ -490,13 +491,13 @@ public class CommandHandlers {
 
     public static void dropItem() { // Thanks Amoo!
 
-        ServerPlayerEntity player = player();
-        ItemStack currentItem = player.inventory.getSelected();
+        ServerPlayer player = player();
+        ItemStack currentItem = player.getInventory().getSelected();
 
         if (currentItem != ItemStack.EMPTY) {
 
             player.drop(currentItem, false, true);
-            player.inventory.removeItem(currentItem);
+            player.getInventory().removeItem(currentItem);
 
         }
 
@@ -504,8 +505,8 @@ public class CommandHandlers {
 
     public static void changeDurability(boolean repairItem) {
 
-        ServerPlayerEntity player = player();
-        ItemStack currentItem = player.inventory.getSelected();
+        ServerPlayer player = player();
+        ItemStack currentItem = player.getInventory().getSelected();
 
         int damageAmount = rand.nextInt(currentItem.getMaxDamage() / 3);
 
@@ -524,21 +525,21 @@ public class CommandHandlers {
 
     public static void removeRandomItemStack() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         // Prevent loop
-        if (player.inventory.isEmpty()) {
+        if (player.getInventory().isEmpty()) {
             return;
         }
 
         // Delete a random item
-        int r = rand.nextInt(player.inventory.getContainerSize());
+        int r = rand.nextInt(player.getInventory().getContainerSize());
 
-        ItemStack randomItem = player.inventory.getItem(r);
+        ItemStack randomItem = player.getInventory().getItem(r);
 
         if (randomItem != ItemStack.EMPTY) {
 
-            player.inventory.removeItem(randomItem);
+            player.getInventory().removeItem(randomItem);
 
         } else {
 
@@ -585,14 +586,14 @@ public class CommandHandlers {
 
     public static void itemRoulette(String sender) {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
-        if (!player.inventory.isEmpty()) {
+        if (!player.getInventory().isEmpty()) {
 
             giveAndRemoveRandom();
 
             // Show chat message
-            player.displayClientMessage(new StringTextComponent(TextFormatting.RED + sender + " giveth, and " + sender + " taketh away."), true);
+            player.displayClientMessage(new TextComponent(ChatFormatting.RED + sender + " giveth, and " + sender + " taketh away."), true);
 
         }
 
@@ -602,51 +603,51 @@ public class CommandHandlers {
     // https://github.com/ChiKitsune/SwapThings/blob/master/src/main/java/chikitsune/swap_things/commands/ShuffleInventory.java
     public static void shuffleInventory(String sender) {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         ItemStack tempItem;
         int tempRandNum;
 
-        for (int i = 0; i < player.inventory.getContainerSize(); i++) {
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
 
             tempRandNum = i;
 
             while (tempRandNum == i) {
-                tempRandNum = rand.nextInt(player.inventory.getContainerSize());
+                tempRandNum = rand.nextInt(player.getInventory().getContainerSize());
             }
 
-            tempItem = player.inventory.getItem(i).copy();
-            player.inventory.setItem(i, player.inventory.getItem(tempRandNum).copy());
-            player.inventory.setItem(tempRandNum, tempItem);
+            tempItem = player.getInventory().getItem(i).copy();
+            player.getInventory().setItem(i, player.getInventory().getItem(tempRandNum).copy());
+            player.getInventory().setItem(tempRandNum, tempItem);
         }
 
         // Show chat message
-        player.displayClientMessage(new StringTextComponent(TextFormatting.RED + sender + " rearranged your inventory."), true);
+        player.displayClientMessage(new TextComponent(ChatFormatting.RED + sender + " rearranged your inventory."), true);
 
     }
 
     public static void renameItem(String name) {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
-        if (!player.inventory.isEmpty()) {
+        if (!player.getInventory().isEmpty()) {
 
             // Limit custom rename to 32 characters (FIXED: use StringUtils)
             String newname = StringUtils.left(name, 32);
 
-            ItemStack currentitem = player.inventory.getSelected();
+            ItemStack currentitem = player.getInventory().getSelected();
 
             if (currentitem == ItemStack.EMPTY || currentitem.getDisplayName().getContents().equals(newname)) {
 
                 int tries = 0;
 
                 // Rename a random item in the player's inventory when the player isn't holding anything
-                while (currentitem == ItemStack.EMPTY || currentitem.getDisplayName().getContents().equals(newname) && !player.inventory.isEmpty()) {
+                while (currentitem == ItemStack.EMPTY || currentitem.getDisplayName().getContents().equals(newname) && !player.getInventory().isEmpty()) {
 
-                    if (tries < player.inventory.getContainerSize()) {
+                    if (tries < player.getInventory().getContainerSize()) {
 
-                        int r = rand.nextInt(player.inventory.getContainerSize());
-                        currentitem = player.inventory.getItem(r);
+                        int r = rand.nextInt(player.getInventory().getContainerSize());
+                        currentitem = player.getInventory().getItem(r);
                         tries++;
 
                     } else {
@@ -657,7 +658,7 @@ public class CommandHandlers {
 
             }
 
-            currentitem.setHoverName(new StringTextComponent(newname));
+            currentitem.setHoverName(new TextComponent(newname));
 
         }
 
@@ -665,9 +666,9 @@ public class CommandHandlers {
 
     public static void enchantItem() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
-        if (!player.inventory.isEmpty()) {
+        if (!player.getInventory().isEmpty()) {
 
             // Get random enchantment from list
             int length = ForgeRegistries.ENCHANTMENTS.getKeys().toArray().length;
@@ -682,15 +683,15 @@ public class CommandHandlers {
                 return;
             }
 
-            ItemStack currentitem = player.inventory.getSelected();
+            ItemStack currentitem = player.getInventory().getSelected();
 
             if (currentitem == ItemStack.EMPTY) {
 
                 // Enchant a random item in the player's inventory when the player isn't holding anything
-                while (currentitem == ItemStack.EMPTY && !player.inventory.isEmpty()) {
+                while (currentitem == ItemStack.EMPTY && !player.getInventory().isEmpty()) {
 
-                    r = rand.nextInt(player.inventory.getContainerSize());
-                    currentitem = player.inventory.getItem(r);
+                    r = rand.nextInt(player.getInventory().getContainerSize());
+                    currentitem = player.getInventory().getItem(r);
 
                 }
 
@@ -704,18 +705,18 @@ public class CommandHandlers {
 
     public static void curseArmour() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
-        if (!player.inventory.isEmpty()) {
+        if (!player.getInventory().isEmpty()) {
 
-            for (int i = 0; i < player.inventory.armor.size(); i++) {
+            for (int i = 0; i < player.getInventory().armor.size(); i++) {
 
-                ItemStack armourItem = player.inventory.getArmor(i);
+                ItemStack armourItem = player.getInventory().getArmor(i);
 
                 if (armourItem != ItemStack.EMPTY) {
 
                     armourItem.enchant(Enchantments.BINDING_CURSE, 1);
-                    player.inventory.armor.set(i, armourItem);
+                    player.getInventory().armor.set(i, armourItem);
 
                 }
 
@@ -727,12 +728,12 @@ public class CommandHandlers {
 
     public static void pumpkin() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
-        if (!player.inventory.isEmpty()) {
+        if (!player.getInventory().isEmpty()) {
 
             // Armour index 3 is helmet
-            ItemStack helmet = player.inventory.armor.get(3);
+            ItemStack helmet = player.getInventory().armor.get(3);
 
             if (helmet.getItem() == Items.CARVED_PUMPKIN) {
                 return;
@@ -740,10 +741,10 @@ public class CommandHandlers {
 
             if (helmet != ItemStack.EMPTY) {
                 player.drop(helmet, false, true);
-                player.inventory.removeItem(helmet);
+                player.getInventory().removeItem(helmet);
             }
 
-            player.inventory.armor.set(3, new ItemStack(Items.CARVED_PUMPKIN));
+            player.getInventory().armor.set(3, new ItemStack(Items.CARVED_PUMPKIN));
 
         }
 
@@ -751,18 +752,18 @@ public class CommandHandlers {
     }
 
     public static void toggleCrouch() {
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
         player.setShiftKeyDown(!player.isCrouching());
     }
 
     public static void toggleSprint() {
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
         player.setSprinting(!player.isSprinting());
     }
 
     public static void dismount() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         if (player.isPassenger()) {
             player.stopRiding();
@@ -775,8 +776,8 @@ public class CommandHandlers {
 
     public static void chorusTeleport() {
 
-        ServerPlayerEntity player = player();
-        World world = player.level;
+        ServerPlayer player = player();
+        Level world = player.level;
 
         // Code taken from ChorusFruitItem in vanilla
         if (!world.isClientSide()) {
@@ -786,7 +787,7 @@ public class CommandHandlers {
 
             for (int i = 0; i < 16; ++i) {
                 double d3 = player.getX() + (player.getRandom().nextDouble() - 0.5D) * 16.0D;
-                double d4 = MathHelper.clamp(player.getY() + (double) (player.getRandom().nextInt(16) - 8), 0.0D, world.getHeight() - 1);
+                double d4 = Mth.clamp(player.getY() + (double) (player.getRandom().nextInt(16) - 8), 0.0D, world.getHeight() - 1);
                 double d5 = player.getZ() + (player.getRandom().nextDouble() - 0.5D) * 16.0D;
                 if (player.isPassenger()) {
                     player.stopRiding();
@@ -794,7 +795,7 @@ public class CommandHandlers {
 
                 if (player.randomTeleport(d3, d4, d5, true)) {
                     SoundEvent soundevent = SoundEvents.CHORUS_FRUIT_TELEPORT;
-                    world.playSound(null, d0, d1, d2, soundevent, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                    world.playSound(null, d0, d1, d2, soundevent, SoundSource.PLAYERS, 1.0F, 1.0F);
                     player.playSound(soundevent, 1.0F, 1.0F);
                     break;
                 }
@@ -826,7 +827,7 @@ public class CommandHandlers {
 
         ChatPicker.tempChatLog.clear();
         ChatPicker.logMessages = true;
-        player().displayClientMessage(new StringTextComponent(TextFormatting.LIGHT_PURPLE + "Chat has started writing a book."), true);
+        player().displayClientMessage(new TextComponent(ChatFormatting.LIGHT_PURPLE + "Chat has started writing a book."), true);
 
     }
 
@@ -835,25 +836,25 @@ public class CommandHandlers {
         try {
 
             Main.logger.info("Creating book");
-            ServerPlayerEntity player = player();
+            ServerPlayer player = player();
 
             ItemStack itemStack = new ItemStack(Items.WRITTEN_BOOK, 1);
-            CompoundNBT nbt = itemStack.getOrCreateTag();
+            CompoundTag nbt = itemStack.getOrCreateTag();
 
-            ListNBT pages = new ListNBT();
+            ListTag pages = new ListTag();
 
             nbt.putString("author", PlayerHelper.getUsername());
             nbt.putString("title", "Chat Log " + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
 
             for (String str : text) {
-                pages.add(StringNBT.valueOf(str));
+                pages.add(StringTag.valueOf(str));
             }
 
             nbt.put("pages", pages);
             itemStack.save(nbt);
 
             player.addItem(itemStack);
-            player.displayClientMessage(new StringTextComponent(TextFormatting.LIGHT_PURPLE + "Chat has written you a book."), true);
+            player.displayClientMessage(new TextComponent(ChatFormatting.LIGHT_PURPLE + "Chat has written you a book."), true);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -863,7 +864,7 @@ public class CommandHandlers {
 
     public static void placeSign(String message) {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         // Split every 15 characters
         int maxlength = 15;
@@ -873,7 +874,7 @@ public class CommandHandlers {
         BlockPos bposBelow = new BlockPos(bpos.getX(), bpos.getY() - 1, bpos.getZ());
 
         // Rotate the sign to face the player
-        int playerFace = MathHelper.floor((double) ((player.yRot + 180.0F) * 16.0F / 360.0F) + 0.5D) & 15;
+        int playerFace = Mth.floor((double) ((player.getYRot() + 180.0F) * 16.0F / 360.0F) + 0.5D) & 15;
 
         // Set block state to air before placing sign
         setBlock(bpos, Blocks.AIR.defaultBlockState());
@@ -881,17 +882,17 @@ public class CommandHandlers {
         // Place the sign with rotation
         player.level.setBlock(bpos, Blocks.OAK_SIGN.defaultBlockState().setValue(BlockStateProperties.ROTATION_16, playerFace), 11);
 
-        TileEntity tileEntity = player.level.getBlockEntity(bpos);
+        BlockEntity BlockEntity = player.level.getBlockEntity(bpos);
 
         // Thanks for the new code Commoble!
-        if (tileEntity instanceof SignTileEntity) {
+        if (BlockEntity instanceof SignBlockEntity) {
 
-            SignTileEntity sign = (SignTileEntity) tileEntity;
+            SignBlockEntity sign = (SignBlockEntity) BlockEntity;
 
             int lines = splitMessage.length;
 
             for (int i = 0; i < lines; i++) {
-                sign.setMessage(i, new StringTextComponent(splitMessage[i]));
+                sign.setMessage(i, new TextComponent(splitMessage[i]));
             }
 
         }
@@ -904,7 +905,7 @@ public class CommandHandlers {
 
     public static void placeChest() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         BlockPos bpos = player.blockPosition();
         Block bposBlock = player.level.getBlockState(bpos).getBlock();
@@ -914,12 +915,12 @@ public class CommandHandlers {
 
             setBlock(bpos, Blocks.CHEST.defaultBlockState());
 
-            TileEntity tileEntity = player.level.getBlockEntity(bpos);
+            BlockEntity BlockEntity = player.level.getBlockEntity(bpos);
 
-            if (tileEntity instanceof ChestTileEntity) {
+            if (BlockEntity instanceof ChestBlockEntity) {
 
-                ((ChestTileEntity) tileEntity).setLootTable(lootArray[rand.nextInt(lootArray.length)], rand.nextLong());
-                ((ChestTileEntity) tileEntity).unpackLootTable(player);
+                ((ChestBlockEntity) BlockEntity).setLootTable(lootArray[rand.nextInt(lootArray.length)], rand.nextLong());
+                ((ChestBlockEntity) BlockEntity).unpackLootTable(player);
 
             }
 
@@ -939,9 +940,9 @@ public class CommandHandlers {
             messagesList.remove(r);
 
             // Get random colour
-            TextFormatting format = TextFormatting.values()[1 + rand.nextInt(TextFormatting.values().length - 1)];
+            ChatFormatting format = ChatFormatting.values()[1 + rand.nextInt(ChatFormatting.values().length - 1)];
 
-            broadcastMessage(new StringTextComponent(format + message));
+            broadcastMessage(new TextComponent(format + message));
 
         }
 
@@ -950,9 +951,9 @@ public class CommandHandlers {
     /**
      * This method sends a message to everyone on a server.
      */
-    public static void broadcastMessage(ITextComponent message) {
+    public static void broadcastMessage(MutableComponent message) {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         try {
             player.sendMessage(message, player.getUUID());
@@ -973,7 +974,7 @@ public class CommandHandlers {
             double dy = event.getPos().getY();
             double dz = event.getPos().getZ();
 
-            player().level.explode(null, dx, dy, dz, 4.0F, Explosion.Mode.BREAK);
+            player().level.explode(null, dx, dy, dz, 4.0F, Explosion.BlockInteraction.BREAK);
 
             oresExplode = false;
 
@@ -999,9 +1000,9 @@ public class CommandHandlers {
     @SubscribeEvent
     public static void villagersDie(PlayerInteractEvent.EntityInteract event) {
 
-        if (event.getTarget() instanceof VillagerEntity && burnVillagersOnInteract && !event.getWorld().isClientSide()) {
+        if (event.getTarget() instanceof Villager && burnVillagersOnInteract && !event.getWorld().isClientSide()) {
 
-            ((VillagerEntity) event.getTarget()).addEffect(new EffectInstance(Effects.HARM, 1, 1));
+            ((Villager) event.getTarget()).addEffect(new MobEffectInstance(MobEffects.HARM, 1, 1));
             event.getTarget().setSecondsOnFire(10);
             burnVillagersOnInteract = false;
 
@@ -1011,7 +1012,7 @@ public class CommandHandlers {
     @SubscribeEvent
     public static void workbenchesBreak(PlayerInteractEvent.RightClickBlock event) {
 
-        World world = event.getWorld();
+        Level world = event.getWorld();
         Block block = world.getBlockState(event.getPos()).getBlock();
 
         if (destroyWorkbenchesOnInteract && !world.isClientSide()) {

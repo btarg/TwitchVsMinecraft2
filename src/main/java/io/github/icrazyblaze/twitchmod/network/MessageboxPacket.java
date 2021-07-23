@@ -1,8 +1,8 @@
 package io.github.icrazyblaze.twitchmod.network;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -10,7 +10,7 @@ public class MessageboxPacket {
 
     public String toSend;
 
-    public MessageboxPacket(PacketBuffer buf) {
+    public MessageboxPacket(FriendlyByteBuf buf) {
         fromBytes(buf);
     }
 
@@ -18,7 +18,7 @@ public class MessageboxPacket {
         this.toSend = message;
     }
 
-    public void fromBytes(PacketBuffer buf) {
+    public void fromBytes(FriendlyByteBuf buf) {
         toSend = buf.readUtf(32767);
     }
 
@@ -34,7 +34,7 @@ public class MessageboxPacket {
         ctx.get().setPacketHandled(true);
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeUtf(toSend);
     }
 

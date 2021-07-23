@@ -2,13 +2,13 @@ package io.github.icrazyblaze.twitchmod.integration.mods;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.integration.ModProxy;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import static io.github.icrazyblaze.twitchmod.chat.ChatCommands.registerCommand;
@@ -31,10 +31,10 @@ public class ChanceCubesIntegration {
 
     public static void placeGiantChanceCube() {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
         Block cube = ModProxy.chanceCubesProxy.get().GIANT_CHANCE_CUBE.get();
 
-        Vector3d lookVector = player.getLookAngle();
+        Vec3 lookVector = player.getLookAngle();
 
         double dx = player.getX() + (lookVector.x * 4);
         double dz = player.getZ() + (lookVector.z * 4);

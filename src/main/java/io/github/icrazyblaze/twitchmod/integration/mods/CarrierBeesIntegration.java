@@ -2,14 +2,14 @@ package io.github.icrazyblaze.twitchmod.integration.mods;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.integration.ModProxy;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Mob;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Objects;
@@ -52,18 +52,18 @@ public class CarrierBeesIntegration {
 
     public static void spawnCarrierBee(String name, EntityType<?> type) {
 
-        ServerPlayerEntity player = player();
+        ServerPlayer player = player();
 
         // Get the entity without referencing CarrierBeeEntity explicitly
-        MobEntity bee = (MobEntity) type.create(player.level);
+        Mob bee = (Mob) type.create(player.level);
 
         // Give it an item and name
         assert bee != null;
         bee.setItemInHand(bee.getUsedItemHand(), Objects.requireNonNull(CommandHandlers.getRandomItemStack(true)));
-        bee.setCustomName(new StringTextComponent(name));
-        bee.setDropChance(EquipmentSlotType.MAINHAND, 1.0F);
+        bee.setCustomName(new TextComponent(name));
+        bee.setDropChance(EquipmentSlot.MAINHAND, 1.0F);
 
-        player.displayClientMessage(new StringTextComponent(TextFormatting.YELLOW + name + " sent you a bee!"), true);
+        player.displayClientMessage(new TextComponent(ChatFormatting.YELLOW + name + " sent you a bee!"), true);
         CommandHandlers.spawnMob(bee);
 
     }

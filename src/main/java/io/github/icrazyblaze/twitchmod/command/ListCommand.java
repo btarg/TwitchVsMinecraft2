@@ -5,9 +5,10 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.Util;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.TextComponent;
 
 public class ListCommand implements Command<CommandSource> {
 
@@ -22,7 +23,7 @@ public class ListCommand implements Command<CommandSource> {
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
 
-        context.getSource().sendSuccess(new StringTextComponent("Registered commands: " + ChatCommands.getRegisteredCommands()), false);
+        context.getSource().sendMessage(new TextComponent("Registered commands: " + ChatCommands.getRegisteredCommands()), Util.NIL_UUID);
 
         return SINGLE_SUCCESS;
     }

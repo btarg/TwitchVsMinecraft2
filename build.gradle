@@ -5,14 +5,21 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "3.+", changing: true
+        classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "5.1.+", changing: true
         classpath "com.github.jengelman.gradle.plugins:shadow:5.2.0"
     }
 }
 apply plugin: "java"
 apply plugin: "net.minecraftforge.gradle"
 apply plugin: "com.github.johnrengelman.shadow"
-import net.minecraftforge.gradle.common.task.SignJar
+apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
+import net.minecraftforge.gradle.common.tasks.SignJar
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(16)
+    }
+}
 
 version = mod_version
 group = package_group
@@ -73,6 +80,8 @@ dependencies {
         exclude module: "opus-java"
         exclude group: "org.slf4j", module: "slf4j-api" // we already have this
     }
+
+    implementation('cpw.mods:securejarhandler') { version { strictly '0.9.45' } }
 
 }
 

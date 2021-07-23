@@ -7,8 +7,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.icrazyblaze.twitchmod.bots.irc.TwitchConnectionHelper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.ChatFormatting;
 
 public class TwitchDisconnectCommand implements Command<CommandSource> {
 
@@ -26,7 +26,7 @@ public class TwitchDisconnectCommand implements Command<CommandSource> {
         if (TwitchConnectionHelper.isConnected()) {
             TwitchConnectionHelper.disconnectBot();
         } else {
-            context.getSource().sendSuccess(new StringTextComponent(TextFormatting.RED + "Bot not connected."), false);
+            context.getSource().sendMessage(new TextComponent(ChatFormatting.RED + "Bot not connected."), false);
         }
 
         return SINGLE_SUCCESS;

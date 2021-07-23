@@ -11,12 +11,13 @@ import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import io.github.icrazyblaze.twitchmod.util.UptimeReader;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
-import net.minecraft.command.CommandSource;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.command.Commands;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.TextComponent;
 
 public class StatusCommand implements Command<CommandSource> {
 
@@ -35,33 +36,33 @@ public class StatusCommand implements Command<CommandSource> {
 
         // Display current status and uptime
         if (TwitchConnectionHelper.isConnected()) {
-            context.getSource().sendSuccess(new StringTextComponent(TextFormatting.GREEN + "Twitch bot connected."), false);
+            context.getSource().sendMessage(new TextComponent(ChatFormatting.GREEN + "Twitch bot connected."), Util.NIL_UUID);
         } else {
-            context.getSource().sendSuccess(new StringTextComponent(TextFormatting.RED + "Twitch bot not connected."), false);
+            context.getSource().sendMessage(new TextComponent(ChatFormatting.RED + "Twitch bot not connected."), Util.NIL_UUID);
         }
 
         if (DiscordConnectionHelper.isConnected()) {
-            context.getSource().sendSuccess(new StringTextComponent(TextFormatting.GREEN + "Discord bot connected."), false);
+            context.getSource().sendMessage(new TextComponent(ChatFormatting.GREEN + "Discord bot connected."), Util.NIL_UUID);
         } else {
-            context.getSource().sendSuccess(new StringTextComponent(TextFormatting.RED + "Discord bot not connected."), false);
+            context.getSource().sendMessage(new TextComponent(ChatFormatting.RED + "Discord bot not connected."), Util.NIL_UUID);
         }
 
-        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.GOLD + "Twitch channel name: " + BotConfig.CHANNEL_NAME), false);
-        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.GREEN + "Twitch stream uptime: " + UptimeReader.getUptimeString(BotConfig.CHANNEL_NAME)), false);
-        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.BLUE + "Watching Discord channels: " + BotConfig.DISCORD_CHANNELS.toString()), false);
-        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.GOLD + "Player(s) affected: " + PlayerHelper.affectedPlayers.toString()), false);
-        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.DARK_PURPLE + "A new command will be chosen every " + TimerSystem.chatSecondsTrigger + " seconds."), false);
-        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.DARK_PURPLE + "Commands start with " + BotConfig.prefix), false);
+        context.getSource().sendMessage(new TextComponent(ChatFormatting.GOLD + "Twitch channel name: " + BotConfig.CHANNEL_NAME), Util.NIL_UUID);
+        context.getSource().sendMessage(new TextComponent(ChatFormatting.GREEN + "Twitch stream uptime: " + UptimeReader.getUptimeString(BotConfig.CHANNEL_NAME)), Util.NIL_UUID);
+        context.getSource().sendMessage(new TextComponent(ChatFormatting.BLUE + "Watching Discord channels: " + BotConfig.DISCORD_CHANNELS.toString()), Util.NIL_UUID);
+        context.getSource().sendMessage(new TextComponent(ChatFormatting.GOLD + "Player(s) affected: " + PlayerHelper.affectedPlayers.toString()), Util.NIL_UUID);
+        context.getSource().sendMessage(new TextComponent(ChatFormatting.DARK_PURPLE + "A new command will be chosen every " + TimerSystem.chatSecondsTrigger + " seconds."), Util.NIL_UUID);
+        context.getSource().sendMessage(new TextComponent(ChatFormatting.DARK_PURPLE + "Commands start with " + BotConfig.prefix), Util.NIL_UUID);
 
         // Click chat message to go to Twitch login page
-        StringTextComponent keyMessage = new StringTextComponent(TextFormatting.AQUA + "Click here to get your Twitch OAuth key!");
+        TextComponent keyMessage = new TextComponent(ChatFormatting.AQUA + "Click here to get your Twitch OAuth key!");
         ClickEvent goLinkEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, "https://twitchapps.com/tmi/");
-        HoverEvent goHoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Click to open the link in your browser"));
+        HoverEvent goHoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent("Click to open the link in your browser"));
 
         keyMessage.setStyle(keyMessage.getStyle().withClickEvent(goLinkEvent));
         keyMessage.setStyle(keyMessage.getStyle().withHoverEvent(goHoverEvent));
 
-        context.getSource().sendSuccess(keyMessage, false);
+        context.getSource().sendMessage(keyMessage, Util.NIL_UUID);
 
         return SINGLE_SUCCESS;
     }

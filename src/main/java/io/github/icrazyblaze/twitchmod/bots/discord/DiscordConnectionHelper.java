@@ -2,8 +2,8 @@ package io.github.icrazyblaze.twitchmod.bots.discord;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.ChatFormatting;
 
 public class DiscordConnectionHelper {
 
@@ -13,7 +13,7 @@ public class DiscordConnectionHelper {
     public static void login() {
 
         if (BotConfig.DISCORD_TOKEN.isEmpty()) {
-            CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.RED + "No Bot Token provided. Use /discord token to set the token."));
+            CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.RED + "No Bot Token provided. Use /discord token to set the token."));
             return;
         }
 
@@ -38,7 +38,7 @@ public class DiscordConnectionHelper {
         botThread.interrupt();
         listener = null;
 
-        CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.DARK_RED + "Bot disconnected."));
+        CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.DARK_RED + "Bot disconnected."));
 
     }
 

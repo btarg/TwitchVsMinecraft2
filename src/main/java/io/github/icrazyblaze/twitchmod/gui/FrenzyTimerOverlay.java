@@ -3,8 +3,8 @@ package io.github.icrazyblaze.twitchmod.gui;
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,7 +26,7 @@ public class FrenzyTimerOverlay {
             Minecraft mc = Minecraft.getInstance();
             String text = "FRENZY MODE: " + TimerSystem.frenzyTimerSeconds;
 
-            mc.font.drawShadow(event.getMatrixStack(), text, 4, 4, TextFormatting.GOLD.getColor());
+            mc.font.drawShadow(event.getMatrixStack(), text, 4, 4, ChatFormatting.GOLD.getColor());
 
         }
 

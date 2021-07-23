@@ -8,10 +8,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.util.SecretFileHelper;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.TextComponent;
 
 
 public class SetKeyCommand implements Command<CommandSource> {
@@ -43,7 +44,7 @@ public class SetKeyCommand implements Command<CommandSource> {
         // Update config
         ConfigManager.updateFromConfig();
 
-        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.GOLD + "Twitch OAuth key set. Use /ttv connect to start!"), false);
+        context.getSource().sendMessage(new TextComponent(ChatFormatting.GOLD + "Twitch OAuth key set. Use /ttv connect to start!"), Util.NIL_UUID);
         return SINGLE_SUCCESS;
 
     }

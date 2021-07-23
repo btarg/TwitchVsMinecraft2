@@ -9,8 +9,8 @@ import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.util.SecretFileHelper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.ChatFormatting;
 
 
 public class TokenCommand implements Command<CommandSource> {
@@ -34,7 +34,7 @@ public class TokenCommand implements Command<CommandSource> {
         // Update config
         ConfigManager.updateFromConfig();
 
-        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.GOLD + "Discord Bot Token set. Use /discord connect to start!"), false);
+        context.getSource().sendMessage(new TextComponent(ChatFormatting.GOLD + "Discord Bot Token set. Use /discord connect to start!"), false);
         return SINGLE_SUCCESS;
 
     }

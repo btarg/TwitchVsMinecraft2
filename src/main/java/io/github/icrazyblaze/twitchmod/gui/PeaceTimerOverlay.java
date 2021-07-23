@@ -3,7 +3,7 @@ package io.github.icrazyblaze.twitchmod.gui;
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,7 +25,7 @@ public class PeaceTimerOverlay {
             Minecraft mc = Minecraft.getInstance();
             String text = "COMMANDS DISABLED: " + TimerSystem.peaceTimerSeconds;
 
-            mc.font.drawShadow(event.getMatrixStack(), text, 4, 4, TextFormatting.AQUA.getColor());
+            mc.font.drawShadow(event.getMatrixStack(), text, 4, 4, ChatFormatting.AQUA.getColor());
 
         }
 

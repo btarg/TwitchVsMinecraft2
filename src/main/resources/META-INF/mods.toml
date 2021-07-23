@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[32,)"
+loaderVersion = "[37,)"
 license = "GNU LGPLv3"
 issueTrackerURL = "http://github.com/iCrazyBlaze/TwitchVsMinecraft2/issues"
 
@@ -19,12 +19,12 @@ Be at your viewers' mercy! Random commands are chosen from Twitch chat or Discor
 [[dependencies.twitchmod]]
 modId = "forge"
 mandatory = true
-versionRange = "[32,)"
+versionRange = "[37,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.twitchmod]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.16,1.17)"
+versionRange="[1.17,1.18)"
 side="BOTH"

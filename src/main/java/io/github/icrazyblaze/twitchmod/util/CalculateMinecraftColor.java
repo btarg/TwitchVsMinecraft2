@@ -5,7 +5,7 @@
 
 package io.github.icrazyblaze.twitchmod.util;
 
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -20,9 +20,9 @@ public class CalculateMinecraftColor {
      * @return
      * @See https://minecraft.gamepedia.com/Formatting_codes#Color_codes
      */
-    public static TextFormatting findNearestMinecraftColor(Color color) {
-        return Arrays.stream(TextFormatting.values())
-                .filter(TextFormatting::isColor)
+    public static ChatFormatting findNearestMinecraftColor(Color color) {
+        return Arrays.stream(ChatFormatting.values())
+                .filter(ChatFormatting::isColor)
                 .map(formatting -> {
                     Color formattingColor = new Color(formatting.getColor());
 
@@ -34,20 +34,20 @@ public class CalculateMinecraftColor {
                 .sorted(Comparator.comparing(FormattingAndDistance::getDistance))
                 .map(FormattingAndDistance::getFormatting)
                 .findFirst()
-                .orElse(TextFormatting.WHITE);
+                .orElse(ChatFormatting.WHITE);
     }
 
 
     private static class FormattingAndDistance {
-        private final TextFormatting formatting;
+        private final ChatFormatting formatting;
         private final int distance;
 
-        public FormattingAndDistance(TextFormatting formatting, int distance) {
+        public FormattingAndDistance(ChatFormatting formatting, int distance) {
             this.formatting = formatting;
             this.distance = distance;
         }
 
-        public TextFormatting getFormatting() {
+        public ChatFormatting getFormatting() {
             return formatting;
         }
 

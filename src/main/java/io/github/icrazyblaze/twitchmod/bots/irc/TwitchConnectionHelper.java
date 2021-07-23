@@ -3,8 +3,8 @@ package io.github.icrazyblaze.twitchmod.bots.irc;
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.config.ConfigManager;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.pircbotx.cap.EnableCapHandler;
@@ -25,7 +25,7 @@ public class TwitchConnectionHelper {
         ConfigManager.updateFromConfig();
 
         if (BotConfig.TWITCH_KEY.isEmpty()) {
-            CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.RED + "No OAuth key provided. Use /ttv key to set the key."));
+            CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.RED + "No OAuth key provided. Use /ttv key to set the key."));
             return;
         }
 
@@ -33,10 +33,10 @@ public class TwitchConnectionHelper {
 
             // Disconnect before connecting again
             disconnectBot();
-            CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.DARK_PURPLE + "Reconnecting..."));
+            CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.DARK_PURPLE + "Reconnecting..."));
 
         } else {
-            CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.DARK_PURPLE + String.format("Connecting to channel %s...", BotConfig.CHANNEL_NAME)));
+            CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.DARK_PURPLE + String.format("Connecting to channel %s...", BotConfig.CHANNEL_NAME)));
         }
 
         try {
@@ -71,7 +71,7 @@ public class TwitchConnectionHelper {
 
         } catch (Exception e) {
             e.printStackTrace();
-            CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.RED + "Could not connect: " + e));
+            CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.RED + "Could not connect: " + e));
         }
     }
 

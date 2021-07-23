@@ -14,9 +14,9 @@ import net.dv8tion.jda.api.events.DisconnectEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,12 +36,12 @@ public class DiscordBot extends ListenerAdapter {
             jda.shutdown();
         }
 
-        CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.LIGHT_PURPLE + "Connecting to Discord..."));
+        CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.LIGHT_PURPLE + "Connecting to Discord..."));
         jda = JDABuilder.createDefault(BotConfig.DISCORD_TOKEN).build();
         jda.addEventListener(new DiscordBot());
 
         jda.getPresence().setActivity(Activity.playing("Twitch Vs Minecraft Reloaded"));
-        CommandHandlers.broadcastMessage(new StringTextComponent(TextFormatting.DARK_GREEN + "Bot connected!"));
+        CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.DARK_GREEN + "Bot connected!"));
         isConnected = true;
 
     }
@@ -82,7 +82,7 @@ public class DiscordBot extends ListenerAdapter {
 
         if ((!message.startsWith(BotConfig.prefix) || BotConfig.showCommandsInChat) && BotConfig.showChatMessages) {
 
-            TextFormatting format = CalculateMinecraftColor.findNearestMinecraftColor(userColor);
+            ChatFormatting format = CalculateMinecraftColor.findNearestMinecraftColor(userColor);
             List<String> roleNames = new ArrayList<>();
 
             // Get role names and add them to a hover
@@ -94,9 +94,9 @@ public class DiscordBot extends ListenerAdapter {
                 ChatPicker.forceCommands = true;
             }
 
-            StringTextComponent showText = new StringTextComponent(String.format("%s<%s[%s] %s%s%s> %s", TextFormatting.WHITE, TextFormatting.BLUE, channel, format, sender, TextFormatting.WHITE, message));
+            TextComponent showText = new TextComponent(String.format("%s<%s[%s] %s%s%s> %s", ChatFormatting.WHITE, ChatFormatting.BLUE, channel, format, sender, ChatFormatting.WHITE, message));
 
-            showText.setStyle(showText.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(format + StringUtils.join(roleNames, ", ")))));
+            showText.setStyle(showText.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(format + StringUtils.join(roleNames, ", ")))));
 
             CommandHandlers.broadcastMessage(showText);
 

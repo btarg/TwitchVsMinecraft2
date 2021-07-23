@@ -4,9 +4,10 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.Util;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.TextComponent;
 
 
 public class ClearBlacklistCommand implements Command<CommandSource> {
@@ -23,7 +24,7 @@ public class ClearBlacklistCommand implements Command<CommandSource> {
     public int run(CommandContext<CommandSource> context) {
 
         ChatPicker.clearBlacklist();
-        context.getSource().sendSuccess(new StringTextComponent("Blacklisted commands: " + ChatPicker.blacklist.toString()), false);
+        context.getSource().sendMessage(new TextComponent("Blacklisted commands: " + ChatPicker.blacklist.toString()), Util.NIL_UUID);
 
         return SINGLE_SUCCESS;
 
