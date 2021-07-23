@@ -27,12 +27,12 @@ public class MimicModIntegration {
 
         EntityType<?> type = MIMIC.get();
         ServerPlayerEntity player = player();
-        MobEntity mimic = (MobEntity) type.create(player.world);
+        MobEntity mimic = (MobEntity) type.create(player.level);
 
         assert mimic != null;
-        mimic.setPosition(player.getX(), player.getY(), player.getZ());
+        mimic.setPos(player.getX(), player.getY(), player.getZ());
 
-        player.world.addEntity(mimic);
+        player.level.addFreshEntity(mimic);
 
     }
 

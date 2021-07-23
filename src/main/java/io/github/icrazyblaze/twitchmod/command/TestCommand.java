@@ -21,7 +21,7 @@ public class TestCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("test")
-                .requires(cs -> cs.hasPermissionLevel(0))
+                .requires(cs -> cs.hasPermission(0))
                 .then(Commands.argument("runAndIgnoreBlacklist", BoolArgumentType.bool())
                         .then(Commands.argument("command", StringArgumentType.greedyString())
 

@@ -55,7 +55,7 @@ public class ForgeEventSubscriber {
     @SubscribeEvent
     public static void worldTick(TickEvent.WorldTickEvent event) {
 
-        if (!event.world.isRemote && PlayerHelper.defaultServer == null) {
+        if (!event.world.isClientSide() && PlayerHelper.defaultServer == null) {
 
             // Set the server reference for PlayerHelper
             PlayerHelper.defaultServer = event.world.getServer();

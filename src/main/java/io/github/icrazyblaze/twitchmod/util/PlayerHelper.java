@@ -20,7 +20,7 @@ public class PlayerHelper {
     public static ServerPlayerEntity player() {
 
         PlayerList playerList = defaultServer.getPlayerList();
-        ServerPlayerEntity player = playerList.getPlayerByUsername(getUsername());
+        ServerPlayerEntity player = playerList.getPlayerByName(getUsername());
 
         if (player == null) {
             player = getDefaultPlayer();

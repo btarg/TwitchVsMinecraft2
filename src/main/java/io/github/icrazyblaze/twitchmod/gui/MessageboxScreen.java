@@ -30,19 +30,20 @@ public class MessageboxScreen extends Screen {
         renderBackground(stack);
 
         RenderSystem.color4f(1f, 1f, 1f, 1f);
-        assert client != null;
-        client.getTextureManager().bindTexture(BG_TEXTURE);
+        assert minecraft != null;
+        minecraft.getTextureManager().bind(BG_TEXTURE);
 
         // Show the background
-        drawTexture(stack, (width / 2) - 87, (height / 2) - 83, 0, 0, 256, 256);
+        blit(stack, (width / 2) - 87, (height / 2) - 83, 0, 0, 256, 256);
+
 
         // Draw title
-        client.fontRenderer.draw(stack, "Message Box", width / 2f - 32, height / 2f - 78, 4210752);
+        minecraft.font.draw(stack, "Message Box", width / 2f - 32, height / 2f - 78, 4210752);
 
         // Draw wrapped text
-        List<IReorderingProcessor> text = client.fontRenderer.wrapLines(new StringTextComponent(message), 165);
+        List<IReorderingProcessor> text = minecraft.font.split(new StringTextComponent(message), 165);
         for (int i = 0; i < text.size(); i++) {
-            client.fontRenderer.draw(stack, text.get(i), (width / 2f) - (client.fontRenderer.getWidth(text.get(i)) / 2f), (height / 2f - 60) + (client.fontRenderer.FONT_HEIGHT * i), 4210752);
+            minecraft.font.draw(stack, text.get(i), (width / 2f) - (minecraft.font.width(text.get(i)) / 2f), (height / 2f - 60) + (minecraft.font.lineHeight * i), 4210752);
         }
 
         super.render(stack, mouseX, mouseY, partialTicks);
@@ -52,7 +53,7 @@ public class MessageboxScreen extends Screen {
     @Override
     public void init() {
 
-        Button btn = new Button(width / 2 - 75, height / 2 + 55, 150, 20, new StringTextComponent(I18n.format("gui.done")), button -> client.player.closeScreen());
+        Button btn = new Button(width / 2 - 75, height / 2 + 55, 150, 20, new StringTextComponent(I18n.get("gui.done")), button -> minecraft.player.closeContainer());
         addButton(btn);
 
     }

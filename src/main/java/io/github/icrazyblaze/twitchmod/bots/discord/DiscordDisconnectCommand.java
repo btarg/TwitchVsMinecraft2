@@ -12,7 +12,7 @@ public class DiscordDisconnectCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("disconnect")
-                .requires(cs -> cs.hasPermissionLevel(0))
+                .requires(cs -> cs.hasPermission(0))
                 .executes(CMD);
     }
 

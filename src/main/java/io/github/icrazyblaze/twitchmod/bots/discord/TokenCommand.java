@@ -19,7 +19,7 @@ public class TokenCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("token")
-                .requires(cs -> cs.hasPermissionLevel(0))
+                .requires(cs -> cs.hasPermission(0))
                 .then(Commands.argument("token", StringArgumentType.greedyString()).executes(CMD));
     }
 
@@ -34,7 +34,7 @@ public class TokenCommand implements Command<CommandSource> {
         // Update config
         ConfigManager.updateFromConfig();
 
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Discord Bot Token set. Use /discord connect to start!"), false);
+        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.GOLD + "Discord Bot Token set. Use /discord connect to start!"), false);
         return SINGLE_SUCCESS;
 
     }

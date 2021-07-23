@@ -23,7 +23,7 @@ public class ChanceCubesIntegration {
     public static void initCommands() {
         ModProxy.chanceCubesProxy.ifPresent(proxy -> {
 
-            registerCommand(() -> CommandHandlers.setBlock(player().getBlockPos(), proxy.CHANCE_CUBE.get().getDefaultState()), "chancecube", "cube");
+            registerCommand(() -> CommandHandlers.setBlock(player().blockPosition(), proxy.CHANCE_CUBE.get().defaultBlockState()), "chancecube", "cube");
             registerCommand((ChanceCubesIntegration::placeGiantChanceCube), "giantchancecube", "giantcube");
 
         });
@@ -34,15 +34,15 @@ public class ChanceCubesIntegration {
         ServerPlayerEntity player = player();
         Block cube = ModProxy.chanceCubesProxy.get().GIANT_CHANCE_CUBE.get();
 
-        Vector3d lookVector = player.getLookVec();
+        Vector3d lookVector = player.getLookAngle();
 
         double dx = player.getX() + (lookVector.x * 4);
         double dz = player.getZ() + (lookVector.z * 4);
 
         BlockPos bpos = new BlockPos(dx, player.getY(), dz);
 
-        CommandHandlers.setBlock(bpos, cube.getDefaultState());
-        cube.onBlockPlacedBy(player.world, bpos, cube.getDefaultState(), player, ItemStack.EMPTY);
+        CommandHandlers.setBlock(bpos, cube.defaultBlockState());
+        cube.setPlacedBy(player.level, bpos, cube.defaultBlockState(), player, ItemStack.EMPTY);
 
     }
 

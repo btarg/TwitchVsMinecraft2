@@ -20,7 +20,7 @@ public class SetKeyCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("key")
-                .requires(cs -> cs.hasPermissionLevel(0))
+                .requires(cs -> cs.hasPermission(0))
                 .then(Commands.argument("keystring", StringArgumentType.greedyString()).executes(CMD));
     }
 
@@ -34,7 +34,6 @@ public class SetKeyCommand implements Command<CommandSource> {
         // This command should be more idiot-proof now.
         if (key.startsWith("oauth:") && key.length() == 36) {
 
-            //System.setProperty("twitch_oauth_key", key);
             SecretFileHelper.setTwitchKey(key);
 
         } else {
@@ -44,7 +43,7 @@ public class SetKeyCommand implements Command<CommandSource> {
         // Update config
         ConfigManager.updateFromConfig();
 
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Twitch OAuth key set. Use /ttv connect to start!"), false);
+        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.GOLD + "Twitch OAuth key set. Use /ttv connect to start!"), false);
         return SINGLE_SUCCESS;
 
     }

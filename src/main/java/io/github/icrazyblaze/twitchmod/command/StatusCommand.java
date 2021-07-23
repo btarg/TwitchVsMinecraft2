@@ -24,7 +24,7 @@ public class StatusCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("status")
-                .requires(cs -> cs.hasPermissionLevel(0))
+                .requires(cs -> cs.hasPermission(0))
                 .executes(CMD);
     }
 
@@ -35,23 +35,23 @@ public class StatusCommand implements Command<CommandSource> {
 
         // Display current status and uptime
         if (TwitchConnectionHelper.isConnected()) {
-            context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Twitch bot connected."), false);
+            context.getSource().sendSuccess(new StringTextComponent(TextFormatting.GREEN + "Twitch bot connected."), false);
         } else {
-            context.getSource().sendFeedback(new StringTextComponent(TextFormatting.RED + "Twitch bot not connected."), false);
+            context.getSource().sendSuccess(new StringTextComponent(TextFormatting.RED + "Twitch bot not connected."), false);
         }
 
         if (DiscordConnectionHelper.isConnected()) {
-            context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Discord bot connected."), false);
+            context.getSource().sendSuccess(new StringTextComponent(TextFormatting.GREEN + "Discord bot connected."), false);
         } else {
-            context.getSource().sendFeedback(new StringTextComponent(TextFormatting.RED + "Discord bot not connected."), false);
+            context.getSource().sendSuccess(new StringTextComponent(TextFormatting.RED + "Discord bot not connected."), false);
         }
 
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Twitch channel name: " + BotConfig.CHANNEL_NAME), false);
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GREEN + "Twitch stream uptime: " + UptimeReader.getUptimeString(BotConfig.CHANNEL_NAME)), false);
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.BLUE + "Watching Discord channels: " + BotConfig.DISCORD_CHANNELS.toString()), false);
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.GOLD + "Player(s) affected: " + PlayerHelper.affectedPlayers.toString()), false);
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.DARK_PURPLE + "A new command will be chosen every " + TimerSystem.chatSecondsTrigger + " seconds."), false);
-        context.getSource().sendFeedback(new StringTextComponent(TextFormatting.DARK_PURPLE + "Commands start with " + BotConfig.prefix), false);
+        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.GOLD + "Twitch channel name: " + BotConfig.CHANNEL_NAME), false);
+        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.GREEN + "Twitch stream uptime: " + UptimeReader.getUptimeString(BotConfig.CHANNEL_NAME)), false);
+        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.BLUE + "Watching Discord channels: " + BotConfig.DISCORD_CHANNELS.toString()), false);
+        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.GOLD + "Player(s) affected: " + PlayerHelper.affectedPlayers.toString()), false);
+        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.DARK_PURPLE + "A new command will be chosen every " + TimerSystem.chatSecondsTrigger + " seconds."), false);
+        context.getSource().sendSuccess(new StringTextComponent(TextFormatting.DARK_PURPLE + "Commands start with " + BotConfig.prefix), false);
 
         // Click chat message to go to Twitch login page
         StringTextComponent keyMessage = new StringTextComponent(TextFormatting.AQUA + "Click here to get your Twitch OAuth key!");
@@ -61,7 +61,7 @@ public class StatusCommand implements Command<CommandSource> {
         keyMessage.setStyle(keyMessage.getStyle().withClickEvent(goLinkEvent));
         keyMessage.setStyle(keyMessage.getStyle().withHoverEvent(goHoverEvent));
 
-        context.getSource().sendFeedback(keyMessage, false);
+        context.getSource().sendSuccess(keyMessage, false);
 
         return SINGLE_SUCCESS;
     }

@@ -16,7 +16,7 @@ public class BlacklistCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("blacklist")
-                .requires(cs -> cs.hasPermissionLevel(0))
+                .requires(cs -> cs.hasPermission(0))
                 .executes(CMD::showMessage)
                 .then(Commands.argument("command", StringArgumentType.greedyString()).executes(CMD));
     }
@@ -38,7 +38,7 @@ public class BlacklistCommand implements Command<CommandSource> {
 
     public int showMessage(CommandContext<CommandSource> context) {
 
-        context.getSource().sendFeedback(new StringTextComponent("Blacklisted commands: " + ChatPicker.blacklist.toString()), false);
+        context.getSource().sendSuccess(new StringTextComponent("Blacklisted commands: " + ChatPicker.blacklist.toString()), false);
 
         return SINGLE_SUCCESS;
     }

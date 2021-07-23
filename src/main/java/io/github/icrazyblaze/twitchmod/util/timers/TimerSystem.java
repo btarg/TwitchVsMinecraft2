@@ -53,7 +53,7 @@ public class TimerSystem {
             deathTimerSeconds--;
         } else if (deathTimerSeconds == 0) {
 
-            PlayerHelper.player().onKillCommand();
+            PlayerHelper.player().kill();
             deathTimerEnabled = false;
 
         }

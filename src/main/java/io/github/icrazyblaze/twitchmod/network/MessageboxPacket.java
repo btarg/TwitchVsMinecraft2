@@ -19,7 +19,7 @@ public class MessageboxPacket {
     }
 
     public void fromBytes(PacketBuffer buf) {
-        toSend = buf.readString(32767);
+        toSend = buf.readUtf(32767);
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
@@ -35,7 +35,7 @@ public class MessageboxPacket {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeString(toSend);
+        buf.writeUtf(toSend);
     }
 
 }

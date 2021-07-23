@@ -55,15 +55,15 @@ public class CarrierBeesIntegration {
         ServerPlayerEntity player = player();
 
         // Get the entity without referencing CarrierBeeEntity explicitly
-        MobEntity bee = (MobEntity) type.create(player.world);
+        MobEntity bee = (MobEntity) type.create(player.level);
 
         // Give it an item and name
         assert bee != null;
-        bee.setHeldItem(bee.getActiveHand(), Objects.requireNonNull(CommandHandlers.getRandomItemStack(true)));
+        bee.setItemInHand(bee.getUsedItemHand(), Objects.requireNonNull(CommandHandlers.getRandomItemStack(true)));
         bee.setCustomName(new StringTextComponent(name));
         bee.setDropChance(EquipmentSlotType.MAINHAND, 1.0F);
 
-        player.sendStatusMessage(new StringTextComponent(TextFormatting.YELLOW + name + " sent you a bee!"), true);
+        player.displayClientMessage(new StringTextComponent(TextFormatting.YELLOW + name + " sent you a bee!"), true);
         CommandHandlers.spawnMob(bee);
 
     }

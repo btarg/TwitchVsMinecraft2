@@ -13,8 +13,8 @@ public class ChatPickerHelper {
 
         // Only run on main (server) thread
         ThreadTaskExecutor<?> executor = LogicalSidedProvider.WORKQUEUE.get(LogicalSide.SERVER);
-        if (!executor.isOnExecutionThread()) {
-            executor.deferTask(runnable);
+        if (!executor.isSameThread()) {
+            executor.execute(runnable);
         } else {
             runnable.run();
         }

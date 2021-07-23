@@ -14,14 +14,14 @@ public class QueueCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("queue")
-                .requires(cs -> cs.hasPermissionLevel(0))
+                .requires(cs -> cs.hasPermission(0))
                 .executes(CMD);
     }
 
     @Override
     public int run(CommandContext<CommandSource> context) {
 
-        context.getSource().sendFeedback(new StringTextComponent("Possible commands: " + ChatPicker.chatBuffer.toString()), false);
+        context.getSource().sendSuccess(new StringTextComponent("Possible commands: " + ChatPicker.chatBuffer.toString()), false);
         return SINGLE_SUCCESS;
     }
 }

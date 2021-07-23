@@ -15,7 +15,7 @@ public class ClearBlacklistCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("clearblacklist")
-                .requires(cs -> cs.hasPermissionLevel(0))
+                .requires(cs -> cs.hasPermission(0))
                 .executes(CMD);
     }
 
@@ -23,7 +23,7 @@ public class ClearBlacklistCommand implements Command<CommandSource> {
     public int run(CommandContext<CommandSource> context) {
 
         ChatPicker.clearBlacklist();
-        context.getSource().sendFeedback(new StringTextComponent("Blacklisted commands: " + ChatPicker.blacklist.toString()), false);
+        context.getSource().sendSuccess(new StringTextComponent("Blacklisted commands: " + ChatPicker.blacklist.toString()), false);
 
         return SINGLE_SUCCESS;
 

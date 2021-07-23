@@ -15,14 +15,14 @@ public class ListCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("list")
-                .requires(cs -> cs.hasPermissionLevel(0))
+                .requires(cs -> cs.hasPermission(0))
                 .executes(CMD);
     }
 
     @Override
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
 
-        context.getSource().sendFeedback(new StringTextComponent("Registered commands: " + ChatCommands.getRegisteredCommands()), false);
+        context.getSource().sendSuccess(new StringTextComponent("Registered commands: " + ChatCommands.getRegisteredCommands()), false);
 
         return SINGLE_SUCCESS;
     }

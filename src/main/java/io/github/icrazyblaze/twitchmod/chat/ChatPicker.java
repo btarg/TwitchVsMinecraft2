@@ -249,7 +249,7 @@ public class ChatPicker {
      */
     public static boolean doCommand(String message, String sender) {
 
-        if (!PlayerHelper.player().world.isRemote()) {
+        if (!PlayerHelper.player().level.isClientSide()) {
 
             // If the command contains a space, everything after the space is treated like an argument.
             // We chop of the arguments, and check the map for the command.

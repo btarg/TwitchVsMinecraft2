@@ -16,7 +16,7 @@ public class TwitchDisconnectCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register() {
         return Commands.literal("disconnect")
-                .requires(cs -> cs.hasPermissionLevel(0))
+                .requires(cs -> cs.hasPermission(0))
                 .executes(CMD);
     }
 
@@ -26,7 +26,7 @@ public class TwitchDisconnectCommand implements Command<CommandSource> {
         if (TwitchConnectionHelper.isConnected()) {
             TwitchConnectionHelper.disconnectBot();
         } else {
-            context.getSource().sendFeedback(new StringTextComponent(TextFormatting.RED + "Bot not connected."), false);
+            context.getSource().sendSuccess(new StringTextComponent(TextFormatting.RED + "Bot not connected."), false);
         }
 
         return SINGLE_SUCCESS;
