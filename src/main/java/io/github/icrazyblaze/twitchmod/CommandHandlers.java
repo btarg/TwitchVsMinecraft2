@@ -1,5 +1,6 @@
 package io.github.icrazyblaze.twitchmod;
 
+import com.mojang.math.Vector3d;
 import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.gui.MessageboxScreen;
@@ -32,6 +33,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.projectile.Fireball;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -61,6 +63,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -348,13 +351,10 @@ public class CommandHandlers {
 
         ServerPlayer player = player();
 
-        Vec3 lookVector = player.getLookAngle();
+        LargeFireball ent = new LargeFireball(EntityType.FIREBALL, player.level);
 
-        double dx = player.getX() + (lookVector.x * 2);
-        double dz = player.getZ() + (lookVector.z * 2);
-
-        LargeFireball ent = new LargeFireball(player.level, player, dx, player.getEyeY(), dz, 1);
-        ent.lerpMotion(lookVector.x * 3, lookVector.y, lookVector.z * 3);
+        ent.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 1.0F);
+        ent.moveTo(player.getX(), player.getY(0.5), player.getZ(), 0, 0);
 
         player.level.addFreshEntity(ent);
 
