@@ -11,13 +11,13 @@ import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.command.*;
 import io.github.icrazyblaze.twitchmod.integration.IntegrationWrapper;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
-import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
+import net.minecraftforge.fmlserverevents.FMLServerStartedEvent;
+import net.minecraftforge.fmlserverevents.FMLServerStoppingEvent;
 
 /**
  * SubscribeEvents go here to avoid clutter in the main class.
@@ -30,7 +30,7 @@ public class ForgeEventSubscriber {
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {
 
-        CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
+        CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
         dispatcher.register(Commands.literal("ttv")
                 .then(TwitchConnectCommand.register())
                 .then(TwitchDisconnectCommand.register())

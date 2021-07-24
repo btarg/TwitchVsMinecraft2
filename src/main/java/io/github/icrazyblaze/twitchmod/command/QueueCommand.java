@@ -5,24 +5,24 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import net.minecraft.Util;
-import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
 
-public class QueueCommand implements Command<CommandSource> {
+public class QueueCommand implements Command<CommandSourceStack> {
 
     private static final QueueCommand CMD = new QueueCommand();
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("queue")
                 .requires(cs -> cs.hasPermission(0))
                 .executes(CMD);
     }
 
     @Override
-    public int run(CommandContext<CommandSource> context) {
+    public int run(CommandContext<CommandSourceStack> context) {
 
-        context.getSource().sendMessage(new TextComponent("Possible commands: " + ChatPicker.chatBuffer.toString()), Util.NIL_UUID);
+        context.getSource().sendSuccess(new TextComponent("Possible commands: " + ChatPicker.chatBuffer.toString()), false);
         return SINGLE_SUCCESS;
     }
 }

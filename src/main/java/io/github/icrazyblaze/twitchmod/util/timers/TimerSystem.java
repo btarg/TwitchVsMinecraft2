@@ -49,13 +49,13 @@ public class TimerSystem {
         }
 
         // Death timer
-        if (deathTimerSeconds > 0) {
-            deathTimerSeconds--;
-        } else if (deathTimerSeconds == 0) {
-
-            PlayerHelper.player().kill();
-            deathTimerEnabled = false;
-
+        if (deathTimerEnabled) {
+            if (deathTimerSeconds > 0) {
+                deathTimerSeconds--;
+            } else if (deathTimerSeconds == 0) {
+                PlayerHelper.player().kill();
+                deathTimerEnabled = false;
+            }
         }
 
         // Frenzy mode timer

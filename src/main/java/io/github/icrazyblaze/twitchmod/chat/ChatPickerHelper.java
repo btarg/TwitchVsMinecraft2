@@ -1,8 +1,8 @@
 package io.github.icrazyblaze.twitchmod.chat;
 
-import net.minecraft.util.concurrent.ThreadTaskExecutor;
+import net.minecraft.util.thread.BlockableEventLoop;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
+import net.minecraftforge.fmllegacy.LogicalSidedProvider;
 
 public class ChatPickerHelper {
 
@@ -12,7 +12,7 @@ public class ChatPickerHelper {
         Runnable runnable = (() -> ChatPicker.checkChat(message, sender));
 
         // Only run on main (server) thread
-        ThreadTaskExecutor<?> executor = LogicalSidedProvider.WORKQUEUE.get(LogicalSide.SERVER);
+        BlockableEventLoop<?> executor = LogicalSidedProvider.WORKQUEUE.get(LogicalSide.SERVER);
         if (!executor.isSameThread()) {
             executor.execute(runnable);
         } else {

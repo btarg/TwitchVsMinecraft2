@@ -5,17 +5,16 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
-import net.minecraft.Util;
-import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
 
 
-public class BlacklistCommand implements com.mojang.brigadier.Command<CommandSource> {
+public class BlacklistCommand implements Command<CommandSourceStack> {
 
     private static final BlacklistCommand CMD = new BlacklistCommand();
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("blacklist")
                 .requires(cs -> cs.hasPermission(0))
                 .executes(CMD::showMessage)
@@ -23,7 +22,7 @@ public class BlacklistCommand implements com.mojang.brigadier.Command<CommandSou
     }
 
     @Override
-    public int run(CommandContext<CommandSource> context) {
+    public int run(CommandContext<CommandSourceStack> context) {
 
         // Get message and simulate command
         String message = StringArgumentType.getString(context, "command");
@@ -37,10 +36,10 @@ public class BlacklistCommand implements com.mojang.brigadier.Command<CommandSou
 
     }
 
-    public int showMessage(CommandContext<CommandSource> context) {
+    private int showMessage(CommandContext<CommandSourceStack> context) {
 
-        context.getSource().sendMessage(new TextComponent("Blacklisted commands: " + ChatPicker.blacklist.toString()), Util.NIL_UUID);
-
+        context.getSource().sendSuccess(new TextComponent("Blacklisted commands: " + ChatPicker.blacklist.toString()), false);
         return SINGLE_SUCCESS;
+
     }
 }

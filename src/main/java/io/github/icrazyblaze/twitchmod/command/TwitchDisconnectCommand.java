@@ -5,28 +5,28 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.icrazyblaze.twitchmod.bots.irc.TwitchConnectionHelper;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.util.text.TextComponent;
-import net.minecraft.util.text.ChatFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.TextComponent;
 
-public class TwitchDisconnectCommand implements Command<CommandSource> {
+public class TwitchDisconnectCommand implements Command<CommandSourceStack> {
 
     private static final TwitchDisconnectCommand CMD = new TwitchDisconnectCommand();
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("disconnect")
                 .requires(cs -> cs.hasPermission(0))
                 .executes(CMD);
     }
 
     @Override
-    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 
         if (TwitchConnectionHelper.isConnected()) {
             TwitchConnectionHelper.disconnectBot();
         } else {
-            context.getSource().sendMessage(new TextComponent(ChatFormatting.RED + "Bot not connected."), false);
+            context.getSource().sendSuccess(new TextComponent(ChatFormatting.RED + "Bot not connected."), false);
         }
 
         return SINGLE_SUCCESS;

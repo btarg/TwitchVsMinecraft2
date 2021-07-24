@@ -8,18 +8,18 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
-import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 
-public class TestCommand implements Command<CommandSource> {
+public class TestCommand implements Command<CommandSourceStack> {
 
     private static final TestCommand CMD = new TestCommand();
     private static final ThreadLocalRandom rand = ThreadLocalRandom.current();
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("test")
                 .requires(cs -> cs.hasPermission(0))
                 .then(Commands.argument("runAndIgnoreBlacklist", BoolArgumentType.bool())
@@ -29,7 +29,7 @@ public class TestCommand implements Command<CommandSource> {
     }
 
     @Override
-    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 
         // Get message and simulate command
         String message = StringArgumentType.getString(context, "command");

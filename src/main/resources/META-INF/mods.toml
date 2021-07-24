@@ -12,9 +12,7 @@ displayURL = "https://bit.ly/TwitchVsMinecraft"
 logoFile = "logo.png"
 credits = "Idea from Kaze Emanuar. Thanks to iGoodie, Commoble and MMD."
 authors = "RonaRage (iCrazyBlaze)"
-description = '''
-Be at your viewers' mercy! Random commands are chosen from Twitch chat or Discord.
-'''
+description = "Be at your viewers' mercy! Random commands are chosen from Twitch chat or Discord."
 
 [[dependencies.twitchmod]]
 modId = "forge"

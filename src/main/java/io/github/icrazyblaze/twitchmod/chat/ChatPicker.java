@@ -4,8 +4,8 @@ import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
-import net.minecraft.util.text.TextComponent;
-import net.minecraft.util.text.ChatFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;

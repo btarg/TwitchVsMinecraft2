@@ -10,23 +10,23 @@ import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.util.SecretFileHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
-import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
 
 
-public class SetKeyCommand implements Command<CommandSource> {
+public class SetKeyCommand implements Command<CommandSourceStack> {
 
     private static final SetKeyCommand CMD = new SetKeyCommand();
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("key")
                 .requires(cs -> cs.hasPermission(0))
                 .then(Commands.argument("keystring", StringArgumentType.greedyString()).executes(CMD));
     }
 
     @Override
-    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 
         // Get key and store in system properties
         String key = StringArgumentType.getString(context, "keystring");
@@ -44,7 +44,7 @@ public class SetKeyCommand implements Command<CommandSource> {
         // Update config
         ConfigManager.updateFromConfig();
 
-        context.getSource().sendMessage(new TextComponent(ChatFormatting.GOLD + "Twitch OAuth key set. Use /ttv connect to start!"), Util.NIL_UUID);
+        context.getSource().sendSuccess(new TextComponent(ChatFormatting.GOLD + "Twitch OAuth key set. Use /ttv connect to start!"), false);
         return SINGLE_SUCCESS;
 
     }

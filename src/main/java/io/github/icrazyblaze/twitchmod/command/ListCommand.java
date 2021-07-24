@@ -6,24 +6,24 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
 import net.minecraft.Util;
-import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
 
-public class ListCommand implements Command<CommandSource> {
+public class ListCommand implements Command<CommandSourceStack> {
 
     private static final ListCommand CMD = new ListCommand();
 
-    public static ArgumentBuilder<CommandSource, ?> register() {
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("list")
                 .requires(cs -> cs.hasPermission(0))
                 .executes(CMD);
     }
 
     @Override
-    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 
-        context.getSource().sendMessage(new TextComponent("Registered commands: " + ChatCommands.getRegisteredCommands()), Util.NIL_UUID);
+        context.getSource().sendSuccess(new TextComponent("Registered commands: " + ChatCommands.getRegisteredCommands()), false);
 
         return SINGLE_SUCCESS;
     }

@@ -9,7 +9,6 @@ import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.EffectInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -59,7 +58,6 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
@@ -91,27 +89,25 @@ public class CommandHandlers {
     static {
         try {
             lootArray = getLootTables();
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static ResourceLocation[] getLootTables() throws NoSuchFieldException, IllegalAccessException {
+    public static ResourceLocation[] getLootTables() {
 
-        // Reflect LootTables class to get the private set that contains all the vanilla loot tables
-        Class<LootTables> obj = LootTables.class;
+        LootTables obj = player().getServer().getLootTables();
+        Set<ResourceLocation> tables = obj.getIds();
 
-        // New reflection: fixed crash in production
-        Set<ResourceLocation> tables = ObfuscationReflectionHelper.getPrivateValue(obj, null, "LOCATIONS");
+        List<ResourceLocation> tablesCopy = new ArrayList<>(tables);
+        tablesCopy.removeIf(table -> table.toString().contains("blocks"));
 
-        if (tables != null) {
-            return tables.toArray(new ResourceLocation[0]);
-        }
+        Main.logger.info(tablesCopy.toString());
 
-        Main.logger.error("Could not get loot tables.");
-        return new ResourceLocation[]{};
+        return tablesCopy.toArray(new ResourceLocation[0]);
 
     }
+
 
     public static void rollTheDice(String sender) {
 
@@ -357,8 +353,7 @@ public class CommandHandlers {
         double dx = player.getX() + (lookVector.x * 2);
         double dz = player.getZ() + (lookVector.z * 2);
 
-        Entity ent = new LargeFireball(EntityType.FIREBALL, player.level);
-        ent.setPos(dx, player.getEyeY(), dz);
+        LargeFireball ent = new LargeFireball(player.level, player, dx, player.getEyeY(), dz, 1);
         ent.lerpMotion(lookVector.x * 3, lookVector.y, lookVector.z * 3);
 
         player.level.addFreshEntity(ent);
@@ -442,7 +437,7 @@ public class CommandHandlers {
 
         BlockPos bpos = new BlockPos(rayTrace.getLocation());
 
-        player.level.destroyBlock(bpos, false);
+        player.level.destroyBlock(bpos, true);
 
     }
 
@@ -882,12 +877,10 @@ public class CommandHandlers {
         // Place the sign with rotation
         player.level.setBlock(bpos, Blocks.OAK_SIGN.defaultBlockState().setValue(BlockStateProperties.ROTATION_16, playerFace), 11);
 
-        BlockEntity BlockEntity = player.level.getBlockEntity(bpos);
+        BlockEntity blockEntity = player.level.getBlockEntity(bpos);
 
         // Thanks for the new code Commoble!
-        if (BlockEntity instanceof SignBlockEntity) {
-
-            SignBlockEntity sign = (SignBlockEntity) BlockEntity;
+        if (blockEntity instanceof SignBlockEntity sign) {
 
             int lines = splitMessage.length;
 
@@ -896,6 +889,7 @@ public class CommandHandlers {
             }
 
         }
+
 
         // Add a light source below the sign for reading at night (thanks Gaiet)
         setBlock(bposBelow, Blocks.GLOWSTONE.defaultBlockState());
@@ -912,17 +906,15 @@ public class CommandHandlers {
 
         // Make sure we don't replace any chests
         if (bposBlock != Blocks.CHEST && bposBlock != Blocks.TRAPPED_CHEST) {
-
             setBlock(bpos, Blocks.CHEST.defaultBlockState());
+        }
 
-            BlockEntity BlockEntity = player.level.getBlockEntity(bpos);
+        BlockEntity blockEntity = player.level.getBlockEntity(bpos);
 
-            if (BlockEntity instanceof ChestBlockEntity) {
+        if (blockEntity instanceof ChestBlockEntity) {
 
-                ((ChestBlockEntity) BlockEntity).setLootTable(lootArray[rand.nextInt(lootArray.length)], rand.nextLong());
-                ((ChestBlockEntity) BlockEntity).unpackLootTable(player);
-
-            }
+            ((ChestBlockEntity) blockEntity).setLootTable(lootArray[rand.nextInt(lootArray.length)], rand.nextLong());
+            ((ChestBlockEntity) blockEntity).unpackLootTable(player);
 
         }
 

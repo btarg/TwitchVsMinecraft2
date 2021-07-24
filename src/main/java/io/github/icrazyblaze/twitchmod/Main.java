@@ -10,8 +10,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.log4j.BasicConfigurator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,9 +27,6 @@ public final class Main {
     public static final Logger logger = LogManager.getLogger(MOD_ID);
 
     public Main() {
-
-        // Get rid of that annoying log4j:WARN message
-        BasicConfigurator.configure();
 
         // Instantiate and subscribe our config instance
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigManager.COMMON_CONFIG);
@@ -51,7 +48,7 @@ public final class Main {
     }
 
     @SubscribeEvent
-    public static void configLoaded(ModConfig.ModConfigEvent event) {
+    public static void configLoaded(ModConfigEvent event) {
         if (event.getConfig().getSpec() == COMMON_CONFIG) {
             ConfigManager.updateFromConfig();
         }

@@ -3,10 +3,9 @@ package io.github.icrazyblaze.twitchmod.util;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 
 import java.util.List;
-
-import net.minecraft.server.players.PlayerList;
 
 public class PlayerHelper {
 
