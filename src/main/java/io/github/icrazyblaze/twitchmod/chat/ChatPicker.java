@@ -290,7 +290,7 @@ public class ChatPicker {
                 String[] split = message.split("\\s+");
 
                 commandString = split[0]; // Before space (e.g. "messagebox")
-                argString = message.substring(commandString.length());
+                argString = message.substring(commandString.length()).trim();
 
             } else {
                 commandString = message;
