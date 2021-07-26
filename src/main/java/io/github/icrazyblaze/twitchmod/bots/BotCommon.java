@@ -23,7 +23,7 @@ public class BotCommon {
                     if (chan.canTalk()) {
                         try {
                             chan.sendMessage(message).queue();
-                        } catch(Exception e) {
+                        } catch (Exception e) {
                             Main.logger.error("Could not send message to Discord: " + e);
                         }
                     }

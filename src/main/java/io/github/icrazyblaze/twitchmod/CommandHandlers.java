@@ -2,16 +2,11 @@ package io.github.icrazyblaze.twitchmod;
 
 import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
-import io.github.icrazyblaze.twitchmod.gui.MessageboxScreen;
 import io.github.icrazyblaze.twitchmod.network.MessageboxPacket;
 import io.github.icrazyblaze.twitchmod.network.PacketHandler;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.ConfirmLinkScreen;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -55,8 +50,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -351,7 +344,7 @@ public class CommandHandlers {
 
         ServerPlayer player = player();
 
-        LargeFireball ent = new LargeFireball(EntityType.FIREBALL, player.level);
+        LargeFireball ent = new LargeFireball(player.level, player, 0D, 0D, 0D, 4);
 
         ent.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 1.0F);
         ent.moveTo(player.getX(), player.getY(0.5), player.getZ(), 0, 0);

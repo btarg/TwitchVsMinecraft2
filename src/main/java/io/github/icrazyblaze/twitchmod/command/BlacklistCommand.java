@@ -1,7 +1,6 @@
 package io.github.icrazyblaze.twitchmod.command;
 
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -37,6 +36,7 @@ public class BlacklistCommand implements Command<CommandSourceStack> {
         return SINGLE_SUCCESS;
 
     }
+
     private int removeFromBlacklist(CommandContext<CommandSourceStack> context) {
 
         String message = StringArgumentType.getString(context, "command");

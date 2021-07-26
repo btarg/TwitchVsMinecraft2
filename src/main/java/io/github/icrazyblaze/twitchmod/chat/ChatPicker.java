@@ -30,7 +30,8 @@ import java.util.function.Supplier;
 public class ChatPicker {
 
     private static final Supplier<Path> blacklistPath = () -> FMLPaths.CONFIGDIR.get().resolve("command-blacklist.txt");
-    private static List<String> blacklist;
+    private static final File blacklistTextFile = blacklistPath.get().toFile();
+    private static final String[] blankMessagePlaceholders = {" says hello!", " was here"};
     public static ArrayList<String> chatBuffer = new ArrayList<>();
     public static ArrayList<String> chatSenderBuffer = new ArrayList<>();
     public static boolean cooldownEnabled = false;
@@ -40,9 +41,8 @@ public class ChatPicker {
     public static boolean logMessages = false;
     public static ArrayList<String> tempChatLog = new ArrayList<>();
     public static int chatLogLength = 10;
-    private static final File blacklistTextFile = blacklistPath.get().toFile();
+    private static List<String> blacklist;
     private static String lastCommand = null;
-    private static final String[] blankMessagePlaceholders = {" says hello!", " was here"};
 
     public static List<String> getBlacklist() {
         return blacklist;
@@ -58,6 +58,7 @@ public class ChatPicker {
         blacklist.add(toAdd);
         writeBlacklistToFile();
     }
+
     /**
      * @param toRemove The string to remove from the blacklist and its text file.
      */

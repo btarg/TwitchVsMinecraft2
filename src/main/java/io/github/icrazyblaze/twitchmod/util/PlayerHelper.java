@@ -34,6 +34,11 @@ public class PlayerHelper {
     private static ServerPlayer getDefaultPlayer() {
 
         PlayerList playerList = defaultServer.getPlayerList();
+
+        if (playerList.getPlayerCount() == 0) {
+            return null;
+        }
+
         return playerList.getPlayers().get(0);
 
     }
