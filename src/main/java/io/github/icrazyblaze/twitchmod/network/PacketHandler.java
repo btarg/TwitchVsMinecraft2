@@ -23,6 +23,11 @@ public class PacketHandler {
                 MessageboxPacket::toBytes,
                 MessageboxPacket::new,
                 MessageboxPacket::handle);
+        INSTANCE.registerMessage(nextID(),
+                LinkScreenPacket.class,
+                LinkScreenPacket::toBytes,
+                LinkScreenPacket::new,
+                LinkScreenPacket::handle);
 
     }
 

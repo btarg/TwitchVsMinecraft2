@@ -1,14 +1,15 @@
 package io.github.icrazyblaze.twitchmod.util;
 
 import com.mojang.brigadier.CommandDispatcher;
-import io.github.icrazyblaze.twitchmod.bots.discord.DiscordConnectCommand;
 import io.github.icrazyblaze.twitchmod.bots.discord.DiscordConnectionHelper;
-import io.github.icrazyblaze.twitchmod.bots.discord.DiscordDisconnectCommand;
-import io.github.icrazyblaze.twitchmod.bots.discord.TokenCommand;
 import io.github.icrazyblaze.twitchmod.bots.irc.TwitchConnectionHelper;
 import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.command.*;
+import io.github.icrazyblaze.twitchmod.command.discord.DiscordConnectCommand;
+import io.github.icrazyblaze.twitchmod.command.discord.DiscordDisconnectCommand;
+import io.github.icrazyblaze.twitchmod.command.discord.GetTokenCommand;
+import io.github.icrazyblaze.twitchmod.command.discord.TokenCommand;
 import io.github.icrazyblaze.twitchmod.integration.IntegrationWrapper;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.commands.CommandSourceStack;
@@ -35,17 +36,18 @@ public class ForgeEventSubscriber {
                 .then(TwitchConnectCommand.register())
                 .then(TwitchDisconnectCommand.register())
                 .then(SetKeyCommand.register())
+                .then(GetKeyCommand.register())
                 .then(TestCommand.register())
                 .then(StatusCommand.register())
                 .then(QueueCommand.register())
                 .then(BlacklistCommand.register())
-                .then(ClearBlacklistCommand.register())
                 .then(ListCommand.register())
                 // Register Discord commands
                 .then(dispatcher.register(Commands.literal("discord")
                         .then(DiscordConnectCommand.register())
                         .then(DiscordDisconnectCommand.register())
                         .then(TokenCommand.register())
+                        .then(GetTokenCommand.register())
                 ))
         );
 

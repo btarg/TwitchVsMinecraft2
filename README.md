@@ -1,4 +1,4 @@
-# Twitch Vs Minecraft Reloaded (Forge 1.16.X)
+# Twitch Vs Minecraft Reloaded (Forge 1.17.X)
 [![Build status](https://ci.appveyor.com/api/projects/status/xoql77ww8lpbpmyo?svg=true)](https://ci.appveyor.com/project/iCrazyBlaze/twitchvsminecraft2)
 [![CurseForge](http://cf.way2muchnoise.eu/full_twitch-vs-minecraft_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/twitch-vs-minecraft)
 
@@ -12,7 +12,10 @@ A Minecraft mod for Forge inspired by [Kaze Emanuar](https://www.youtube.com/cha
 
 
 # Forge version
-The latest version of the mod is designed to work with Forge for Minecraft 1.16.1 and above.
+The latest version of the mod is designed to work with [Forge](https://files.minecraftforge.net) for Minecraft 1.17.1 and above.
+
+> This mod is **NOT** backwards compatible with 1.16.X Minecraft Forge versions.
+> Only versions of the mod for the latest versions of Minecraft Forge will be supported going forwards.
 
 # How it works
 ## **Using Twitch**
@@ -29,20 +32,58 @@ You should keep this key private and safe. **DO NOT** share this key with others
 
 Follow the instructions on the TwitchApps page for how to revoke access to the Twitch API if you want to stay extra safe.
 
-> This key needs to be reset every time the game is restarted using the in-game command `/ttv key <key>`.
+> This key is stored in a file located in the Minecraft root directory under `mod_data`.
 
 # Discord Bot Token
 You can also connect a Discord Bot and use your Discord server instead of Twitch chat.
 Visit the [Discord Developer Dashboard](https://discord.com/developers/applications), and create a bot.
 
-> This token needs to be reset every time the game is restarted using the in-game command `/discord token <token>` or `/ttv discord token <token>`.
+> This key is stored in a file located in the Minecraft root directory under `mod_data`.
 
+# Editing the configuration file
+You will need to edit this file to add your Twitch channel name, change the affected players, or choose what Discord channels are read from, and you will often use it to change timer settings.
+
+> You should edit this file as soon as you start playing. Make sure you have it on hand while trying the mod as you may need to tweak settings during your game.
+
+Your config file will be located in:
+```jsonpath
+.minecraft/config/twitchmod-common
+```
+and will look like this by default when opened in a text editor:
+```toml
+
+[general]
+	#Name of Twitch channel
+	twitch_channel_name = "channel"
+	#How many messages should be included when chat writes a book
+	book_length = 10
+	#The players' Minecraft usernames that will be effected
+	minecraft_username = ["Dev", "Test"]
+	#Allow Frenzy Mode
+	enable_frenzy = true
+	#Prevent the same command from being executed twice in a row
+	enable_cooldown = false
+	#How many votes are needed to activate certain commands
+	votes_needed = 3
+	#Should chat messages from Twitch or Discord be show in-game?
+	show_chat_messages = false
+	#The prefix for commands in Twitch or Discord
+	command_prefix = "!"
+	#How many seconds until the next command is chosen
+	choose_command_delay = 20
+	#How many seconds until a random viewer-written message is shown on screen
+	choose_message_delay = 240
+	#Names of Discord channels to read commands from ['separated', 'like', 'this']
+	discord_channels = ["general"]
+	#Should chosen commands be shown if chat messages are enabled?
+	show_commands_in_chat = true
+```
 # Testing
-To test commands without connecting to Twitch or Discord, use `/ttv test <string>`.
+To test commands without connecting to Twitch or Discord, use `/ttv test [true/false] <string>`.
 
 When connected to Twitch, the Broadcaster's commands are always sent through, bypassing the blacklist and command timer entirely.
 
-To see more information, type `/ttv status`.
+To review settings and view connection status, type `/ttv status`.
 
 # Building from source
 > *Before you try building, make sure you [have JDK installed](https://adoptopenjdk.net/) and have properly set up your Java development environment.*

@@ -23,10 +23,9 @@ public class FrenzyTimerOverlay {
 
         if (ChatPicker.instantCommands) {
 
-            Minecraft mc = Minecraft.getInstance();
             String text = "FRENZY MODE: " + TimerSystem.frenzyTimerSeconds;
 
-            mc.font.drawShadow(event.getMatrixStack(), text, 4, 4, ChatFormatting.GOLD.getColor());
+            Minecraft.getInstance().font.drawShadow(event.getMatrixStack(), text, 4, 4, ChatFormatting.GOLD.getColor());
 
         }
 

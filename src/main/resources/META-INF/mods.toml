@@ -9,10 +9,11 @@ version = "${file.jarVersion}"
 displayName = "Twitch Vs Minecraft Reloaded"
 updateJSONURL = "https://raw.githubusercontent.com/iCrazyBlaze/TwitchVsMinecraft2/main/update.json"
 displayURL = "https://bit.ly/TwitchVsMinecraft"
-logoFile = "logo.png"
+logoFile = "icon.png"
 credits = "Idea from Kaze Emanuar. Thanks to iGoodie, Commoble and MMD."
 authors = "RonaRage (iCrazyBlaze)"
 description = "Be at your viewers' mercy! Random commands are chosen from Twitch chat or Discord."
+itemIcon = "minecraft:anvil"
 
 [[dependencies.twitchmod]]
 modId = "forge"
@@ -26,3 +27,7 @@ modId="minecraft"
 mandatory=true
 versionRange="[1.17,1.18)"
 side="BOTH"
+
+[modproperties.configured]
+catalogueImageIcon="icon.png"
+configuredBackground="minecraft:textures/block/stone.png"

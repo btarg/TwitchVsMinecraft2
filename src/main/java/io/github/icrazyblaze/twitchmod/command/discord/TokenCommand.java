@@ -1,4 +1,4 @@
-package io.github.icrazyblaze.twitchmod.bots.discord;
+package io.github.icrazyblaze.twitchmod.command.discord;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;

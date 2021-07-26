@@ -2,6 +2,7 @@ package io.github.icrazyblaze.twitchmod.chat;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.Main;
+import io.github.icrazyblaze.twitchmod.bots.BotCommon;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import net.minecraft.ChatFormatting;
@@ -28,8 +29,8 @@ import java.util.function.Supplier;
  */
 public class ChatPicker {
 
-    private static final Supplier<Path> blacklistPath = () -> FMLPaths.CONFIGDIR.get().resolve("twitch-blacklist.txt");
-    public static List<String> blacklist;
+    private static final Supplier<Path> blacklistPath = () -> FMLPaths.CONFIGDIR.get().resolve("command-blacklist.txt");
+    private static List<String> blacklist;
     public static ArrayList<String> chatBuffer = new ArrayList<>();
     public static ArrayList<String> chatSenderBuffer = new ArrayList<>();
     public static boolean cooldownEnabled = false;
@@ -39,30 +40,53 @@ public class ChatPicker {
     public static boolean logMessages = false;
     public static ArrayList<String> tempChatLog = new ArrayList<>();
     public static int chatLogLength = 10;
-    private static File blacklistTextFile;
+    private static final File blacklistTextFile = blacklistPath.get().toFile();
     private static String lastCommand = null;
+    private static final String[] blankMessagePlaceholders = {" says hello!", " was here"};
+
+    public static List<String> getBlacklist() {
+        return blacklist;
+    }
 
     /**
-     * @param toAdd The string to add to the blacklist file.
+     * @param toAdd The string to add to the blacklist and its text file.
      */
     public static void addToBlacklist(String toAdd) {
-
         if (blacklist.contains(toAdd)) {
             return;
         }
+        blacklist.add(toAdd);
+        writeBlacklistToFile();
+    }
+    /**
+     * @param toRemove The string to remove from the blacklist and its text file.
+     */
+    public static void removeFromBlacklist(String toRemove) {
+        if (!blacklist.contains(toRemove)) {
+            return;
+        }
+        blacklist.removeAll(Collections.singleton(toRemove));
+        writeBlacklistToFile();
+    }
+
+    /**
+     * Writes the contents of the blacklist to a text file.
+     */
+    public static void writeBlacklistToFile() {
 
         try {
+            FileWriter writer = new FileWriter(blacklistTextFile);
 
-            // Append to file
-            FileWriter fr = new FileWriter(blacklistTextFile, true);
+            for (String str : blacklist) {
 
-            // New line fix
-            fr.write(System.lineSeparator() + toAdd);
+                // Remove prefixes when writing to the file for consistency
+                if (str.startsWith(BotConfig.prefix)) {
+                    str = str.substring(BotConfig.prefix.length());
+                }
 
-            fr.close();
-
-            // Update from file
-            loadBlacklistFile();
+                writer.write(str + System.lineSeparator());
+            }
+            writer.close();
 
         } catch (IOException e) {
             Main.logger.error(e);
@@ -75,7 +99,6 @@ public class ChatPicker {
      */
     public static void loadBlacklistFile() {
 
-        blacklistTextFile = blacklistPath.get().toFile();
         try {
 
             blacklistTextFile.createNewFile(); // Create file if it doesn't already exist
@@ -105,7 +128,7 @@ public class ChatPicker {
     }
 
     /**
-     * Clears the blacklist file.
+     * Clears the blacklist and its text file.
      */
     public static void clearBlacklist() {
 
@@ -115,8 +138,7 @@ public class ChatPicker {
             PrintWriter pr = new PrintWriter(blacklistTextFile);
             pr.close();
 
-            // Update from file
-            loadBlacklistFile();
+            blacklist.clear();
 
         } catch (IOException e) {
             Main.logger.error(e);
@@ -272,7 +294,7 @@ public class ChatPicker {
 
             } else {
                 commandString = message;
-                argString = sender + " says hello!";
+                argString = sender + blankMessagePlaceholders[PlayerHelper.player().getRandom().nextInt(blankMessagePlaceholders.length)];
             }
 
             // Special commands below have extra arguments, so they are registered here.
@@ -282,10 +304,12 @@ public class ChatPicker {
                 // Invoke command from command map
                 ChatCommands.commandMap.get(commandString).run();
 
-                if (BotConfig.showChatMessages && BotConfig.showCommandsInChat) {
-                    CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
+                if (BotConfig.showCommandsInChat) {
+                    if (BotConfig.showChatMessages) {
+                        CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
+                    }
+                    BotCommon.sendBotMessage("Command Chosen: " + BotConfig.prefix + message);
                 }
-                Main.logger.info("Command Chosen: " + BotConfig.prefix + message);
 
                 // Below will not be executed if the command does not run
                 lastCommand = message;

@@ -1,6 +1,5 @@
 package io.github.icrazyblaze.twitchmod;
 
-import com.mojang.math.Vector3d;
 import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.gui.MessageboxScreen;
@@ -9,7 +8,10 @@ import io.github.icrazyblaze.twitchmod.network.PacketHandler;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -33,7 +35,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.projectile.Fireball;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -63,7 +64,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.core.jmx.Server;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -805,16 +805,6 @@ public class CommandHandlers {
         message = message.substring(0, Math.min(message.length(), 324));
 
         PacketHandler.INSTANCE.sendTo(new MessageboxPacket(message), player().connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
-
-    }
-
-    /*
-    This code is run on the client when the GuiMessage packet is received.
-    */
-    @OnlyIn(Dist.CLIENT)
-    public static void showMessageBoxClient(String message) {
-
-        Minecraft.getInstance().setScreen(new MessageboxScreen(message));
 
     }
 

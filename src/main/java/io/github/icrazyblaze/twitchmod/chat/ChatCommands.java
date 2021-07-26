@@ -164,7 +164,7 @@ public class ChatCommands {
 
         for (String key : commandMap.keySet()) {
 
-            if (!ChatPicker.blacklist.contains(key)) {
+            if (!ChatPicker.isBlacklisted(key)) {
                 commandList.add(key);
             }
 

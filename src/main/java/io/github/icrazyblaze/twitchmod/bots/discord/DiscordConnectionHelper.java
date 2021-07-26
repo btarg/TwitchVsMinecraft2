@@ -10,6 +10,10 @@ public class DiscordConnectionHelper {
     private static Thread botThread = null;
     private static DiscordBot listener = null;
 
+    public static DiscordBot getListener() {
+        return listener;
+    }
+
     public static void login() {
 
         if (BotConfig.DISCORD_TOKEN.isEmpty()) {

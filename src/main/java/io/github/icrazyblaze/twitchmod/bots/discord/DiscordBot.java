@@ -75,7 +75,7 @@ public class DiscordBot extends ListenerAdapter {
         Color userColor = event.getMember().getColor();
 
         if (userColor == null) {
-            userColor = Color.WHITE;
+            userColor = Color.white;
         }
 
         boolean isAdmin = event.getMember().hasPermission(Permission.ADMINISTRATOR);
@@ -114,23 +114,20 @@ public class DiscordBot extends ListenerAdapter {
 
             message = message.substring(BotConfig.prefix.length());
 
-            // Add to and clear blacklist from Discord (admins only)
-            if (message.startsWith("blacklist ")) {
+            if (isAdmin && message.contains(" ")) {
 
-                if (isAdmin) {
+                String cmd = message.substring(11);
 
-                    if (message.substring(10).startsWith("add ")) {
-                        ChatPicker.addToBlacklist(message.substring(14));
-                    } else if (message.substring(10).equalsIgnoreCase("clear")) {
-                        ChatPicker.clearBlacklist();
-                        event.getChannel().sendMessage("Blacklist cleared.").queue();
-                    }
-
+                if (cmd.startsWith("add ")) {
+                    ChatPicker.addToBlacklist(cmd.substring(4));
+                } else if (cmd.startsWith("remove ")) {
+                    ChatPicker.removeFromBlacklist(cmd.substring(7));
+                } else if (cmd.equalsIgnoreCase("clear")) {
+                    ChatPicker.clearBlacklist();
+                    event.getChannel().sendMessage("Blacklist cleared.").queue();
                 }
-
             }
-            ChatPicker.loadBlacklistFile();
-            event.getChannel().sendMessage("Blacklisted commands: " + ChatPicker.blacklist.toString()).queue();
+            event.getChannel().sendMessage("Blacklisted commands: " + ChatPicker.getBlacklist().toString()).queue();
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "disconnect") && isAdmin) {
             jda.shutdown();

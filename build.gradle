@@ -15,11 +15,7 @@ apply plugin: "com.github.johnrengelman.shadow"
 apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 import net.minecraftforge.gradle.common.tasks.SignJar
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(16)
-    }
-}
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 version = mod_version
 group = package_group
@@ -71,8 +67,6 @@ dependencies {
     implementation shadow (group: "com.github.pircbotx", name: "pircbotx", version: "2.2") {
         transitive = false
     }
-
-    implementation shadow (group: "org.slf4j", name: "slf4j-log4j12", version: "1.7.30")
 
     // JDA without audio
     implementation shadow (group: "net.dv8tion", name: "JDA", version: "4.3.0_298") {

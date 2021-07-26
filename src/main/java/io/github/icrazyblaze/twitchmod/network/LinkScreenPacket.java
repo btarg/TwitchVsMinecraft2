@@ -6,15 +6,15 @@ import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class MessageboxPacket {
+public class LinkScreenPacket {
 
     public String toSend;
 
-    public MessageboxPacket(FriendlyByteBuf buf) {
+    public LinkScreenPacket(FriendlyByteBuf buf) {
         fromBytes(buf);
     }
 
-    public MessageboxPacket(String message) {
+    public LinkScreenPacket(String message) {
         this.toSend = message;
     }
 
@@ -25,7 +25,7 @@ public class MessageboxPacket {
     public void handle(Supplier<NetworkEvent.Context> ctx) {
 
         String display = this.toSend;
-        ctx.get().enqueueWork(() -> ClientPacketFunctions.showMessageBoxClient(display));
+        ctx.get().enqueueWork(() -> ClientPacketFunctions.showLinkScreenClient(display));
 
         ctx.get().setPacketHandled(true);
 

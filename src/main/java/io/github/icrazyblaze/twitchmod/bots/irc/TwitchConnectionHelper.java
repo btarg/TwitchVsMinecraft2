@@ -16,8 +16,12 @@ import org.pircbotx.cap.EnableCapHandler;
 
 public class TwitchConnectionHelper {
 
-    public static PircBotX bot = null;
+    private static PircBotX bot = null;
     private static Thread botThread = null;
+
+    public static PircBotX getBot() {
+        return bot;
+    }
 
     public static void login() {
 

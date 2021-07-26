@@ -102,23 +102,22 @@ public class TwitchBot extends ListenerAdapter {
 
             message = message.substring(BotConfig.prefix.length());
 
-            // Moved adding to and clearing blacklist to the Twitch chat (only for mods and broadcasters)
-            if (message.startsWith("blacklist ")) {
+            if (role.equals("Moderator") || role.equals("Broadcaster") && message.contains(" ")) {
 
-                if (role.equals("Moderator") || role.equals("Broadcaster")) {
+                String cmd = message.substring(11);
 
-                    if (message.substring(10).startsWith("add ")) {
-                        ChatPicker.addToBlacklist(message.substring(14));
-                    } else if (message.substring(10).equalsIgnoreCase("clear")) {
-                        ChatPicker.clearBlacklist();
-                        event.respond("Blacklist cleared.");
-                    }
-
+                if (cmd.startsWith("add ")) {
+                    ChatPicker.addToBlacklist(cmd.substring(4));
+                } else if (cmd.startsWith("remove ")) {
+                    ChatPicker.removeFromBlacklist(cmd.substring(7));
+                } else if (cmd.equalsIgnoreCase("clear")) {
+                    ChatPicker.clearBlacklist();
+                    event.respond("Blacklist cleared.");
                 }
 
+
             }
-            ChatPicker.loadBlacklistFile();
-            event.respond("Blacklisted commands: " + ChatPicker.blacklist.toString());
+            event.respond("Blacklisted commands: " + ChatPicker.getBlacklist().toString());
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "disconnect")) {
             TwitchConnectionHelper.disconnectBot();
@@ -138,7 +137,7 @@ public class TwitchBot extends ListenerAdapter {
     // Prevent the bot from being kicked
     @Override
     public void onPing(PingEvent event) throws Exception {
-        TwitchConnectionHelper.bot.sendRaw().rawLineNow(String.format("PONG %s\r\n", event.getPingValue()));
+        TwitchConnectionHelper.getBot().sendRaw().rawLineNow(String.format("PONG %s\r\n", event.getPingValue()));
     }
 
 }

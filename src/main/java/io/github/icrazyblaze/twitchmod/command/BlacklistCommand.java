@@ -1,6 +1,7 @@
 package io.github.icrazyblaze.twitchmod.command;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -18,19 +19,41 @@ public class BlacklistCommand implements Command<CommandSourceStack> {
         return Commands.literal("blacklist")
                 .requires(cs -> cs.hasPermission(0))
                 .executes(CMD::showMessage)
-                .then(Commands.argument("command", StringArgumentType.greedyString()).executes(CMD));
+                .then(Commands.literal("add").then(Commands.argument("command", StringArgumentType.greedyString()).executes(CMD)))
+                .then(Commands.literal("remove").then(Commands.argument("command", StringArgumentType.greedyString()).executes(CMD::removeFromBlacklist)))
+                .then(Commands.literal("clear").executes(CMD::clearBlacklist));
     }
 
     @Override
     public int run(CommandContext<CommandSourceStack> context) {
 
-        // Get message and simulate command
         String message = StringArgumentType.getString(context, "command");
 
         // Add to blacklist
         ChatPicker.addToBlacklist(message);
-
+        context.getSource().sendSuccess(new TextComponent("Added to blacklist: " + message), false);
         showMessage(context);
+
+        return SINGLE_SUCCESS;
+
+    }
+    private int removeFromBlacklist(CommandContext<CommandSourceStack> context) {
+
+        String message = StringArgumentType.getString(context, "command");
+
+        // Remove from blacklist
+        ChatPicker.removeFromBlacklist(message);
+        context.getSource().sendSuccess(new TextComponent("Removed from blacklist: " + message), false);
+        showMessage(context);
+
+        return SINGLE_SUCCESS;
+
+    }
+
+    private int clearBlacklist(CommandContext<CommandSourceStack> context) {
+
+        ChatPicker.clearBlacklist();
+        context.getSource().sendSuccess(new TextComponent("Blacklisted commands: " + ChatPicker.getBlacklist().toString()), false);
 
         return SINGLE_SUCCESS;
 
@@ -38,7 +61,7 @@ public class BlacklistCommand implements Command<CommandSourceStack> {
 
     private int showMessage(CommandContext<CommandSourceStack> context) {
 
-        context.getSource().sendSuccess(new TextComponent("Blacklisted commands: " + ChatPicker.blacklist.toString()), false);
+        context.getSource().sendSuccess(new TextComponent("Blacklisted commands: " + ChatPicker.getBlacklist().toString()), false);
         return SINGLE_SUCCESS;
 
     }
