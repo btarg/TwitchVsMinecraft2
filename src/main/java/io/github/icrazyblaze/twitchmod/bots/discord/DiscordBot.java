@@ -90,16 +90,16 @@ public class DiscordBot extends ListenerAdapter {
                 roleNames.add(r.getName());
             }
 
+            TextComponent showText = new TextComponent(String.format("%s<%s[%s] %s%s%s> %s", ChatFormatting.WHITE, ChatFormatting.BLUE, channel, format, sender, ChatFormatting.WHITE, message));
+
+            if (!roleNames.isEmpty()) {
+                showText.setStyle(showText.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(format + StringUtils.join(roleNames, ", ")))));
+            }
+            CommandHandlers.broadcastMessage(showText);
+
             if (roleNames.contains("bot-tester")) {
                 ChatPicker.forceCommands = true;
             }
-
-            TextComponent showText = new TextComponent(String.format("%s<%s[%s] %s%s%s> %s", ChatFormatting.WHITE, ChatFormatting.BLUE, channel, format, sender, ChatFormatting.WHITE, message));
-
-            showText.setStyle(showText.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(format + StringUtils.join(roleNames, ", ")))));
-
-            CommandHandlers.broadcastMessage(showText);
-
         }
 
         if (message.equalsIgnoreCase(BotConfig.prefix + "help") || message.equalsIgnoreCase(BotConfig.prefix + "commands")) {
