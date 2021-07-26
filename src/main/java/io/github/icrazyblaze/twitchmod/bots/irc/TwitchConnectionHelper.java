@@ -1,6 +1,7 @@
 package io.github.icrazyblaze.twitchmod.bots.irc;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
+import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import net.minecraft.ChatFormatting;

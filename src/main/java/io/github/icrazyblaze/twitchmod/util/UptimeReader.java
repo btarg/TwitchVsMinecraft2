@@ -1,5 +1,7 @@
 package io.github.icrazyblaze.twitchmod.util;
 
+import io.github.icrazyblaze.twitchmod.Main;
+
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
