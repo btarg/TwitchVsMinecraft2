@@ -435,9 +435,9 @@ public class CommandHandlers {
             return;
         }
 
-        BlockPos bpos = new BlockPos(rayTrace.getLocation());
+        BlockPos bpos = rayTrace.getBlockPos();
 
-        player.level.destroyBlock(bpos, true);
+        player.level.destroyBlock(bpos, false);
 
     }
 
@@ -457,7 +457,7 @@ public class CommandHandlers {
             return;
         }
 
-        BlockPos bpos = new BlockPos(rayTrace.getLocation());
+        BlockPos bpos = rayTrace.getBlockPos();
         BlockState thisBlock = player.level.getBlockState(bpos);
 
         setBlock(bpos, InfestedBlock.infestedStateByHost(thisBlock));
