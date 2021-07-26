@@ -28,7 +28,7 @@ public class DiscordConnectionHelper {
             try {
                 listener.startDiscordBot();
             } catch (Exception e) {
-                e.printStackTrace();
+                Main.logger.error(e);
             }
 
         });

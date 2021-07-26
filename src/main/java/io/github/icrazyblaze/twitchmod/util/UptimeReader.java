@@ -15,7 +15,7 @@ public class UptimeReader {
         try {
             return readStringFromURL("https://decapi.me/twitch/uptime?channel=" + username);
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.logger.error(e);
         }
 
         return "Could not get uptime";

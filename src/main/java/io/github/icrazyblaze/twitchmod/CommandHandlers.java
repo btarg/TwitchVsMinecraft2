@@ -86,7 +86,7 @@ public class CommandHandlers {
         try {
             lootArray = getLootTables();
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.logger.error(e);
         }
     }
 
@@ -96,9 +96,7 @@ public class CommandHandlers {
         Set<ResourceLocation> tables = obj.getIds();
 
         List<ResourceLocation> tablesCopy = new ArrayList<>(tables);
-        tablesCopy.removeIf(table -> table.toString().contains("blocks"));
-
-        Main.logger.info(tablesCopy.toString());
+        tablesCopy.removeIf(table -> table.toString().contains("blocks") || table.toString().equalsIgnoreCase("minecraft:empty"));
 
         return tablesCopy.toArray(new ResourceLocation[0]);
 
@@ -812,8 +810,7 @@ public class CommandHandlers {
     public static void createBook(List<String> text) {
 
         try {
-
-            Main.logger.info("Creating book");
+            
             ServerPlayer player = player();
 
             ItemStack itemStack = new ItemStack(Items.WRITTEN_BOOK, 1);
@@ -835,7 +832,7 @@ public class CommandHandlers {
             player.displayClientMessage(new TextComponent(ChatFormatting.LIGHT_PURPLE + "Chat has written you a book."), true);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.logger.error(e);
         }
 
     }
@@ -933,7 +930,7 @@ public class CommandHandlers {
         try {
             player.sendMessage(message, player.getUUID());
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.logger.error(e);
         }
 
     }

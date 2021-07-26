@@ -66,7 +66,7 @@ public class TwitchConnectionHelper {
                 try {
                     bot.startBot();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Main.logger.error(e);
                 }
 
             });
@@ -74,7 +74,7 @@ public class TwitchConnectionHelper {
             botThread.start();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.logger.error(e);
             CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.RED + "Could not connect: " + e));
         }
     }

@@ -62,7 +62,7 @@ public class SecretFileHelper implements Serializable {
         try {
             writeToFile(toWrite, path_twitch);
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.logger.error(e);
         }
         setValuesFromFiles();
     }
@@ -71,7 +71,7 @@ public class SecretFileHelper implements Serializable {
         try {
             writeToFile(toWrite, path_discord);
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.logger.error(e);
         }
         setValuesFromFiles();
     }
