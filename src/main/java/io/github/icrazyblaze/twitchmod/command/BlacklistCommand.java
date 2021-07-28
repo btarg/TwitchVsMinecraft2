@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
+import io.github.icrazyblaze.twitchmod.util.BlacklistSystem;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
@@ -29,7 +29,7 @@ public class BlacklistCommand implements Command<CommandSourceStack> {
         String message = StringArgumentType.getString(context, "command");
 
         // Add to blacklist
-        ChatPicker.addToBlacklist(message);
+        BlacklistSystem.addToBlacklist(message);
         context.getSource().sendSuccess(new TextComponent("Added to blacklist: " + message), false);
         showMessage(context);
 
@@ -42,7 +42,7 @@ public class BlacklistCommand implements Command<CommandSourceStack> {
         String message = StringArgumentType.getString(context, "command");
 
         // Remove from blacklist
-        ChatPicker.removeFromBlacklist(message);
+        BlacklistSystem.removeFromBlacklist(message);
         context.getSource().sendSuccess(new TextComponent("Removed from blacklist: " + message), false);
         showMessage(context);
 
@@ -52,8 +52,8 @@ public class BlacklistCommand implements Command<CommandSourceStack> {
 
     private int clearBlacklist(CommandContext<CommandSourceStack> context) {
 
-        ChatPicker.clearBlacklist();
-        context.getSource().sendSuccess(new TextComponent("Blacklisted commands: " + ChatPicker.getBlacklist().toString()), false);
+        BlacklistSystem.clearBlacklist();
+        context.getSource().sendSuccess(new TextComponent("Blacklisted commands: " + BlacklistSystem.getBlacklist().toString()), false);
 
         return SINGLE_SUCCESS;
 
@@ -61,7 +61,7 @@ public class BlacklistCommand implements Command<CommandSourceStack> {
 
     private int showMessage(CommandContext<CommandSourceStack> context) {
 
-        context.getSource().sendSuccess(new TextComponent("Blacklisted commands: " + ChatPicker.getBlacklist().toString()), false);
+        context.getSource().sendSuccess(new TextComponent("Blacklisted commands: " + BlacklistSystem.getBlacklist().toString()), false);
         return SINGLE_SUCCESS;
 
     }

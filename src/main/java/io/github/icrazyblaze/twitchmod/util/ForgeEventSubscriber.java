@@ -4,7 +4,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import io.github.icrazyblaze.twitchmod.bots.discord.DiscordConnectionHelper;
 import io.github.icrazyblaze.twitchmod.bots.irc.TwitchConnectionHelper;
 import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
-import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.command.*;
 import io.github.icrazyblaze.twitchmod.command.discord.DiscordConnectCommand;
 import io.github.icrazyblaze.twitchmod.command.discord.DiscordDisconnectCommand;
@@ -51,7 +50,7 @@ public class ForgeEventSubscriber {
                 ))
         );
 
-        ChatPicker.loadBlacklistFile();
+        BlacklistSystem.loadBlacklistFile();
     }
 
     @SubscribeEvent

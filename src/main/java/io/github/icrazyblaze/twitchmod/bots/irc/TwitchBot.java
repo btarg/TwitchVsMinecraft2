@@ -7,6 +7,7 @@ import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.chat.ChatPickerHelper;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
+import io.github.icrazyblaze.twitchmod.util.BlacklistSystem;
 import io.github.icrazyblaze.twitchmod.util.CalculateMinecraftColor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.HoverEvent;
@@ -24,7 +25,7 @@ import java.util.Objects;
 public class TwitchBot extends ListenerAdapter {
 
     public TwitchBot() {
-        ChatPicker.loadBlacklistFile();
+        BlacklistSystem.loadBlacklistFile();
     }
 
     public void onConnect(ConnectEvent event) {
@@ -107,17 +108,17 @@ public class TwitchBot extends ListenerAdapter {
                 String cmd = message.substring(11);
 
                 if (cmd.startsWith("add ")) {
-                    ChatPicker.addToBlacklist(cmd.substring(4));
+                    BlacklistSystem.addToBlacklist(cmd.substring(4));
                 } else if (cmd.startsWith("remove ")) {
-                    ChatPicker.removeFromBlacklist(cmd.substring(7));
+                    BlacklistSystem.removeFromBlacklist(cmd.substring(7));
                 } else if (cmd.equalsIgnoreCase("clear")) {
-                    ChatPicker.clearBlacklist();
+                    BlacklistSystem.clearBlacklist();
                     event.respond("Blacklist cleared.");
                 }
 
 
             }
-            event.respond("Blacklisted commands: " + ChatPicker.getBlacklist().toString());
+            event.respond("Blacklisted commands: " + BlacklistSystem.getBlacklist().toString());
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "disconnect")) {
             TwitchConnectionHelper.disconnectBot();

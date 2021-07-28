@@ -4,33 +4,20 @@ import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.bots.BotCommon;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
+import io.github.icrazyblaze.twitchmod.util.BlacklistSystem;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.fml.loading.FMLPaths;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Supplier;
 
 /**
  * This class is responsible for picking commands from chat and running them.
- * Blacklist operations are done in this class.
- * <p>
- * As of version 3.4.0, command registering is now done in a separate class.
- *
  * @see io.github.icrazyblaze.twitchmod.chat.ChatCommands
  */
 public class ChatPicker {
 
-    private static final Supplier<Path> blacklistPath = () -> FMLPaths.CONFIGDIR.get().resolve("command-blacklist.txt");
-    private static final File blacklistTextFile = blacklistPath.get().toFile();
     private static final String[] blankMessagePlaceholders = {" says hello!", " was here"};
     public static ArrayList<String> chatBuffer = new ArrayList<>();
     public static ArrayList<String> chatSenderBuffer = new ArrayList<>();
@@ -41,124 +28,11 @@ public class ChatPicker {
     public static boolean logMessages = false;
     public static ArrayList<String> tempChatLog = new ArrayList<>();
     public static int chatLogLength = 10;
-    private static List<String> blacklist;
     private static String lastCommand = null;
-
-    public static List<String> getBlacklist() {
-        return blacklist;
-    }
-
-    /**
-     * @param toAdd The string to add to the blacklist and its text file.
-     */
-    public static void addToBlacklist(String toAdd) {
-        if (blacklist.contains(toAdd)) {
-            return;
-        }
-        blacklist.add(toAdd);
-        writeBlacklistToFile();
-    }
-
-    /**
-     * @param toRemove The string to remove from the blacklist and its text file.
-     */
-    public static void removeFromBlacklist(String toRemove) {
-        if (!blacklist.contains(toRemove)) {
-            return;
-        }
-        blacklist.removeAll(Collections.singleton(toRemove));
-        writeBlacklistToFile();
-    }
-
-    /**
-     * Writes the contents of the blacklist to a text file.
-     */
-    public static void writeBlacklistToFile() {
-
-        try {
-            FileWriter writer = new FileWriter(blacklistTextFile);
-
-            for (String str : blacklist) {
-
-                // Remove prefixes when writing to the file for consistency
-                if (str.startsWith(BotConfig.prefix)) {
-                    str = str.substring(BotConfig.prefix.length());
-                }
-
-                writer.write(str + System.lineSeparator());
-            }
-            writer.close();
-
-        } catch (IOException e) {
-            Main.logger.error(e);
-        }
-
-    }
-
-    /**
-     * Loads the blacklist file, or creates the file if it doesn't already exist.
-     */
-    public static void loadBlacklistFile() {
-
-        try {
-
-            blacklistTextFile.createNewFile(); // Create file if it doesn't already exist
-            blacklist = Files.readAllLines(blacklistPath.get()); // Read into list
-
-            // Remove all empty objects
-            blacklist.removeAll(Arrays.asList("", null));
-
-            // Remove prefixes from the start of commands in the blacklist
-            for (int i = 0; i < blacklist.size(); i++) {
-                if (blacklist.get(i).startsWith(BotConfig.prefix)) {
-
-                    blacklist.set(i, blacklist.get(i).substring(BotConfig.prefix.length()));
-
-                }
-            }
-
-        } catch (IOException e) {
-            Main.logger.error(e);
-        }
-
-        // Fix for blacklist being null - set to empty instead
-        if (blacklist == null) {
-            blacklist = Collections.emptyList();
-        }
-
-    }
-
-    /**
-     * Clears the blacklist and its text file.
-     */
-    public static void clearBlacklist() {
-
-        try {
-
-            // Clear text file using PrintWriter
-            PrintWriter pr = new PrintWriter(blacklistTextFile);
-            pr.close();
-
-            blacklist.clear();
-
-        } catch (IOException e) {
-            Main.logger.error(e);
-        }
-
-    }
-
-    public static boolean isBlacklisted(String command) {
-
-        if (!blacklist.isEmpty()) {
-            return blacklist.contains(command);
-        } else {
-            return false;
-        }
-
-    }
 
     /**
      * Checks the command against the blacklist, unless force commands is enabled.
+     * If the chat should be logged for writing into a book then that is also done here.
      *
      * @param message The chat message
      * @param sender  The sender's name
@@ -203,7 +77,7 @@ public class ChatPicker {
 
 
         // Only add the message if it is not blacklisted, and if the command isn't the same as the last
-        if (isBlacklisted(message)) {
+        if (BlacklistSystem.isBlacklisted(message)) {
             Main.logger.info("Command not executed: command is blacklisted.");
             return;
         }
@@ -229,7 +103,7 @@ public class ChatPicker {
 
 
     /**
-     * Attempts to run doCommand for every player in the affected players list.
+     * Attempts to run a command for every player in the affected players list.
      *
      * @param message The chat command, e.g. "!creeper"
      * @param sender  The sender's name, which is used in some commands.

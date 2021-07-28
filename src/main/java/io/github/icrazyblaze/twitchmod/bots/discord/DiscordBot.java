@@ -4,6 +4,7 @@ import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.chat.ChatPickerHelper;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
+import io.github.icrazyblaze.twitchmod.util.BlacklistSystem;
 import io.github.icrazyblaze.twitchmod.util.CalculateMinecraftColor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -119,15 +120,15 @@ public class DiscordBot extends ListenerAdapter {
                 String cmd = message.substring(11);
 
                 if (cmd.startsWith("add ")) {
-                    ChatPicker.addToBlacklist(cmd.substring(4));
+                    BlacklistSystem.addToBlacklist(cmd.substring(4));
                 } else if (cmd.startsWith("remove ")) {
-                    ChatPicker.removeFromBlacklist(cmd.substring(7));
+                    BlacklistSystem.removeFromBlacklist(cmd.substring(7));
                 } else if (cmd.equalsIgnoreCase("clear")) {
-                    ChatPicker.clearBlacklist();
+                    BlacklistSystem.clearBlacklist();
                     event.getChannel().sendMessage("Blacklist cleared.").queue();
                 }
             }
-            event.getChannel().sendMessage("Blacklisted commands: " + ChatPicker.getBlacklist().toString()).queue();
+            event.getChannel().sendMessage("Blacklisted commands: " + BlacklistSystem.getBlacklist().toString()).queue();
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "disconnect") && isAdmin) {
             jda.shutdown();

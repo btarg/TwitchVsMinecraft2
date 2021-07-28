@@ -2,6 +2,7 @@ package io.github.icrazyblaze.twitchmod.chat;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.integration.IntegrationWrapper;
+import io.github.icrazyblaze.twitchmod.util.BlacklistSystem;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -164,7 +165,7 @@ public class ChatCommands {
 
         for (String key : commandMap.keySet()) {
 
-            if (!ChatPicker.isBlacklisted(key)) {
+            if (!BlacklistSystem.isBlacklisted(key)) {
                 commandList.add(key);
             }
 
