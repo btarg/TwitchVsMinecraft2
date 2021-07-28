@@ -6,7 +6,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.icrazyblaze.twitchmod.config.ConfigManager;
-import io.github.icrazyblaze.twitchmod.util.SecretFileHelper;
+import io.github.icrazyblaze.twitchmod.util.files.SecretFileHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -29,7 +29,7 @@ public class TokenCommand implements Command<CommandSourceStack> {
         // Get key and store in system properties
         String key = StringArgumentType.getString(context, "token");
 
-        SecretFileHelper.setDiscordToken(key);
+        SecretFileHelper.writeDiscordToken(key);
 
         // Update config
         ConfigManager.updateFromConfig();

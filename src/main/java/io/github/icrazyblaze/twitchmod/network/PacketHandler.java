@@ -1,6 +1,8 @@
 package io.github.icrazyblaze.twitchmod.network;
 
 import io.github.icrazyblaze.twitchmod.Main;
+import io.github.icrazyblaze.twitchmod.network.packet.LinkScreenPacket;
+import io.github.icrazyblaze.twitchmod.network.packet.MessageboxPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fmllegacy.network.NetworkRegistry;
 import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;

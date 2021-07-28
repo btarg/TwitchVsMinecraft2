@@ -4,7 +4,7 @@ import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.chat.ChatPickerHelper;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
-import io.github.icrazyblaze.twitchmod.util.BlacklistSystem;
+import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import io.github.icrazyblaze.twitchmod.util.CalculateMinecraftColor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;

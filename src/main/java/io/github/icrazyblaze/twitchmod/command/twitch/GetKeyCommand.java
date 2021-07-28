@@ -1,10 +1,10 @@
-package io.github.icrazyblaze.twitchmod.command;
+package io.github.icrazyblaze.twitchmod.command.twitch;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import io.github.icrazyblaze.twitchmod.network.LinkScreenPacket;
 import io.github.icrazyblaze.twitchmod.network.PacketHandler;
+import io.github.icrazyblaze.twitchmod.network.packet.LinkScreenPacket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraftforge.fmllegacy.network.NetworkDirection;

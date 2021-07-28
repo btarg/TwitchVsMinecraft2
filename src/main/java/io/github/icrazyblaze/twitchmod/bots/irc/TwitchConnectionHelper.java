@@ -24,14 +24,13 @@ public class TwitchConnectionHelper {
         return bot;
     }
 
-    public static void login() {
+    public static boolean login() {
 
         // Update settings before connecting
         ConfigManager.updateFromConfig();
 
         if (BotConfig.TWITCH_KEY.isEmpty()) {
-            CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.RED + "No OAuth key provided. Use /ttv key to set the key."));
-            return;
+            return false;
         }
 
         if (isConnected()) {
@@ -73,10 +72,12 @@ public class TwitchConnectionHelper {
             });
 
             botThread.start();
+            return true;
 
         } catch (Exception e) {
             Main.logger.error(e);
             CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.RED + "Could not connect: " + e));
+            return false;
         }
     }
 

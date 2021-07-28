@@ -7,7 +7,7 @@ import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.chat.ChatPickerHelper;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
-import io.github.icrazyblaze.twitchmod.util.BlacklistSystem;
+import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import io.github.icrazyblaze.twitchmod.util.CalculateMinecraftColor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.HoverEvent;
@@ -39,7 +39,7 @@ public class TwitchBot extends ListenerAdapter {
     }
 
     @Override
-    public void onMessage(MessageEvent event) {
+    public void onMessage(MessageEvent event) throws Exception {
 
         String message = event.getMessage();
         String sender = Objects.requireNonNull(event.getUser()).getNick();

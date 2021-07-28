@@ -1,11 +1,13 @@
-package io.github.icrazyblaze.twitchmod.command;
+package io.github.icrazyblaze.twitchmod.command.twitch;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.icrazyblaze.twitchmod.bots.irc.TwitchConnectionHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.TextComponent;
 
 public class TwitchConnectCommand implements Command<CommandSourceStack> {
 
@@ -19,7 +21,13 @@ public class TwitchConnectCommand implements Command<CommandSourceStack> {
 
     @Override
     public int run(CommandContext<CommandSourceStack> context) {
-        TwitchConnectionHelper.login();
+
+        boolean attempt = TwitchConnectionHelper.login();
+
+        if (!attempt) {
+            context.getSource().sendFailure(new TextComponent(ChatFormatting.RED + "No OAuth key provided. Use /ttv key to set the key."));
+        }
+
         return SINGLE_SUCCESS;
     }
 }

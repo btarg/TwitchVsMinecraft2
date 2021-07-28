@@ -4,16 +4,19 @@ import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.bots.BotCommon;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
-import io.github.icrazyblaze.twitchmod.util.BlacklistSystem;
+import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Random;
 
 /**
  * This class is responsible for picking commands from chat and running them.
+ *
  * @see io.github.icrazyblaze.twitchmod.chat.ChatCommands
  */
 public class ChatPicker {

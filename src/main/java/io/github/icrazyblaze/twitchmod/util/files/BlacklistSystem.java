@@ -1,4 +1,4 @@
-package io.github.icrazyblaze.twitchmod.util;
+package io.github.icrazyblaze.twitchmod.util.files;
 
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 
 /**
  * This class is responsible for reading from and writing to the blacklist file.
+ *
  * @see io.github.icrazyblaze.twitchmod.chat.ChatPicker
  */
 public class BlacklistSystem {
@@ -71,7 +72,7 @@ public class BlacklistSystem {
             writer.close();
 
         } catch (IOException e) {
-            Main.logger.error(e);
+            Main.logger.error("Could not write to blacklist file: " + e);
         }
 
     }
@@ -99,7 +100,7 @@ public class BlacklistSystem {
             }
 
         } catch (IOException e) {
-            Main.logger.error(e);
+            Main.logger.error("Could not load blacklist file:" + e);
         }
 
         // Fix for blacklist being null - set to empty instead

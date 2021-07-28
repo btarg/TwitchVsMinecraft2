@@ -14,8 +14,6 @@ import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.TextComponent;
 
 public class StatusCommand implements Command<CommandSourceStack> {
@@ -53,13 +51,7 @@ public class StatusCommand implements Command<CommandSourceStack> {
         context.getSource().sendSuccess(new TextComponent(ChatFormatting.DARK_PURPLE + "A new command will be chosen every " + TimerSystem.chatSecondsTrigger + " seconds."), false);
         context.getSource().sendSuccess(new TextComponent(ChatFormatting.DARK_PURPLE + "Commands start with " + BotConfig.prefix), false);
 
-        // Click chat message to go to Twitch login page
-        TextComponent keyMessage = new TextComponent(ChatFormatting.AQUA + "Click here to get your Twitch OAuth key!");
-        ClickEvent goLinkEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, "https://twitchapps.com/tmi/");
-        HoverEvent goHoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent("Click to open the link in your browser"));
-
-        keyMessage.setStyle(keyMessage.getStyle().withClickEvent(goLinkEvent));
-        keyMessage.setStyle(keyMessage.getStyle().withHoverEvent(goHoverEvent));
+        TextComponent keyMessage = new TextComponent(ChatFormatting.AQUA + "Type /ttv getkey or /discord gettoken to log in.");
 
         context.getSource().sendSuccess(keyMessage, false);
 

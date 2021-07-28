@@ -1,44 +1,64 @@
-package io.github.icrazyblaze.twitchmod.util;
+package io.github.icrazyblaze.twitchmod.util.files;
 
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.*;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.function.Supplier;
 
 /**
  * SUCK = Serialised Unreadable Connection Key
  * <br>
- * This class is responsible for reading from and writing to base64-encoded serialised files that contain keys.
- * This new system allows for the keys to be hidden, without requiring the keys to be entered every time the game starts.
- * No real encryption is done in this class: this system is entirely designed for idiot-proofing and preventing the keys from being leaked!
+ * This class is responsible for serialising and deserializing encrypted password strings.
+ * This system allows for keys to be stored securely, without requiring them to be entered every time the game starts.
+ * The key strings are Base64 encoded, then RC4 encrypted using an MD5 (hex) of the hardware address.
  *
  * @see io.github.icrazyblaze.twitchmod.config.BotConfig
+ * @see EncryptionHelper
  * @since 3.5.0
  */
 public class SecretFileHelper implements Serializable {
 
     private static final Supplier<Path> path_twitch = () -> FMLPaths.CONFIGDIR.get().resolve("twitch_key.suck");
     private static final Supplier<Path> path_discord = () -> FMLPaths.CONFIGDIR.get().resolve("discord_token.suck");
+    private static String hardwareAddress = null;
 
+
+    static {
+        try {
+            // Get MAC address
+            byte[] bytes = NetworkInterface.getByInetAddress(InetAddress.getLocalHost()).getHardwareAddress();
+            // MD5 hash the MAC address
+            byte[] md5 = MessageDigest.getInstance("md5").digest(bytes);
+            hardwareAddress = Hex.encodeHexString(md5);
+
+        } catch (Exception e) {
+            Main.logger.error(e);
+        }
+    }
 
     public static void setValuesFromFiles() {
 
         try {
             BotConfig.TWITCH_KEY = getStringFromFile(path_twitch);
         } catch (Exception e) {
-            Main.logger.error("No Twitch credentials found");
+            Main.logger.error("No Twitch credentials found: " + e);
         }
 
         try {
             BotConfig.DISCORD_TOKEN = getStringFromFile(path_discord);
         } catch (Exception e) {
-            Main.logger.info("No Discord credentials found");
+            Main.logger.info("No Discord credentials found: " + e);
         }
 
     }
@@ -48,32 +68,33 @@ public class SecretFileHelper implements Serializable {
         FileOutputStream f_out = new FileOutputStream(path.get().toFile());
         ObjectOutputStream obj_out = new ObjectOutputStream(f_out);
 
-        // Encode into base64
-        String encoded = Base64.getEncoder().encodeToString(toWrite.getBytes());
-        // Now with reversing!
-        String reversed = new StringBuilder(encoded).reverse().toString();
+        // Encrypt string
+        byte[] encrypted = EncryptionHelper.encrypt(toWrite, hardwareAddress);
+        String encoded = Base64.getEncoder().encodeToString(encrypted);
 
         // Write to file
-        SerializationUtils.serialize(reversed, obj_out);
+        SerializationUtils.serialize(encoded, obj_out);
 
     }
 
-    public static void setTwitchKey(String toWrite) {
+    public static void writeTwitchKey(String toWrite) {
         try {
             writeToFile(toWrite, path_twitch);
         } catch (Exception e) {
             Main.logger.error(e);
+            return;
         }
-        setValuesFromFiles();
+        BotConfig.TWITCH_KEY = toWrite;
     }
 
-    public static void setDiscordToken(String toWrite) {
+    public static void writeDiscordToken(String toWrite) {
         try {
             writeToFile(toWrite, path_discord);
         } catch (Exception e) {
             Main.logger.error(e);
+            return;
         }
-        setValuesFromFiles();
+        BotConfig.DISCORD_TOKEN = toWrite;
     }
 
     private static String getStringFromFile(Supplier<Path> path) throws IOException {
@@ -82,15 +103,12 @@ public class SecretFileHelper implements Serializable {
 
             // Read string from file
             String encoded = SerializationUtils.deserialize(obj_in);
-            String reversed = new StringBuilder(encoded).reverse().toString();
-
-            // Decode and convert bytes to string
-            byte[] decoded = Base64.getDecoder().decode(reversed);
-            return new String(decoded);
+            byte[] decoded = Base64.getDecoder().decode(encoded);
+            byte[] decrypted = EncryptionHelper.decrypt(decoded, hardwareAddress);
+            return new String(decrypted, StandardCharsets.UTF_8);
 
         }
 
     }
-
 
 }

@@ -6,7 +6,7 @@ import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.chat.FrenzyVote;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
-import io.github.icrazyblaze.twitchmod.util.SecretFileHelper;
+import io.github.icrazyblaze.twitchmod.util.files.SecretFileHelper;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraftforge.common.ForgeConfigSpec;
 

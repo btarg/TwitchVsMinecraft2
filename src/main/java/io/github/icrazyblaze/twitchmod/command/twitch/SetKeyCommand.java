@@ -1,4 +1,4 @@
-package io.github.icrazyblaze.twitchmod.command;
+package io.github.icrazyblaze.twitchmod.command.twitch;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -7,7 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.icrazyblaze.twitchmod.config.ConfigManager;
-import io.github.icrazyblaze.twitchmod.util.SecretFileHelper;
+import io.github.icrazyblaze.twitchmod.util.files.SecretFileHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -20,6 +20,7 @@ public class SetKeyCommand implements Command<CommandSourceStack> {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("key")
+                .executes(new GetKeyCommand())
                 .requires(cs -> cs.hasPermission(0))
                 .then(Commands.argument("keystring", StringArgumentType.greedyString()).executes(CMD));
     }
@@ -34,7 +35,7 @@ public class SetKeyCommand implements Command<CommandSourceStack> {
         // This command should be more idiot-proof now.
         if (key.startsWith("oauth:") && key.length() == 36) {
 
-            SecretFileHelper.setTwitchKey(key);
+            SecretFileHelper.writeTwitchKey(key);
 
         } else {
             throw new CommandSyntaxException(new SimpleCommandExceptionType(() -> ""), () -> "Invalid OAuth key.");

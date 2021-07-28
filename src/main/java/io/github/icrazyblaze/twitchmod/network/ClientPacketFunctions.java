@@ -1,4 +1,4 @@
-package io.github.icrazyblaze.twitchmod;
+package io.github.icrazyblaze.twitchmod.network;
 
 import io.github.icrazyblaze.twitchmod.gui.MessageboxScreen;
 import net.minecraft.Util;
@@ -20,8 +20,8 @@ public class ClientPacketFunctions {
         ConfirmLinkScreen screen = new ConfirmLinkScreen((p_169232_) -> {
             if (p_169232_) {
                 Util.getPlatform().openUri(link);
-                Minecraft.getInstance().setScreen(null);
             }
+            Minecraft.getInstance().setScreen(null);
         }, link, true);
 
         Minecraft.getInstance().setScreen(screen);

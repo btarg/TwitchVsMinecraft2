@@ -1,4 +1,4 @@
-package io.github.icrazyblaze.twitchmod.command;
+package io.github.icrazyblaze.twitchmod.command.twitch;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
