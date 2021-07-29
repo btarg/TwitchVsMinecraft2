@@ -5,6 +5,12 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 
+
+/**
+ * This class is for functions that only run on the client.
+ *
+ * @see io.github.icrazyblaze.twitchmod.network.PacketHandler
+ */
 public class ClientPacketFunctions {
     /*
         This code is run on the client when the Messagebox packet is received.

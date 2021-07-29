@@ -2,6 +2,11 @@ package io.github.icrazyblaze.twitchmod.config;
 
 import java.util.List;
 
+/**
+ * Commonly referenced public values are stored here.
+ *
+ * @see ConfigManager
+ */
 public class BotConfig {
 
     public static String TWITCH_KEY = null;

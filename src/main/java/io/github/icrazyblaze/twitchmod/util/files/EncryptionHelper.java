@@ -9,6 +9,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * This class contains cryptographic functions using the RC4 algorithm.
+ *
+ * @see SecretFileHelper
+ */
 public class EncryptionHelper {
 
     private static Cipher cipher = null;

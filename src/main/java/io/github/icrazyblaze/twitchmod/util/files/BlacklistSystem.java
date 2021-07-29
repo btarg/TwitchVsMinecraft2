@@ -31,6 +31,8 @@ public class BlacklistSystem {
     }
 
     /**
+     * Adds a chat command to the blacklist.
+     *
      * @param toAdd The string to add to the blacklist and its text file.
      */
     public static void addToBlacklist(String toAdd) {
@@ -42,6 +44,8 @@ public class BlacklistSystem {
     }
 
     /**
+     * Removes a chat command from the blacklist.
+     *
      * @param toRemove The string to remove from the blacklist and its text file.
      */
     public static void removeFromBlacklist(String toRemove) {

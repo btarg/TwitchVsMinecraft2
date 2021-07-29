@@ -2,8 +2,8 @@ package io.github.icrazyblaze.twitchmod.chat;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.integration.IntegrationWrapper;
-import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
+import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Difficulty;
@@ -26,13 +26,13 @@ public class ChatCommands {
 
     /**
      * Adds a command to a list that ChatPicker checks.
-     * The registerCommand method takes two arguments: a runnable, and any number of command aliases.
+     * The {@link #registerCommand} method takes two arguments: a runnable, and any number of command aliases.
      * <pre>
      * {@code
      *     registerCommand(() -> CommandHandlers.myCommand(), "mycommand", "mycommandalias");
      * }
      * </pre>
-     * If an entry with the same runnable or alias already exists, it will be replaced.
+     * If an entry with the same runnable or alias has already been registered, it will be replaced.
      * IDEA will swap the lambda for a method reference wherever possible.
      *
      * @param runnable The function linked to the command
@@ -59,7 +59,7 @@ public class ChatCommands {
     }
 
     /**
-     * Commands are registered here from doCommands.
+     * Commands are registered here from {@link ChatPicker#doCommand}.
      */
     public static void initCommands() {
 
@@ -138,7 +138,7 @@ public class ChatCommands {
     }
 
     /**
-     * Commands that are registered here need to be re-added to the command registry every time they run because they have changing ("dynamic") elements.
+     * Commands that are registered here need to be re-added to the command registry every time a command is checked because they have changing ("dynamic") arguments.
      *
      * @param argString the argument for the command
      * @param sender    the name of the command sender
@@ -159,6 +159,9 @@ public class ChatCommands {
 
     }
 
+    /**
+     * @return a sorted list of all the currently registered commands and their aliases
+     */
     public static List<String> getRegisteredCommands() {
 
         List<String> commandList = new ArrayList<>();

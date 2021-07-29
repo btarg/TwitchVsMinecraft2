@@ -12,6 +12,9 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
 
+/**
+ * Reads from and writes to the main configuration file for the mod.
+ */
 public class ConfigManager {
 
     static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();

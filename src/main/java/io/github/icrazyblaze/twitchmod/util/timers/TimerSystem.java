@@ -6,6 +6,13 @@ import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+
+/**
+ * This class is used for countdown timers such as the Death Timer as thread.sleep cannot be called while playing.
+ * Timers are set and reset externally by changing their respective condition.
+ *
+ * @see io.github.icrazyblaze.twitchmod.CommandHandlers
+ */
 public class TimerSystem {
 
     public static boolean enableTimers = true;
