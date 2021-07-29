@@ -348,11 +348,9 @@ public class CommandHandlers {
     public static void spawnFireball() {
 
         ServerPlayer player = player();
-
         LargeFireball ent = new LargeFireball(player.level, player, 0D, 0D, 0D, 4);
 
         ent.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 3.0F, 1.0F);
-        ent.moveTo(player.getX(), player.getY(0.5), player.getZ(), 0, 0);
 
         player.level.addFreshEntity(ent);
 
