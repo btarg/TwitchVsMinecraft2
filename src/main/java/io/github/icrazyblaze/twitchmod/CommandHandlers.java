@@ -4,6 +4,7 @@ import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.network.PacketHandler;
 import io.github.icrazyblaze.twitchmod.network.packet.MessageboxPacket;
+import io.github.icrazyblaze.twitchmod.util.EffectInstanceHelper;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.ChatFormatting;
@@ -112,6 +113,12 @@ public class CommandHandlers {
 
     }
 
+    public static void giveRandomPotionEffect() {
+
+        MobEffectInstance effect = EffectInstanceHelper.getRandomEffect();
+        player().addEffect(effect);
+
+    }
 
     public static void addPotionEffects(MobEffectInstance... effectInstances) {
 

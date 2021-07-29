@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 import static io.github.icrazyblaze.twitchmod.config.ConfigManager.COMMON_CONFIG;
 
 /**
- * @author iCrazyBlaze
+ * @author RonaRage, AKA Btarg (https://github.com/iCrazyBlaze)
  */
 @Mod(Main.MOD_ID)
 public final class Main {

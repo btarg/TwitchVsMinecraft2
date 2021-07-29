@@ -79,6 +79,7 @@ public class ChatCommands {
         registerCommand(() -> CommandHandlers.addPotionEffects(effect(MobEffects.DIG_SPEED, 400, 2)), "haste", "diggydiggy");
         registerCommand(() -> CommandHandlers.addPotionEffects(effect(MobEffects.BAD_OMEN, 400, 0)), "badomen", "pillager", "raid");
         registerCommand(() -> CommandHandlers.addPotionEffects(effect(MobEffects.FIRE_RESISTANCE, 800, 0), effect(MobEffects.DAMAGE_RESISTANCE, 800, 4)), "resistance");
+        registerCommand(CommandHandlers::giveRandomPotionEffect, "randomeffect", "effectroulette");
         registerCommand(() -> PlayerHelper.player().removeAllEffects(), "cleareffects", "milk");
         registerCommand(CommandHandlers::setOnFire, "fire", "burn");
         registerCommand(CommandHandlers::floorIsLava, "lava", "floorislava");
