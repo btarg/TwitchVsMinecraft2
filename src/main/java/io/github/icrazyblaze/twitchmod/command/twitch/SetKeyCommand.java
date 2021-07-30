@@ -39,7 +39,7 @@ public class SetKeyCommand implements Command<CommandSourceStack> {
             SecretFileHelper.writeTwitchKey(key);
 
         } else {
-            throw new CommandSyntaxException(new SimpleCommandExceptionType(() -> ""), () -> I18n.get("exception.twitchmod.invalid_oauth")))
+            throw new CommandSyntaxException(new SimpleCommandExceptionType(() -> ""), () -> I18n.get("exception.twitchmod.invalid_oauth"));
         }
 
         // Update config
