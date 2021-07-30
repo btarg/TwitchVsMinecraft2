@@ -7,11 +7,14 @@ import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.chat.ChatPickerHelper;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
-import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import io.github.icrazyblaze.twitchmod.util.CalculateMinecraftColor;
+import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.ConnectEvent;
 import org.pircbotx.hooks.events.DisconnectEvent;
@@ -29,17 +32,17 @@ public class TwitchBot extends ListenerAdapter {
     }
 
     public void onConnect(ConnectEvent event) {
-        CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.DARK_GREEN + "Bot connected! Use /ttv status to see details."));
+        CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.chat.connected_success_twitch").withStyle(ChatFormatting.DARK_GREEN));
         Main.logger.info("IRC Bot connected.");
     }
 
     public void onDisconnect(DisconnectEvent event) {
-        CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.DARK_RED + "Bot disconnected."));
+        CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.chat.disconnected_success_twitch").withStyle(ChatFormatting.DARK_RED));
         Main.logger.info("IRC Bot disconnected: " + event.getDisconnectException());
     }
 
     @Override
-    public void onMessage(MessageEvent event) throws Exception {
+    public void onMessage(MessageEvent event) {
 
         String message = event.getMessage();
         String sender = Objects.requireNonNull(event.getUser()).getNick();
@@ -47,7 +50,7 @@ public class TwitchBot extends ListenerAdapter {
 
         ChatFormatting format = ChatFormatting.WHITE;
 
-        TextComponent showText;
+        MutableComponent showText;
         String role = null;
 
         if (BotConfig.showChatMessages) {
@@ -60,8 +63,7 @@ public class TwitchBot extends ListenerAdapter {
                 Color userColor = Color.decode(tags.get("color"));
 
                 try {
-                    if (format != null)
-                        format = CalculateMinecraftColor.findNearestMinecraftColor(userColor);
+                    format = CalculateMinecraftColor.findNearestMinecraftColor(userColor);
                 } catch (Exception e) {
                     Main.logger.info("No valid user colour");
                 }
@@ -79,7 +81,7 @@ public class TwitchBot extends ListenerAdapter {
 
             if (!message.startsWith(BotConfig.prefix) || BotConfig.showCommandsInChat) {
 
-                showText = new TextComponent(String.format("%s<%sTwitch %s%s%s> %s", ChatFormatting.WHITE, ChatFormatting.DARK_PURPLE, format, sender, ChatFormatting.WHITE, message));
+                showText = new TranslatableComponent("gui.twitchmod.chat.prefix_twitch", new TextComponent("Twitch").withStyle(ChatFormatting.DARK_PURPLE), new TextComponent(sender).withStyle(format), message).withStyle(ChatFormatting.WHITE);
 
                 if (role != null) {
                     showText.setStyle(showText.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(format + role))));
@@ -93,17 +95,17 @@ public class TwitchBot extends ListenerAdapter {
 
         if (message.equalsIgnoreCase(BotConfig.prefix + "help") || message.equalsIgnoreCase(BotConfig.prefix + "commands")) {
 
-            event.respond("Click here for a list of commands: http://bit.ly/2UfBCiL");
+            event.respond(I18n.get("gui.twitchmod.commands_link"));
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "modlink")) {
 
-            event.respond("Click here to download the mod: http://bit.ly/TwitchVsMinecraft");
+            event.respond(I18n.get("gui.twitchmod.mod_link"));
 
         } else if (message.startsWith(BotConfig.prefix + "blacklist")) {
 
             message = message.substring(BotConfig.prefix.length());
 
-            if (role.equals("Moderator") || role.equals("Broadcaster") && message.contains(" ")) {
+            if (Objects.equals(role, "Moderator") || Objects.equals(role, "Broadcaster") && message.contains(" ")) {
 
                 String cmd = message.substring(11);
 
@@ -113,12 +115,11 @@ public class TwitchBot extends ListenerAdapter {
                     BlacklistSystem.removeFromBlacklist(cmd.substring(7));
                 } else if (cmd.equalsIgnoreCase("clear")) {
                     BlacklistSystem.clearBlacklist();
-                    event.respond("Blacklist cleared.");
+                    event.respond(I18n.get("gui.twitchmod.blacklist_cleared"));
                 }
 
-
             }
-            event.respond("Blacklisted commands: " + BlacklistSystem.getBlacklist().toString());
+            event.respond(I18n.get("gui.twitchmod.blacklisted_commands", BlacklistSystem.getBlacklist().toString()));
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "disconnect")) {
             TwitchConnectionHelper.disconnectBot();
@@ -137,7 +138,7 @@ public class TwitchBot extends ListenerAdapter {
 
     // Prevent the bot from being kicked
     @Override
-    public void onPing(PingEvent event) throws Exception {
+    public void onPing(PingEvent event) {
         TwitchConnectionHelper.getBot().sendRaw().rawLineNow(String.format("PONG %s\r\n", event.getPingValue()));
     }
 

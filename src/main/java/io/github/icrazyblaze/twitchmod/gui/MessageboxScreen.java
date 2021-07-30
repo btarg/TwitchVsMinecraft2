@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,7 @@ public class MessageboxScreen extends Screen {
     public static String message = null;
 
     public MessageboxScreen(String message) {
-        super(new TextComponent("Message Box"));
+        super(new TranslatableComponent("gui.twitchmod.screen.messagebox"));
         MessageboxScreen.message = message;
     }
 
@@ -35,7 +36,7 @@ public class MessageboxScreen extends Screen {
         this.blit(stack, (width / 2) - 87, (height / 2) - 83, 0, 0, 256, 256);
 
         // Draw title
-        this.font.draw(stack, "Message Box", width / 2f - 32, height / 2f - 78, 4210752);
+        this.font.draw(stack, I18n.get("gui.twitchmod.screen.messagebox"), width / 2f - 32, height / 2f - 78, 4210752);
 
         // Draw wrapped text
         List<FormattedCharSequence> text = this.font.split(new TextComponent(message), 165);

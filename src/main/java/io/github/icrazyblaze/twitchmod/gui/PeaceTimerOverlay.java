@@ -4,6 +4,8 @@ import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,8 +24,7 @@ public class PeaceTimerOverlay {
 
         if (TimerSystem.peaceTimerEnabled) {
 
-            String text = "COMMANDS DISABLED: " + TimerSystem.peaceTimerSeconds;
-
+            MutableComponent text = new TranslatableComponent("gui.twitchmod.peace_timer", TimerSystem.peaceTimerSeconds);
             Minecraft.getInstance().font.drawShadow(event.getMatrixStack(), text, 4, 4, ChatFormatting.AQUA.getColor());
 
         }

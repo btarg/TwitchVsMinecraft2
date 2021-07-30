@@ -85,8 +85,8 @@ public class ChatCommands {
         registerCommand(CommandHandlers::floorIsLava, "lava", "floorislava");
         registerCommand(CommandHandlers::placeWater, "water", "watersbroke");
         registerCommand(CommandHandlers::placeSponge, "sponge");
-        registerCommand(CommandHandlers::deathTimer, "timer", "deathtimer");
-        registerCommand(CommandHandlers::graceTimer, "peacetimer", "timeout");
+        registerCommand(() -> CommandHandlers.deathTimer(60), "timer", "deathtimer");
+        registerCommand(() -> CommandHandlers.deathTimer(30), "peacetimer", "timeout");
         registerCommand(CommandHandlers::drainHealth, "drain", "halfhealth");
         registerCommand(CommandHandlers::spawnAnvil, "anvil"); // Gaiet's favourite command <3
         registerCommand(() -> CommandHandlers.spawnMobBehind(EntityType.CREEPER.create(PlayerHelper.player().level)), "creeper", "awman");

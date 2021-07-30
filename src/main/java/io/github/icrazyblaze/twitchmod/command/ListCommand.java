@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class ListCommand implements Command<CommandSourceStack> {
 
@@ -22,7 +22,7 @@ public class ListCommand implements Command<CommandSourceStack> {
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 
-        context.getSource().sendSuccess(new TextComponent("Registered commands: " + ChatCommands.getRegisteredCommands()), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.chat.registered_commands", ChatCommands.getRegisteredCommands()), false);
 
         return SINGLE_SUCCESS;
     }

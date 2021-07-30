@@ -4,10 +4,11 @@ import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.bots.BotCommon;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
-import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
+import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,7 +22,6 @@ import java.util.Random;
  */
 public class ChatPicker {
 
-    private static final String[] blankMessagePlaceholders = {" says hello!", " was here"};
     public static ArrayList<String> chatBuffer = new ArrayList<>();
     public static ArrayList<String> chatSenderBuffer = new ArrayList<>();
     public static boolean cooldownEnabled = false;
@@ -81,7 +81,7 @@ public class ChatPicker {
 
         // Only add the message if it is not blacklisted, and if the command isn't the same as the last
         if (BlacklistSystem.isBlacklisted(message)) {
-            Main.logger.info("Command not executed: command is blacklisted.");
+            Main.logger.info(new TranslatableComponent("exception.twitchmod.command_blacklisted", message));
             return;
         }
         if (lastCommand != null && cooldownEnabled) {
@@ -92,7 +92,7 @@ public class ChatPicker {
                 chatSenderBuffer.add(sender);
 
             } else {
-                Main.logger.info(String.format("Command not executed: cooldown is active for this command (%s).", message));
+                Main.logger.info(new TranslatableComponent("exception.twitchmod.command_on_cooldown", message));
             }
 
         } else {
@@ -172,7 +172,7 @@ public class ChatPicker {
 
             } else {
                 commandString = message;
-                argString = sender + blankMessagePlaceholders[PlayerHelper.player().getRandom().nextInt(blankMessagePlaceholders.length)];
+                argString = I18n.get("gui.twitchmod.blank_message_placeholder" + CommandHandlers.rand.nextInt(1, 3), sender);
             }
 
             // Special commands below have extra arguments, so they are registered here.
@@ -184,9 +184,9 @@ public class ChatPicker {
 
                 if (BotConfig.showCommandsInChat) {
                     if (BotConfig.showChatMessages) {
-                        CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.AQUA + "Command Chosen: " + BotConfig.prefix + message));
+                        CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.chat.command_chosen", BotConfig.prefix + message).withStyle(ChatFormatting.AQUA));
                     }
-                    BotCommon.sendBotMessage("Command Chosen: " + BotConfig.prefix + message);
+                    BotCommon.sendBotMessage(I18n.get("gui.twitchmod.chat.command_chosen", BotConfig.prefix + message));
                 }
 
                 // Below will not be executed if the command does not run
@@ -242,7 +242,7 @@ public class ChatPicker {
                 // Choose another if the list is big enough
                 pickRandomChat();
             } else {
-                Main.logger.error("Failed to execute a command.");
+                Main.logger.error(new TranslatableComponent("exception.twitchmod.command_failed"));
             }
         }
 

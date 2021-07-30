@@ -9,9 +9,10 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.util.files.SecretFileHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 
 public class SetKeyCommand implements Command<CommandSourceStack> {
@@ -38,13 +39,13 @@ public class SetKeyCommand implements Command<CommandSourceStack> {
             SecretFileHelper.writeTwitchKey(key);
 
         } else {
-            throw new CommandSyntaxException(new SimpleCommandExceptionType(() -> ""), () -> "Invalid OAuth key.");
+            throw new CommandSyntaxException(new SimpleCommandExceptionType(() -> ""), () -> I18n.get("exception.twitchmod.invalid_oauth")))
         }
 
         // Update config
         ConfigManager.updateFromConfig();
 
-        context.getSource().sendSuccess(new TextComponent(ChatFormatting.GOLD + "Twitch OAuth key set. Use /ttv connect to start!"), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.ready_twitch").withStyle(ChatFormatting.GOLD), false);
         return SINGLE_SUCCESS;
 
     }

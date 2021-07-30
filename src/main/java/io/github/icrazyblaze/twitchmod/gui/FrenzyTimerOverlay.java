@@ -5,6 +5,8 @@ import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,12 +25,9 @@ public class FrenzyTimerOverlay {
 
         if (ChatPicker.instantCommands) {
 
-            String text = "FRENZY MODE: " + TimerSystem.frenzyTimerSeconds;
-
+            MutableComponent text = new TranslatableComponent("gui.twitchmod.frenzy_timer", TimerSystem.frenzyTimerSeconds);
             Minecraft.getInstance().font.drawShadow(event.getMatrixStack(), text, 4, 4, ChatFormatting.GOLD.getColor());
 
         }
-
     }
-
 }

@@ -6,7 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class QueueCommand implements Command<CommandSourceStack> {
 
@@ -21,7 +21,7 @@ public class QueueCommand implements Command<CommandSourceStack> {
     @Override
     public int run(CommandContext<CommandSourceStack> context) {
 
-        context.getSource().sendSuccess(new TextComponent("Possible commands: " + ChatPicker.chatBuffer.toString()), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.chat.possible_commands", ChatPicker.chatBuffer.toString()), false);
         return SINGLE_SUCCESS;
     }
 }

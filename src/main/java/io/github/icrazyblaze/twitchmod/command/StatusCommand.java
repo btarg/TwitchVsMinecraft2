@@ -14,7 +14,8 @@ import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class StatusCommand implements Command<CommandSourceStack> {
 
@@ -33,25 +34,25 @@ public class StatusCommand implements Command<CommandSourceStack> {
 
         // Display current status and uptime
         if (TwitchConnectionHelper.isConnected()) {
-            context.getSource().sendSuccess(new TextComponent(ChatFormatting.GREEN + "Twitch bot connected."), false);
+            context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.status.connected_twitch").withStyle(ChatFormatting.GREEN), false);
         } else {
-            context.getSource().sendSuccess(new TextComponent(ChatFormatting.RED + "Twitch bot not connected."), false);
+            context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.status.disconnected_twitch").withStyle(ChatFormatting.RED), false);
         }
 
         if (DiscordConnectionHelper.isConnected()) {
-            context.getSource().sendSuccess(new TextComponent(ChatFormatting.GREEN + "Discord bot connected."), false);
+            context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.status.connected_discord").withStyle(ChatFormatting.GREEN), false);
         } else {
-            context.getSource().sendSuccess(new TextComponent(ChatFormatting.RED + "Discord bot not connected."), false);
+            context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.status.disconnected_discord").withStyle(ChatFormatting.RED), false);
         }
 
-        context.getSource().sendSuccess(new TextComponent(ChatFormatting.GOLD + "Twitch channel name: " + BotConfig.CHANNEL_NAME), false);
-        context.getSource().sendSuccess(new TextComponent(ChatFormatting.GREEN + "Twitch stream uptime: " + UptimeReader.getUptimeString(BotConfig.CHANNEL_NAME)), false);
-        context.getSource().sendSuccess(new TextComponent(ChatFormatting.BLUE + "Watching Discord channels: " + BotConfig.DISCORD_CHANNELS.toString()), false);
-        context.getSource().sendSuccess(new TextComponent(ChatFormatting.GOLD + "Player(s) affected: " + PlayerHelper.affectedPlayers.toString()), false);
-        context.getSource().sendSuccess(new TextComponent(ChatFormatting.DARK_PURPLE + "A new command will be chosen every " + TimerSystem.chatSecondsTrigger + " seconds."), false);
-        context.getSource().sendSuccess(new TextComponent(ChatFormatting.DARK_PURPLE + "Commands start with " + BotConfig.prefix), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.twitch_name", BotConfig.CHANNEL_NAME).withStyle(ChatFormatting.GOLD), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.twitch_uptime", UptimeReader.getUptimeString(BotConfig.CHANNEL_NAME)).withStyle(ChatFormatting.GREEN), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.discord_channels", BotConfig.DISCORD_CHANNELS.toString()).withStyle(ChatFormatting.BLUE), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.players", PlayerHelper.affectedPlayers.toString()).withStyle(ChatFormatting.GOLD), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.command_seconds", TimerSystem.chatSecondsTrigger).withStyle(ChatFormatting.DARK_PURPLE), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.command_prefix", BotConfig.prefix).withStyle(ChatFormatting.DARK_PURPLE), false);
 
-        TextComponent keyMessage = new TextComponent(ChatFormatting.AQUA + "Type /ttv getkey or /discord gettoken to log in.");
+        MutableComponent keyMessage = new TranslatableComponent("gui.twitchmod.chat.hint_login").withStyle(ChatFormatting.AQUA);
 
         context.getSource().sendSuccess(keyMessage, false);
 

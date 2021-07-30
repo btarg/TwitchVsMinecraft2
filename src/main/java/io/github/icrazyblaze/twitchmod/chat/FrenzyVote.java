@@ -1,7 +1,7 @@
 package io.github.icrazyblaze.twitchmod.chat;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.ArrayList;
 
@@ -18,10 +18,10 @@ public class FrenzyVote {
             votedList.add(username);
             votes = votedList.toArray().length;
 
-            CommandHandlers.broadcastMessage(new TextComponent(username + String.format(" wants to enable Frenzy Mode. (%s/%s)", votes, votesNeeded)));
+            CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.user_voted_frenzy", username, votes, votesNeeded));
 
             if (votes == votesNeeded) {
-                CommandHandlers.frenzyTimer();
+                CommandHandlers.frenzyTimer(10);
                 votedList.clear();
             }
 

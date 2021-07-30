@@ -4,8 +4,8 @@ import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.chat.ChatPickerHelper;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
-import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import io.github.icrazyblaze.twitchmod.util.CalculateMinecraftColor;
+import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.Permission;
@@ -16,8 +16,11 @@ import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,12 +40,12 @@ public class DiscordBot extends ListenerAdapter {
             jda.shutdown();
         }
 
-        CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.LIGHT_PURPLE + "Connecting to Discord..."));
+        CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.connecting_discord").withStyle(ChatFormatting.LIGHT_PURPLE));
         jda = JDABuilder.createDefault(BotConfig.DISCORD_TOKEN).build();
         jda.addEventListener(new DiscordBot());
 
-        jda.getPresence().setActivity(Activity.playing("Twitch Vs Minecraft Reloaded"));
-        CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.DARK_GREEN + "Bot connected!"));
+        jda.getPresence().setActivity(Activity.playing(I18n.get("gui.twitchmod.mod_name")));
+        CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.status.connected_success_discord").withStyle(ChatFormatting.DARK_GREEN));
         isConnected = true;
 
     }
@@ -91,25 +94,22 @@ public class DiscordBot extends ListenerAdapter {
                 roleNames.add(r.getName());
             }
 
-            TextComponent showText = new TextComponent(String.format("%s<%s[%s] %s%s%s> %s", ChatFormatting.WHITE, ChatFormatting.BLUE, channel, format, sender, ChatFormatting.WHITE, message));
+            MutableComponent showText = new TranslatableComponent("gui.twitchmod.chat.prefix_discord", new TextComponent(channel).withStyle(ChatFormatting.BLUE), new TextComponent(sender).withStyle(format), message).withStyle(ChatFormatting.WHITE);
 
             if (!roleNames.isEmpty()) {
                 showText.setStyle(showText.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(format + StringUtils.join(roleNames, ", ")))));
             }
             CommandHandlers.broadcastMessage(showText);
 
-            if (roleNames.contains("bot-tester")) {
-                ChatPicker.forceCommands = true;
-            }
         }
 
         if (message.equalsIgnoreCase(BotConfig.prefix + "help") || message.equalsIgnoreCase(BotConfig.prefix + "commands")) {
 
-            event.getChannel().sendMessage("Click here for a list of commands: http://bit.ly/2UfBCiL").queue();
+            event.getChannel().sendMessage(I18n.get("gui.twitchmod.commands_link")).queue();
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "modlink")) {
 
-            event.getChannel().sendMessage("Click here to download the mod: http://bit.ly/TwitchVsMinecraft").queue();
+            event.getChannel().sendMessage(I18n.get("gui.twitchmod.mod_link")).queue();
 
         } else if (message.startsWith(BotConfig.prefix + "blacklist")) {
 
@@ -125,10 +125,10 @@ public class DiscordBot extends ListenerAdapter {
                     BlacklistSystem.removeFromBlacklist(cmd.substring(7));
                 } else if (cmd.equalsIgnoreCase("clear")) {
                     BlacklistSystem.clearBlacklist();
-                    event.getChannel().sendMessage("Blacklist cleared.").queue();
+                    event.getChannel().sendMessage(I18n.get("gui.twitchmod.blacklist_cleared")).queue();
                 }
             }
-            event.getChannel().sendMessage("Blacklisted commands: " + BlacklistSystem.getBlacklist().toString()).queue();
+            event.getChannel().sendMessage(I18n.get("gui.twitchmod.blacklisted_commands", BlacklistSystem.getBlacklist().toString())).queue();
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "disconnect") && isAdmin) {
             jda.shutdown();

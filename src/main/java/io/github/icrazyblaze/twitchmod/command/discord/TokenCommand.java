@@ -10,7 +10,7 @@ import io.github.icrazyblaze.twitchmod.util.files.SecretFileHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 
 public class TokenCommand implements Command<CommandSourceStack> {
@@ -34,7 +34,7 @@ public class TokenCommand implements Command<CommandSourceStack> {
         // Update config
         ConfigManager.updateFromConfig();
 
-        context.getSource().sendSuccess(new TextComponent(ChatFormatting.GOLD + "Discord Bot Token set. Use /discord connect to start!"), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.chat.ready_discord").withStyle(ChatFormatting.GOLD), false);
         return SINGLE_SUCCESS;
 
     }

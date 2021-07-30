@@ -2,6 +2,7 @@ package io.github.icrazyblaze.twitchmod.util.files;
 
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;
@@ -76,7 +77,7 @@ public class BlacklistSystem {
             writer.close();
 
         } catch (IOException e) {
-            Main.logger.error("Could not write to blacklist file: " + e);
+            Main.logger.error(new TranslatableComponent("exception.twitchmod.blacklist_load_exception", e));
         }
 
     }
@@ -104,7 +105,7 @@ public class BlacklistSystem {
             }
 
         } catch (IOException e) {
-            Main.logger.error("Could not load blacklist file:" + e);
+            Main.logger.error(new TranslatableComponent("exception.twitchmod.blacklist_load_exception", e));
         }
 
         // Fix for blacklist being null - set to empty instead

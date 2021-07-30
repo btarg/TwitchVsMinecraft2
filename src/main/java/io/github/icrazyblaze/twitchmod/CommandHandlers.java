@@ -8,12 +8,14 @@ import io.github.icrazyblaze.twitchmod.util.EffectInstanceHelper;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -70,10 +72,9 @@ import static io.github.icrazyblaze.twitchmod.util.PlayerHelper.player;
  *
  * @see io.github.icrazyblaze.twitchmod.chat.ChatPicker
  */
-@SuppressWarnings("unchecked")
 public class CommandHandlers {
 
-    private static final ThreadLocalRandom rand = ThreadLocalRandom.current();
+    public static final ThreadLocalRandom rand = ThreadLocalRandom.current();
     public static boolean oresExplode = false;
     public static boolean placeBedrockOnBreak = false;
     public static boolean burnVillagersOnInteract = false;
@@ -108,7 +109,7 @@ public class CommandHandlers {
 
         List<String> commands = ChatCommands.getRegisteredCommands();
         String randomCommand = commands.get(rand.nextInt(commands.toArray().length));
-        broadcastMessage(new TextComponent(sender + " rolled the dice!"));
+        broadcastMessage(new TranslatableComponent("gui.twitchmod.dice_rolled", sender));
         ChatPicker.checkChat(randomCommand, sender);
 
     }
@@ -203,49 +204,49 @@ public class CommandHandlers {
 
     }
 
-    public static void deathTimer() {
+    public static void deathTimer(int seconds) {
 
         if (ChatPicker.instantCommands) {
             return;
         }
 
-        TimerSystem.deathTimerSeconds = 60;
+        TimerSystem.deathTimerSeconds = seconds;
         TimerSystem.deathTimerEnabled = true;
 
-        player().displayClientMessage(new TextComponent(ChatFormatting.DARK_RED + "Chat has given you " + TimerSystem.deathTimerSeconds + " seconds to live."), true);
+        player().displayClientMessage(new TranslatableComponent("gui.twitchmod.alert_deathtimer", seconds).withStyle(ChatFormatting.DARK_RED), true);
 
     }
 
-    public static void frenzyTimer() {
+    public static void frenzyTimer(int seconds) {
 
         if (ChatPicker.instantCommands || !enableFrenzyMode) {
             return;
         }
 
-        TimerSystem.frenzyTimerSeconds = 10;
+        TimerSystem.frenzyTimerSeconds = seconds;
         ChatPicker.instantCommands = true;
 
         previousDeathTimerState = TimerSystem.deathTimerEnabled;
         TimerSystem.deathTimerEnabled = false;
 
-        player().displayClientMessage(new TextComponent(ChatFormatting.GOLD + "FRENZY MODE! All commands are executed for the next " + TimerSystem.frenzyTimerSeconds + " seconds."), true);
+        player().displayClientMessage(new TranslatableComponent("gui.twitchmod.alert_frenzymode", seconds).withStyle(ChatFormatting.GOLD), true);
 
     }
 
-    public static void graceTimer() {
+    public static void graceTimer(int seconds) {
 
         if (ChatPicker.instantCommands) {
             return;
         }
 
         ChatPicker.enabled = false;
-        TimerSystem.peaceTimerSeconds = 30;
+        TimerSystem.peaceTimerSeconds = seconds;
         TimerSystem.peaceTimerEnabled = true;
 
         previousDeathTimerState = TimerSystem.deathTimerEnabled;
         TimerSystem.deathTimerEnabled = false;
 
-        player().displayClientMessage(new TextComponent(ChatFormatting.AQUA + "Commands are turned off for " + TimerSystem.peaceTimerSeconds + " seconds."), true);
+        player().displayClientMessage(new TranslatableComponent("gui.twitchmod.alert_peacetimer", seconds).withStyle(ChatFormatting.AQUA), true);
 
     }
 
@@ -255,7 +256,7 @@ public class CommandHandlers {
         TimerSystem.peaceTimerEnabled = false;
         TimerSystem.deathTimerEnabled = previousDeathTimerState;
 
-        player().displayClientMessage(new TextComponent(ChatFormatting.AQUA + "Commands are now enabled!"), true);
+        player().displayClientMessage(new TranslatableComponent("gui.twitchmod.commands_enabled").withStyle(ChatFormatting.AQUA), true);
 
     }
 
@@ -263,7 +264,7 @@ public class CommandHandlers {
 
         ChatPicker.instantCommands = false;
         TimerSystem.deathTimerEnabled = previousDeathTimerState;
-        player().displayClientMessage(new TextComponent(ChatFormatting.GOLD + "Frenzy mode is now disabled."), true);
+        player().displayClientMessage(new TranslatableComponent("gui.twitchmod.frenzy_disabled").withStyle(ChatFormatting.GOLD), true);
 
     }
 
@@ -586,7 +587,7 @@ public class CommandHandlers {
             giveAndRemoveRandom();
 
             // Show chat message
-            player.displayClientMessage(new TextComponent(ChatFormatting.RED + sender + " giveth, and " + sender + " taketh away."), true);
+            player.displayClientMessage(new TranslatableComponent("gui.twitchmod.alert_roulette", sender).withStyle(ChatFormatting.RED), true);
 
         }
 
@@ -615,7 +616,7 @@ public class CommandHandlers {
         }
 
         // Show chat message
-        player.displayClientMessage(new TextComponent(ChatFormatting.RED + sender + " rearranged your inventory."), true);
+        player.displayClientMessage(new TranslatableComponent("gui.twitchmod.alert_inventory_shuffle", sender).withStyle(ChatFormatting.RED), true);
 
     }
 
@@ -810,7 +811,7 @@ public class CommandHandlers {
 
         ChatPicker.tempChatLog.clear();
         ChatPicker.logMessages = true;
-        player().displayClientMessage(new TextComponent(ChatFormatting.LIGHT_PURPLE + "Chat has started writing a book."), true);
+        player().displayClientMessage(new TextComponent("gui.twitchmod.alert_book_start").withStyle(ChatFormatting.LIGHT_PURPLE), true);
 
     }
 
@@ -826,7 +827,7 @@ public class CommandHandlers {
             ListTag pages = new ListTag();
 
             nbt.putString("author", PlayerHelper.getUsername());
-            nbt.putString("title", "Chat Log " + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+            nbt.putString("title", I18n.get("gui.twitchmod.chat_log", new SimpleDateFormat().format(new Date())));
 
             for (String str : text) {
                 pages.add(StringTag.valueOf(str));
@@ -836,7 +837,7 @@ public class CommandHandlers {
             itemStack.save(nbt);
 
             player.addItem(itemStack);
-            player.displayClientMessage(new TextComponent(ChatFormatting.LIGHT_PURPLE + "Chat has written you a book."), true);
+            player.displayClientMessage(new TextComponent("gui.twitchmod.alert_book_finished").withStyle(ChatFormatting.LIGHT_PURPLE), true);
 
         } catch (Exception e) {
             Main.logger.error(e);

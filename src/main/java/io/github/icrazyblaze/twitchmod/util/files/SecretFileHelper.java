@@ -2,6 +2,7 @@ package io.github.icrazyblaze.twitchmod.util.files;
 
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.SerializationUtils;
@@ -52,13 +53,13 @@ public class SecretFileHelper implements Serializable {
         try {
             BotConfig.TWITCH_KEY = getStringFromFile(path_twitch);
         } catch (Exception e) {
-            Main.logger.error("No Twitch credentials found: " + e);
+            Main.logger.error(new TranslatableComponent("exception.twitchmod.login_not_found_twitch", e));
         }
 
         try {
             BotConfig.DISCORD_TOKEN = getStringFromFile(path_discord);
         } catch (Exception e) {
-            Main.logger.info("No Discord credentials found: " + e);
+            Main.logger.error(new TranslatableComponent("exception.twitchmod.login_not_found_discord", e));
         }
 
     }

@@ -3,6 +3,8 @@ package io.github.icrazyblaze.twitchmod.gui;
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,9 +23,8 @@ public class DeathTimerOverlay {
 
         if (TimerSystem.deathTimerEnabled) {
 
-            String text = "TIMER: " + TimerSystem.deathTimerSeconds;
-
-            Minecraft.getInstance().font.drawShadow(event.getMatrixStack(), text, 4, 4, Integer.parseInt("AA0000", 16));
+            MutableComponent text = new TranslatableComponent("gui.twitchmod.timer", TimerSystem.deathTimerSeconds);
+            Minecraft.getInstance().font.drawShadow(event.getMatrixStack(), text, 4, 4, 11141120);
 
         }
 

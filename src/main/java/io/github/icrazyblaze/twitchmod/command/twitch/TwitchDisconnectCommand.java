@@ -5,10 +5,9 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.icrazyblaze.twitchmod.bots.irc.TwitchConnectionHelper;
-import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class TwitchDisconnectCommand implements Command<CommandSourceStack> {
 
@@ -26,7 +25,7 @@ public class TwitchDisconnectCommand implements Command<CommandSourceStack> {
         if (TwitchConnectionHelper.isConnected()) {
             TwitchConnectionHelper.disconnectBot();
         } else {
-            context.getSource().sendSuccess(new TextComponent(ChatFormatting.RED + "Bot not connected."), false);
+            context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.status.disconnected_twitch"), false);
         }
 
         return SINGLE_SUCCESS;

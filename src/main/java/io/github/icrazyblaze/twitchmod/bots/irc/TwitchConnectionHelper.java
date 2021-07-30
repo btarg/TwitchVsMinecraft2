@@ -5,7 +5,7 @@ import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.pircbotx.cap.EnableCapHandler;
@@ -37,10 +37,10 @@ public class TwitchConnectionHelper {
 
             // Disconnect before connecting again
             disconnectBot();
-            CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.DARK_PURPLE + "Reconnecting..."));
+            CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.chat.reconnecting").withStyle(ChatFormatting.DARK_PURPLE));
 
         } else {
-            CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.DARK_PURPLE + String.format("Connecting to channel %s...", BotConfig.CHANNEL_NAME)));
+            CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.chat.connecting_to", BotConfig.CHANNEL_NAME).withStyle(ChatFormatting.DARK_PURPLE));
         }
 
         try {
@@ -76,7 +76,7 @@ public class TwitchConnectionHelper {
 
         } catch (Exception e) {
             Main.logger.error(e);
-            CommandHandlers.broadcastMessage(new TextComponent(ChatFormatting.RED + "Could not connect: " + e));
+            CommandHandlers.broadcastMessage(new TranslatableComponent("exception.twitchmod.connection_error", e));
             return false;
         }
     }

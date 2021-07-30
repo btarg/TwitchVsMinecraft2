@@ -7,7 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 
 public class BlacklistCommand implements Command<CommandSourceStack> {
@@ -30,7 +30,7 @@ public class BlacklistCommand implements Command<CommandSourceStack> {
 
         // Add to blacklist
         BlacklistSystem.addToBlacklist(message);
-        context.getSource().sendSuccess(new TextComponent("Added to blacklist: " + message), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.blacklist_added", message), false);
         showMessage(context);
 
         return SINGLE_SUCCESS;
@@ -43,7 +43,7 @@ public class BlacklistCommand implements Command<CommandSourceStack> {
 
         // Remove from blacklist
         BlacklistSystem.removeFromBlacklist(message);
-        context.getSource().sendSuccess(new TextComponent("Removed from blacklist: " + message), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.blacklist_removed", message), false);
         showMessage(context);
 
         return SINGLE_SUCCESS;
@@ -53,7 +53,7 @@ public class BlacklistCommand implements Command<CommandSourceStack> {
     private int clearBlacklist(CommandContext<CommandSourceStack> context) {
 
         BlacklistSystem.clearBlacklist();
-        context.getSource().sendSuccess(new TextComponent("Blacklisted commands: " + BlacklistSystem.getBlacklist().toString()), false);
+        showMessage(context);
 
         return SINGLE_SUCCESS;
 
@@ -61,7 +61,7 @@ public class BlacklistCommand implements Command<CommandSourceStack> {
 
     private int showMessage(CommandContext<CommandSourceStack> context) {
 
-        context.getSource().sendSuccess(new TextComponent("Blacklisted commands: " + BlacklistSystem.getBlacklist().toString()), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.chat.blacklisted_commands", BlacklistSystem.getBlacklist().toString()), false);
         return SINGLE_SUCCESS;
 
     }
