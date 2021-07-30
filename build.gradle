@@ -12,8 +12,6 @@ buildscript {
 apply plugin: "java"
 apply plugin: "net.minecraftforge.gradle"
 apply plugin: "com.github.johnrengelman.shadow"
-apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
-import net.minecraftforge.gradle.common.tasks.SignJar
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
@@ -64,12 +62,12 @@ dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
     // PircBotX has many dependencies that we already have downloaded
-    implementation shadow (group: "com.github.pircbotx", name: "pircbotx", version: "2.2") {
+    implementation shadow(group: "com.github.pircbotx", name: "pircbotx", version: "2.2") {
         transitive = false
     }
 
     // JDA without audio
-    implementation shadow (group: "net.dv8tion", name: "JDA", version: "4.3.0_298") {
+    implementation shadow(group: "net.dv8tion", name: "JDA", version: "4.3.0_300") {
         transitive = true
         exclude module: "opus-java"
         exclude group: "org.slf4j", module: "slf4j-api" // we already have this
@@ -90,7 +88,7 @@ shadowJar {
 
     classifier ''
     configurations = [project.configurations.shadow]
-    dependencies{
+    dependencies {
         exclude(dependency("org.jetbrains:annotations"))
         exclude(dependency("com.google.code.findbugs:jsr305"))
     }
@@ -107,11 +105,11 @@ reobf {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "${archivesBaseName}",
+                "Specification-Title"     : "${project.name}-${mc_version}-${project.version}",
                 "Specification-Vendor"    : "${author}",
-                "Specification-Version"   : "1",
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : "${archiveVersion}",
+                "Specification-Version"   : "${mod_version}",
+                "Implementation-Title"    : "${project.name}-${mc_version}-${project.version}",
+                "Implementation-Version"  : "${mod_version}",
                 "Implementation-Vendor"   : "${author}",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
@@ -119,23 +117,4 @@ jar {
 
 }
 
-task signJar(type: SignJar, dependsOn: jar) {
-
-    // Skips if the keyStore property is missing.
-    onlyIf {
-        project.hasProperty('keyStore')
-    }
-
-    // findProperty allows us to reference the property without it existing.
-    // Using project.propName would cause the script to fail validation if
-    // the property did not exist.
-    keyStore = project.findProperty('keyStore')
-    alias = project.findProperty('keyStoreAlias')
-    storePass = project.findProperty('keyStorePass')
-    keyPass = project.findProperty('keyStoreKeyPass')
-    inputFile = jar.archiveFile
-    outputFile = jar.archiveFile
-}
-
 tasks.assemble.dependsOn shadowJar
-tasks.build.dependsOn signJar
