@@ -45,7 +45,7 @@ public class SetKeyCommand implements Command<CommandSourceStack> {
         // Update config
         ConfigManager.updateFromConfig();
 
-        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.ready_twitch").withStyle(ChatFormatting.GOLD), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.chat.ready_twitch").withStyle(ChatFormatting.GOLD), false);
         return SINGLE_SUCCESS;
 
     }
