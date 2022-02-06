@@ -20,9 +20,9 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fmlserverevents.FMLServerStartedEvent;
-import net.minecraftforge.fmlserverevents.FMLServerStoppingEvent;
 
 /**
  * SubscribeEvents go here to avoid clutter in the main class.
@@ -72,7 +72,7 @@ public class ForgeEventSubscriber {
     }
 
     @SubscribeEvent
-    public static void serverStarted(FMLServerStartedEvent event) {
+    public static void serverStarted(ServerStartedEvent event) {
         ChatCommands.initCommands();
         IntegrationWrapper.initModCommands();
         ChatCommands.initDynamicCommands("", ""); // this initialisation prevents the dynamic commands not being recognised as real commands
@@ -80,7 +80,7 @@ public class ForgeEventSubscriber {
 
 
     @SubscribeEvent
-    public static void serverStopping(FMLServerStoppingEvent event) {
+    public static void serverStopping(ServerStoppingEvent event) {
 
         if (TwitchConnectionHelper.isConnected()) {
             TwitchConnectionHelper.disconnectBot();

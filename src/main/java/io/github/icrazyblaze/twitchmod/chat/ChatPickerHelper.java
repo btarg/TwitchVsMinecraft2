@@ -1,8 +1,8 @@
 package io.github.icrazyblaze.twitchmod.chat;
 
 import net.minecraft.util.thread.BlockableEventLoop;
+import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fmllegacy.LogicalSidedProvider;
 
 public class ChatPickerHelper {
 

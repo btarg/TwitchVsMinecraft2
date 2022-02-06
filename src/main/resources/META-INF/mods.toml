@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[37,)"
+loaderVersion = "[39,)"
 license = "GNU LGPLv3"
 issueTrackerURL = "http://github.com/iCrazyBlaze/TwitchVsMinecraft2/issues"
 
@@ -11,21 +11,21 @@ updateJSONURL = "https://raw.githubusercontent.com/iCrazyBlaze/TwitchVsMinecraft
 displayURL = "https://bit.ly/TwitchVsMinecraft"
 logoFile = "logo.png"
 credits = "Idea from Kaze Emanuar. Thanks to the Minecraft Mod Development community for helping me create this!"
-authors = "RonaRage (iCrazyBlaze)"
+authors = "RonaRage (iCrazyBlaze/Btarg)"
 description = "Be at your viewers' mercy! Random commands are chosen from Twitch chat or Discord."
 itemIcon = "minecraft:anvil"
 
 [[dependencies.twitchmod]]
 modId = "forge"
 mandatory = true
-versionRange = "[37,)"
+versionRange = "[39,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.twitchmod]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.17,1.18)"
+versionRange="[1.18,1.19)"
 side="BOTH"
 
 [modproperties.configured]

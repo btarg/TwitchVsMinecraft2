@@ -6,14 +6,14 @@ buildscript {
     }
     dependencies {
         classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "5.1.+", changing: true
-        classpath "com.github.jengelman.gradle.plugins:shadow:6.1.0"
+        classpath "gradle.plugin.com.github.johnrengelman:shadow:7.1.2"
     }
 }
 apply plugin: "java"
 apply plugin: "net.minecraftforge.gradle"
 apply plugin: "com.github.johnrengelman.shadow"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 version = mod_version
 group = package_group
@@ -29,10 +29,6 @@ repositories {
         content {
             includeGroup "curse.maven"
         }
-    }
-    maven {
-        name "m2-dv8tion"
-        url "https://m2.dv8tion.net/releases"
     }
 }
 
@@ -67,7 +63,7 @@ dependencies {
     }
 
     // JDA without audio
-    implementation shadow(group: "net.dv8tion", name: "JDA", version: "4.3.0_300") {
+    implementation shadow(group: "net.dv8tion", name: "JDA", version: "5.0.0-alpha.5") {
         transitive = true
         exclude module: "opus-java"
         exclude group: "org.slf4j", module: "slf4j-api" // we already have this

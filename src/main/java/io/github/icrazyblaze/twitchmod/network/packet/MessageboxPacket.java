@@ -2,7 +2,7 @@ package io.github.icrazyblaze.twitchmod.network.packet;
 
 import io.github.icrazyblaze.twitchmod.network.ClientPacketFunctions;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
