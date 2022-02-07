@@ -13,6 +13,7 @@ import io.github.icrazyblaze.twitchmod.command.twitch.GetKeyCommand;
 import io.github.icrazyblaze.twitchmod.command.twitch.SetKeyCommand;
 import io.github.icrazyblaze.twitchmod.command.twitch.TwitchConnectCommand;
 import io.github.icrazyblaze.twitchmod.command.twitch.TwitchDisconnectCommand;
+import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.integration.IntegrationWrapper;
 import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
@@ -76,6 +77,8 @@ public class ForgeEventSubscriber {
         ChatCommands.initCommands();
         IntegrationWrapper.initModCommands();
         ChatCommands.initDynamicCommands("", ""); // this initialisation prevents the dynamic commands not being recognised as real commands
+
+        ConfigManager.updateFromConfig();
     }
 
 

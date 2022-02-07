@@ -15,9 +15,7 @@ apply plugin: "com.github.johnrengelman.shadow"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-version = mod_version
-group = package_group
-archivesBaseName = mod_id
+archivesBaseName = archivesBaseName = "${mod_id}-${mc_version}-${mod_version}"
 
 repositories {
     // Put remote maven repositories here
@@ -53,36 +51,38 @@ minecraft {
     }
 }
 
+configurations {
+    library
+    implementation.extendsFrom library
+    shadow.extendsFrom library
+}
+
+minecraft.runs.all {
+    lazyToken('minecraft_classpath') {
+        configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
+    }
+}
 
 dependencies {
+
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    // PircBotX has many dependencies that we already have downloaded
-    implementation shadow(group: "com.github.pircbotx", name: "pircbotx", version: "2.2") {
-        transitive = false
-    }
+    library(group: 'com.github.twitch4j', name: 'twitch4j', version: '1.8.0')
 
     // JDA without audio
-    implementation shadow(group: "net.dv8tion", name: "JDA", version: "5.0.0-alpha.5") {
+    library(group: "net.dv8tion", name: "JDA", version: "5.0.0-alpha.5") {
         transitive = true
         exclude module: "opus-java"
         exclude group: "org.slf4j", module: "slf4j-api" // we already have this
     }
 
-    implementation shadow(group: "org.slf4j", name: "slf4j-log4j12", version: "1.7.30")
+    library(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10')
 
     implementation('cpw.mods:securejarhandler') { version { strictly '0.9.45' } }
 
 }
 
-def repack(rp) {
-    rp.each { shadowJar.relocate(it, "repack.${it}") }
-}
-
 shadowJar {
-
-    def list = ["org.pircbotx", "net.dv8tion.jda", "org.apache.commons.collections4", "gnu.trove", "com.neovisionaries.ws.client", "com.iwebpp.crypto", "org.json", "okio", "okhttp3", "org.slf4j", "com.fasterxml.jackson"]
-    repack list
 
     classifier ''
     configurations = [project.configurations.shadow]
@@ -90,6 +90,14 @@ shadowJar {
         exclude(dependency("org.jetbrains:annotations"))
         exclude(dependency("com.google.code.findbugs:jsr305"))
     }
+
+}
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+
+task relocateShadowJar(type: ConfigureShadowRelocation) {
+
+    target = tasks.shadowJar
+    prefix = "repack" // Default value is "shadow"
 
 }
 
@@ -103,10 +111,10 @@ reobf {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "${project.name}-${mc_version}-${project.version}",
+                "Specification-Title"     : "${archivesBaseName}",
                 "Specification-Vendor"    : "${author}",
                 "Specification-Version"   : "${mod_version}",
-                "Implementation-Title"    : "${project.name}-${mc_version}-${project.version}",
+                "Implementation-Title"    : "${archivesBaseName}",
                 "Implementation-Version"  : "${mod_version}",
                 "Implementation-Vendor"   : "${author}",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
@@ -115,4 +123,5 @@ jar {
 
 }
 
+tasks.shadowJar.dependsOn tasks.relocateShadowJar
 tasks.assemble.dependsOn shadowJar

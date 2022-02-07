@@ -1,14 +1,16 @@
 package io.github.icrazyblaze.twitchmod.bots.irc;
 
+import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
+import com.github.philippheuer.events4j.simple.SimpleEventHandler;
+import com.github.twitch4j.TwitchClient;
+import com.github.twitch4j.TwitchClientBuilder;
+import com.github.twitch4j.chat.enums.TMIConnectionState;
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
 import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
-import org.pircbotx.Configuration;
-import org.pircbotx.PircBotX;
-import org.pircbotx.cap.EnableCapHandler;
 
 /**
  * This class is responsible for connecting the IRC bot, which is defined by the TwitchBot class.
@@ -17,11 +19,11 @@ import org.pircbotx.cap.EnableCapHandler;
 
 public class TwitchConnectionHelper {
 
-    private static PircBotX bot = null;
     private static Thread botThread = null;
+    private static TwitchClient twitchClient = null;
 
-    public static PircBotX getBot() {
-        return bot;
+    public static TwitchClient getBot() {
+        return twitchClient;
     }
 
     public static boolean login() {
@@ -33,11 +35,18 @@ public class TwitchConnectionHelper {
             return false;
         }
 
+
         if (isConnected()) {
 
-            // Disconnect before connecting again
-            disconnectBot();
+            // Reconnect if already connected
             CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.chat.reconnecting").withStyle(ChatFormatting.DARK_PURPLE));
+            try {
+                twitchClient.getChat().reconnect();
+            } catch (Exception e) {
+                Main.logger.error(e);
+                return false;
+            }
+            return true;
 
         } else {
             CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.chat.connecting_to", BotConfig.CHANNEL_NAME).withStyle(ChatFormatting.DARK_PURPLE));
@@ -45,29 +54,18 @@ public class TwitchConnectionHelper {
 
         try {
 
-            Configuration config = new Configuration.Builder()
-                    .setAutoReconnect(true)
-                    .setAutoNickChange(false) // Twitch doesn't support multiple users
-                    .setOnJoinWhoEnabled(false) // Twitch doesn't support WHO command
-                    .setCapEnabled(true)
-                    .addCapHandler(new EnableCapHandler("twitch.tv/membership"))
-                    .addCapHandler(new EnableCapHandler("twitch.tv/tags"))
-                    .setName("MinecraftBot")
-                    .addServer("irc.twitch.tv", 6667)
-                    .setServerPassword(BotConfig.TWITCH_KEY)
-                    .addAutoJoinChannel("#" + BotConfig.CHANNEL_NAME)
-                    .addListener(new TwitchBot())
-                    .buildConfiguration();
+            // Twitch4J setup
+            OAuth2Credential credential = new OAuth2Credential("twitch", BotConfig.TWITCH_KEY);
+            twitchClient = TwitchClientBuilder.builder()
+                    .withEnableChat(true).withChatAccount(credential)
+                    .withDefaultEventHandler(SimpleEventHandler.class)
+                    .build();
 
-            bot = new PircBotX(config);
 
             botThread = new Thread(() -> {
 
-                try {
-                    bot.startBot();
-                } catch (Exception e) {
-                    Main.logger.error(e);
-                }
+                twitchClient.getChat().joinChannel(BotConfig.CHANNEL_NAME);
+                twitchClient.getChat().connect();
 
             });
 
@@ -83,8 +81,8 @@ public class TwitchConnectionHelper {
 
     public static boolean isConnected() {
 
-        if (bot != null) {
-            return bot.isConnected();
+        if (twitchClient != null) {
+            return twitchClient.getChat().getConnectionState().equals(TMIConnectionState.CONNECTED);
         } else {
             return false;
         }
@@ -93,8 +91,7 @@ public class TwitchConnectionHelper {
 
     public static void disconnectBot() {
 
-        bot.stopBotReconnect();
-        bot.close();
+        twitchClient.getChat().disconnect();
         botThread.interrupt();
 
     }
