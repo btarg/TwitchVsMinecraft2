@@ -1,7 +1,7 @@
 # Twitch Vs Minecraft Reloaded (Forge 1.18.X)
 
 [![Build status](https://github.com/iCrazyBlaze/TwitchVsMinecraft2/actions/workflows/build.yml/badge.svg)](https://github.com/iCrazyBlaze/TwitchVsMinecraft2/actions)
-[![CurseForge](http://cf.way2muchnoise.eu/full_twitch-vs-minecraft_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/twitch-vs-minecraft)
+[![CurseForge](http://cf.way2muchnoise.eu/full_318840_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/twitch-vs-minecraft)
 
 A Minecraft mod for Forge inspired by [Kaze Emanuar](https://www.youtube.com/channel/UCuvSqzfO_LV_QzHdmEj84SQ)
 and [CrowdControl](https://crowdcontrol.live) that lets Twitch viewers interact with the game to provide a fun challenge
