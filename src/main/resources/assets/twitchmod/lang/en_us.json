@@ -21,6 +21,7 @@
   "gui.twitchmod.blacklisted_commands": "Blacklisted commands: %s",
   "gui.twitchmod.blank_message_placeholder1": "%s says hello!",
   "gui.twitchmod.blank_message_placeholder2": "%s was here",
+  "gui.twitchmod.chat.bits_required": "It costs %s bits or more to run a command.",
   "gui.twitchmod.chat.command_chosen": "Command Chosen: %s",
   "gui.twitchmod.chat.connected_success_discord": "Connected to Discord! Use /ttv status to see details.",
   "gui.twitchmod.chat.connected_success_twitch": "Connected to Twitch! Use /ttv status to see details.",

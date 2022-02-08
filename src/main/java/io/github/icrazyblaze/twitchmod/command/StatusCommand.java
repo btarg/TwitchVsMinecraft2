@@ -52,6 +52,11 @@ public class StatusCommand implements Command<CommandSourceStack> {
         context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.command_seconds", TimerSystem.chatSecondsTrigger).withStyle(ChatFormatting.DARK_PURPLE), false);
         context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.command_prefix", BotConfig.prefix).withStyle(ChatFormatting.DARK_PURPLE), false);
 
+        if (BotConfig.requireBits) {
+            context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.chat.bits_required", BotConfig.minimumBitsAmount).withStyle(ChatFormatting.DARK_PURPLE), false);
+        }
+
+
         MutableComponent keyMessage = new TranslatableComponent("gui.twitchmod.chat.hint_login").withStyle(ChatFormatting.AQUA);
 
         context.getSource().sendSuccess(keyMessage, false);

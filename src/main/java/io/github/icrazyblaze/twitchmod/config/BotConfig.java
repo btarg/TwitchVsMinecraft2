@@ -16,5 +16,7 @@ public class BotConfig {
     public static boolean showChatMessages = false;
     public static boolean showCommandsInChat = false;
     public static String prefix = "!";
+    public static boolean requireBits = false;
+    public static int minimumBitsAmount = 10;
 
 }

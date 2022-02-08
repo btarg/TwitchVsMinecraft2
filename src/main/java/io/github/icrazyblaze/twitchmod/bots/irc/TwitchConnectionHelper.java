@@ -2,8 +2,8 @@ package io.github.icrazyblaze.twitchmod.bots.irc;
 
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.events4j.simple.SimpleEventHandler;
-import com.github.twitch4j.TwitchClient;
-import com.github.twitch4j.TwitchClientBuilder;
+import com.github.twitch4j.chat.TwitchChat;
+import com.github.twitch4j.chat.TwitchChatBuilder;
 import com.github.twitch4j.chat.enums.TMIConnectionState;
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.Main;
@@ -20,9 +20,9 @@ import net.minecraft.network.chat.TranslatableComponent;
 public class TwitchConnectionHelper {
 
     private static Thread botThread = null;
-    private static TwitchClient twitchClient = null;
+    private static TwitchChat twitchClient = null;
 
-    public static TwitchClient getBot() {
+    public static TwitchChat getBot() {
         return twitchClient;
     }
 
@@ -41,7 +41,7 @@ public class TwitchConnectionHelper {
             // Reconnect if already connected
             CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.chat.reconnecting").withStyle(ChatFormatting.DARK_PURPLE));
             try {
-                twitchClient.getChat().reconnect();
+                twitchClient.reconnect();
             } catch (Exception e) {
                 Main.logger.error(e);
                 return false;
@@ -56,16 +56,17 @@ public class TwitchConnectionHelper {
 
             // Twitch4J setup
             OAuth2Credential credential = new OAuth2Credential("twitch", BotConfig.TWITCH_KEY);
-            twitchClient = TwitchClientBuilder.builder()
-                    .withEnableChat(true).withChatAccount(credential)
+            twitchClient = TwitchChatBuilder.builder()
+                    .withChatAccount(credential)
                     .withDefaultEventHandler(SimpleEventHandler.class)
                     .build();
 
 
             botThread = new Thread(() -> {
 
-                twitchClient.getChat().joinChannel(BotConfig.CHANNEL_NAME);
-                twitchClient.getChat().connect();
+                TwitchBot bot = new TwitchBot(twitchClient.getEventManager().getEventHandler(SimpleEventHandler.class));
+                twitchClient.joinChannel(BotConfig.CHANNEL_NAME);
+                twitchClient.connect();
 
             });
 
@@ -82,7 +83,7 @@ public class TwitchConnectionHelper {
     public static boolean isConnected() {
 
         if (twitchClient != null) {
-            return twitchClient.getChat().getConnectionState().equals(TMIConnectionState.CONNECTED);
+            return twitchClient.getConnectionState().equals(TMIConnectionState.CONNECTED);
         } else {
             return false;
         }
@@ -91,8 +92,10 @@ public class TwitchConnectionHelper {
 
     public static void disconnectBot() {
 
-        twitchClient.getChat().disconnect();
+        twitchClient.disconnect();
         botThread.interrupt();
+
+        CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.chat.disconnected_success_twitch").withStyle(ChatFormatting.DARK_RED));
 
     }
 

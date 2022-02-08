@@ -15,7 +15,7 @@ for streamers.
 
 # Forge version
 
-The latest version of the mod is designed to work with [Forge](https://files.minecraftforge.net) for Minecraft 1.17.1
+The latest version of the mod is designed to work with [Forge](https://files.minecraftforge.net) for Minecraft 1.18.1
 and above.
 
 > This mod is **NOT** backwards compatible with any older Minecraft Forge versions.

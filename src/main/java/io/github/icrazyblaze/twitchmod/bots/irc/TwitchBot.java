@@ -2,9 +2,7 @@ package io.github.icrazyblaze.twitchmod.bots.irc;
 
 import com.github.philippheuer.events4j.simple.SimpleEventHandler;
 import com.github.twitch4j.chat.TwitchChat;
-import com.github.twitch4j.chat.events.channel.ChannelJoinEvent;
-import com.github.twitch4j.chat.events.channel.ChannelLeaveEvent;
-import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
+import com.github.twitch4j.chat.events.channel.*;
 import com.github.twitch4j.common.enums.CommandPermission;
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.Main;
@@ -22,6 +20,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 
 import java.awt.*;
 import java.util.Objects;
+import java.util.Optional;
 
 public class TwitchBot {
 
@@ -33,7 +32,16 @@ public class TwitchBot {
     public TwitchBot(SimpleEventHandler eventHandler) {
         eventHandler.onEvent(ChannelMessageEvent.class, this::onChannelMessage);
         eventHandler.onEvent(ChannelJoinEvent.class, this::onConnect);
-        eventHandler.onEvent(ChannelLeaveEvent.class, this::onDisconnect);
+        eventHandler.onEvent(CheerEvent.class, this::onCheer);
+    }
+
+    public void onCheer(CheerEvent event) {
+
+        // Come back when you're a little, hmmmmm, richer.
+        if (event.getBits() < BotConfig.minimumBitsAmount && BotConfig.requireBits) {
+            return;
+        }
+        handleMessage(event);
     }
 
     /**
@@ -41,23 +49,52 @@ public class TwitchBot {
      */
     public void onChannelMessage(ChannelMessageEvent event) {
 
+        // Handle cheer messages in the onCheer method
+        if (BotConfig.requireBits) {
+            return;
+        }
+        handleMessage(event);
+    }
+
+    public void handleMessage(Object any_event) {
+
+        IRCMessageEvent event;
+
+        if (any_event instanceof ChannelMessageEvent event1) {
+            event = event1.getMessageEvent();
+        } else if (any_event instanceof IRCMessageEvent) {
+            event = (IRCMessageEvent) any_event;
+        } else {
+            return;
+        }
+
         BlacklistSystem.loadBlacklistFile();
 
-        String message = event.getMessage();
+        // Convert optional into string
+        Optional<String> messageOptional = event.getMessage();
+        if (messageOptional.isEmpty())
+            return;
+        String message = messageOptional.get();
+
+        // Get sender and chat
         String sender = Objects.requireNonNull(event.getUser()).getName();
         TwitchChat chat = event.getTwitchChat();
+
+        // Debug twitch chat error messages
+        chat.getEventManager().onEvent(ChannelNoticeEvent.class, System.out::println);
 
         ChatFormatting format = ChatFormatting.WHITE;
 
         MutableComponent showText;
         String role = null;
 
+
         if (BotConfig.showChatMessages) {
 
             ChatPicker.forceCommands = false;
 
             // Get hex colour, convert to RGB, then get nearest Minecraft colour code
-            Color userColor = Color.decode(event.getMessageEvent().getBadges().get("color"));
+            Color userColor = Color.decode(event.getTagValue("color").orElse("#FFFFFF"));
 
             try {
                 format = CalculateMinecraftColor.findNearestMinecraftColor(userColor);
@@ -65,13 +102,15 @@ public class TwitchBot {
                 Main.logger.info("No valid user colour");
             }
 
-            if (event.getMessageEvent().getClientPermissions().contains(CommandPermission.BROADCASTER)) {
+            // Set default as "chatter" instead of blank
+            role = "Chatter";
+            if (event.getClientPermissions().contains(CommandPermission.BROADCASTER)) {
                 ChatPicker.forceCommands = true; // Force commands to execute instantly for broadcaster testing
                 role = "Broadcaster";
-            } else if (event.getMessageEvent().getClientPermissions().contains(CommandPermission.SUBSCRIBER)) {
-                role = "Subscriber";
-            } else if (event.getMessageEvent().getClientPermissions().contains(CommandPermission.MODERATOR)) {
+            } else if (event.getClientPermissions().contains(CommandPermission.MODERATOR)) {
                 role = "Moderator";
+            } else if (event.getClientPermissions().contains(CommandPermission.SUBSCRIBER)) {
+                role = "Subscriber";
             }
 
 
@@ -79,9 +118,7 @@ public class TwitchBot {
 
                 showText = new TranslatableComponent("gui.twitchmod.chat.prefix_twitch", new TextComponent("Twitch").withStyle(ChatFormatting.DARK_PURPLE), new TextComponent(sender).withStyle(format), message).withStyle(ChatFormatting.WHITE);
 
-                if (role != null) {
-                    showText.setStyle(showText.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(format + role))));
-                }
+                showText.setStyle(showText.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(format + role))));
 
                 CommandHandlers.broadcastMessage(showText);
 
@@ -91,11 +128,11 @@ public class TwitchBot {
 
         if (message.equalsIgnoreCase(BotConfig.prefix + "help") || message.equalsIgnoreCase(BotConfig.prefix + "commands")) {
 
-            event.reply(chat, I18n.get("gui.twitchmod.commands_link"));
+            chat.sendMessage(BotConfig.CHANNEL_NAME, I18n.get("gui.twitchmod.commands_link"));
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "modlink")) {
 
-            event.reply(chat, I18n.get("gui.twitchmod.mod_link"));
+            chat.sendMessage(BotConfig.CHANNEL_NAME, I18n.get("gui.twitchmod.mod_link"));
 
         } else if (message.startsWith(BotConfig.prefix + "blacklist")) {
 
@@ -111,11 +148,11 @@ public class TwitchBot {
                     BlacklistSystem.removeFromBlacklist(cmd.substring(7));
                 } else if (cmd.equalsIgnoreCase("clear")) {
                     BlacklistSystem.clearBlacklist();
-                    event.reply(chat, I18n.get("gui.twitchmod.blacklist_cleared"));
+                    chat.sendMessage(BotConfig.CHANNEL_NAME, I18n.get("gui.twitchmod.blacklist_cleared"));
                 }
 
             }
-            event.reply(chat, I18n.get("gui.twitchmod.blacklisted_commands", BlacklistSystem.getBlacklist().toString()));
+            chat.sendMessage(BotConfig.CHANNEL_NAME, I18n.get("gui.twitchmod.blacklisted_commands", BlacklistSystem.getBlacklist().toString()));
 
         } else if (message.equalsIgnoreCase(BotConfig.prefix + "disconnect")) {
             TwitchConnectionHelper.disconnectBot();
@@ -132,10 +169,6 @@ public class TwitchBot {
 
     }
 
-    public void onDisconnect(ChannelLeaveEvent event) {
-        CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.chat.disconnected_success_twitch").withStyle(ChatFormatting.DARK_RED));
-        Main.logger.info("Twitch Client left channel: " + event.getChannel().getName());
-    }
 
     public void onConnect(ChannelJoinEvent event) {
         CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.chat.connected_success_twitch").withStyle(ChatFormatting.DARK_GREEN));

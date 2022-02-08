@@ -33,7 +33,7 @@ public class BotCommon {
 
         if (TwitchConnectionHelper.isConnected()) {
             try {
-                TwitchConnectionHelper.getBot().getChat().sendMessage(BotConfig.CHANNEL_NAME, message);
+                TwitchConnectionHelper.getBot().sendMessage(BotConfig.CHANNEL_NAME, message);
             } catch (Exception e) {
                 Main.logger.error("Could not send message to Twitch: " + e);
             }
