@@ -57,7 +57,7 @@ safe.
 You can also connect a Discord Bot and use your Discord server instead of Twitch chat. Visit
 the [Discord Developer Dashboard](https://discord.com/developers/applications), and create a bot.
 
-> This key is stored in a file located in the Minecraft root directory under `mod_data`.
+> This key is stored in a file located in the Minecraft root directory under `config`.
 
 # Editing the configuration file
 
