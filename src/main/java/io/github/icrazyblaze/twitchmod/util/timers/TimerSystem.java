@@ -18,14 +18,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class TimerSystem {
 
     public static boolean enableTimers = true;
-    public static ForgeConfigSpec.IntValue chatSecondsTrigger = ConfigManager.CHOOSE_COMMAND_DELAY;
+    public static ForgeConfigSpec.ConfigValue<Integer> chatSecondsTrigger = ConfigManager.CHOOSE_COMMAND_DELAY;
     public static int chatSeconds = chatSecondsTrigger.get();
     public static int deathTimerSeconds = 60;
     public static boolean deathTimerEnabled = false;
     public static int frenzyTimerSeconds = 10;
     public static int peaceTimerSeconds = 30;
     public static boolean peaceTimerEnabled = false;
-    public static ForgeConfigSpec.IntValue messageSecondsTrigger = ConfigManager.CHOOSE_MESSAGE_DELAY;
+    public static ForgeConfigSpec.ConfigValue<Integer> messageSecondsTrigger = ConfigManager.CHOOSE_MESSAGE_DELAY;
     public static int messageSeconds = messageSecondsTrigger.get();
     static int ticks = 0;
 

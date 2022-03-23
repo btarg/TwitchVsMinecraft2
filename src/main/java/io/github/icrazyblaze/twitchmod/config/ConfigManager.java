@@ -14,18 +14,18 @@ public class ConfigManager {
     public static ForgeConfigSpec COMMON_CONFIG;
     public static ForgeConfigSpec.ConfigValue<String> TWITCH_CHANNEL_NAME;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> DISCORD_CHANNELS;
-    public static ForgeConfigSpec.BooleanValue SHOW_COMMANDS_IN_CHAT;
-    public static ForgeConfigSpec.IntValue CHOOSE_COMMAND_DELAY;
-    public static ForgeConfigSpec.IntValue CHOOSE_MESSAGE_DELAY;
+    public static ForgeConfigSpec.ConfigValue<Boolean> SHOW_COMMANDS_IN_CHAT;
+    public static ForgeConfigSpec.ConfigValue<Integer> CHOOSE_COMMAND_DELAY;
+    public static ForgeConfigSpec.ConfigValue<Integer> CHOOSE_MESSAGE_DELAY;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> PLAYERS_AFFECTED;
     public static ForgeConfigSpec.ConfigValue<String> COMMAND_PREFIX;
-    public static ForgeConfigSpec.BooleanValue ENABLE_COOLDOWN;
-    public static ForgeConfigSpec.BooleanValue ENABLE_FRENZY;
-    public static ForgeConfigSpec.BooleanValue REQUIRE_BITS;
-    public static ForgeConfigSpec.IntValue MINIMUM_BITS;
-    public static ForgeConfigSpec.IntValue VOTES_NEEDED;
-    public static ForgeConfigSpec.IntValue BOOK_LENGTH;
-    public static ForgeConfigSpec.BooleanValue SHOW_CHAT_MESSAGES;
+    public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_COOLDOWN;
+    public static ForgeConfigSpec.ConfigValue<Boolean> ENABLE_FRENZY;
+    public static ForgeConfigSpec.ConfigValue<Boolean> REQUIRE_BITS;
+    public static ForgeConfigSpec.ConfigValue<Integer> MINIMUM_BITS;
+    public static ForgeConfigSpec.ConfigValue<Integer> VOTES_NEEDED;
+    public static ForgeConfigSpec.ConfigValue<Integer> BOOK_LENGTH;
+    public static ForgeConfigSpec.ConfigValue<Boolean> SHOW_CHAT_MESSAGES;
 
     static {
 
