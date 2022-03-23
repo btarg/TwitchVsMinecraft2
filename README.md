@@ -50,7 +50,7 @@ You should keep this key private and safe. **DO NOT** share this key with others
 Follow the instructions on the TwitchApps page for how to revoke access to the Twitch API if you want to stay extra
 safe.
 
-> This key is stored in a file located in the Minecraft root directory under `mod_data`.
+> This key is stored in a file located in the Minecraft root directory under `config`.
 
 # Discord Bot Token
 
