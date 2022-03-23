@@ -6,7 +6,7 @@ import net.minecraftforge.fml.ModList;
 import java.util.Optional;
 
 public class ModProxy {
-    
+
     public static Optional<ChanceCubesIntegration> chanceCubesProxy;
 
     public static void initModProxies() {

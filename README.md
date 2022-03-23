@@ -1,4 +1,4 @@
-# Twitch Vs Minecraft Reloaded (Forge 1.18.X)
+# Twitch Vs Minecraft Reloaded (Forge 1.18.2)
 
 [![Build status](https://github.com/iCrazyBlaze/TwitchVsMinecraft2/actions/workflows/build.yml/badge.svg)](https://github.com/iCrazyBlaze/TwitchVsMinecraft2/actions)
 [![CurseForge](http://cf.way2muchnoise.eu/full_318840_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/twitch-vs-minecraft)
@@ -15,8 +15,7 @@ for streamers.
 
 # Forge version
 
-The latest version of the mod is designed to work with [Forge](https://files.minecraftforge.net) for Minecraft 1.18.1
-and above.
+The latest version of the mod is designed to work with [Forge](https://files.minecraftforge.net) for Minecraft 1.18.2
 
 > This mod is **NOT** backwards compatible with any older Minecraft Forge versions.
 > Only versions of the mod for the latest versions of Minecraft Forge will be supported going forwards.
@@ -76,32 +75,40 @@ Your config file will be located in:
 and will look like this by default when opened in a text editor:
 
 ```toml
-
 [general]
 	#Name of Twitch channel
-	twitch_channel_name = "channel"
-	#How many messages should be included when chat writes a book
-	book_length = 10
-	#The players' Minecraft usernames that will be effected
-	minecraft_username = ["Dev", "Test"]
-	#Allow Frenzy Mode
-	enable_frenzy = true
-	#Prevent the same command from being executed twice in a row
-	enable_cooldown = false
-	#How many votes are needed to activate certain commands
-	votes_needed = 3
-	#Should chat messages from Twitch or Discord be show in-game?
-	show_chat_messages = false
-	#The prefix for commands in Twitch or Discord
-	command_prefix = "!"
-	#How many seconds until the next command is chosen
-	choose_command_delay = 20
-	#How many seconds until a random viewer-written message is shown on screen
-	choose_message_delay = 240
+	twitch_channel_name = "btarg1"
 	#Names of Discord channels to read commands from ['separated', 'like', 'this']
 	discord_channels = ["general"]
+	#Should chat messages from Twitch or Discord be show in-game?
+	show_chat_messages = true
 	#Should chosen commands be shown if chat messages are enabled?
 	show_commands_in_chat = true
+	#How many seconds until the next command is chosen
+	#Range: 3 ~ 60
+	choose_command_delay = 10
+	#How many seconds until a random viewer-written message is shown on screen
+	#Range: 10 ~ 480
+	choose_message_delay = 100
+	#The players' Minecraft usernames that will be effected
+	minecraft_username = ["Dev", "Test"]
+	#The prefix for commands in Twitch or Discord
+	command_prefix = "!"
+	#Prevent the same command from being executed twice in a row
+	enable_cooldown = true
+	#Allow Frenzy Mode
+	enable_frenzy = true
+	#Require a certain amount of bits for any command
+	require_bits = false
+	#How many bits are needed to activate commands if they are required
+	#Range: > 1
+	minimum_bits = 10
+	#How many votes are needed to activate special commands (e.g. Frenzy Mode)
+	#Range: > 2
+	votes_needed = 3
+	#How many messages should be included when chat writes a book
+	#Range: 5 ~ 99
+	book_length = 10
 ```
 
 # Testing

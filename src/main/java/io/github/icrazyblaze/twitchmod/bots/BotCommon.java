@@ -4,6 +4,7 @@ import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.bots.discord.DiscordConnectionHelper;
 import io.github.icrazyblaze.twitchmod.bots.irc.TwitchConnectionHelper;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
+import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
 
@@ -17,7 +18,7 @@ public class BotCommon {
 
             JDA jda = DiscordConnectionHelper.getListener().jda;
 
-            for (String ch : BotConfig.DISCORD_CHANNELS) {
+            for (String ch : ConfigManager.DISCORD_CHANNELS.get()) {
                 List<TextChannel> channels = jda.getTextChannelsByName(ch, true);
                 for (TextChannel chan : channels) {
                     if (chan.canTalk()) {
@@ -33,7 +34,7 @@ public class BotCommon {
 
         if (TwitchConnectionHelper.isConnected()) {
             try {
-                TwitchConnectionHelper.getBot().sendMessage(BotConfig.CHANNEL_NAME, message);
+                TwitchConnectionHelper.getBot().sendMessage(BotConfig.getTwitchChannelName(), message);
             } catch (Exception e) {
                 Main.logger.error("Could not send message to Twitch: " + e);
             }

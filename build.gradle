@@ -70,20 +70,27 @@ dependencies {
 
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    library(group: 'com.github.twitch4j', name: 'twitch4j', version: '1.8.0') {
-        exclude group: "commons-lang" // fuck this library, I fucking hate this library, fuck you
+    // Twitch4J chat module only
+    library(group: 'com.github.twitch4j', name: 'twitch4j-chat', version: '1.9.0') {
+        exclude group: "commons-lang"
+        exclude group: "org.slf4j"
+        exclude group: "io.github.openfeign"
     }
 
     // JDA without audio
-    library(group: "net.dv8tion", name: "JDA", version: "5.0.0-alpha.5") {
+    library(group: "net.dv8tion", name: "JDA", version: "5.0.0-alpha.9") {
         transitive = true
         exclude module: "opus-java"
-        exclude group: "org.slf4j", module: "slf4j-api"
+        exclude group: "org.slf4j"
     }
 
     library(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10')
 
     implementation('cpw.mods:securejarhandler') { version { strictly '0.9.45' } }
+
+    // Configured mod for config screen
+//    implementation('curse.maven:configured-457570:3640884')
+//    implementation('curse.maven:catalogue-459701:3559402')
 
 }
 

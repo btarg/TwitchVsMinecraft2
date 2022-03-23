@@ -8,7 +8,7 @@ import com.github.twitch4j.chat.enums.TMIConnectionState;
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
-import io.github.icrazyblaze.twitchmod.config.ConfigManager;
+import io.github.icrazyblaze.twitchmod.util.files.SecretFileHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
 
@@ -29,7 +29,7 @@ public class TwitchConnectionHelper {
     public static boolean login() {
 
         // Update settings before connecting
-        ConfigManager.updateFromConfig();
+        SecretFileHelper.setValuesFromFiles();
 
         if (BotConfig.TWITCH_KEY.isEmpty()) {
             return false;
@@ -49,7 +49,7 @@ public class TwitchConnectionHelper {
             return true;
 
         } else {
-            CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.chat.connecting_to", BotConfig.CHANNEL_NAME).withStyle(ChatFormatting.DARK_PURPLE));
+            CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.chat.connecting_to", BotConfig.getTwitchChannelName()).withStyle(ChatFormatting.DARK_PURPLE));
         }
 
         try {
@@ -65,7 +65,7 @@ public class TwitchConnectionHelper {
             botThread = new Thread(() -> {
 
                 TwitchBot bot = new TwitchBot(twitchClient.getEventManager().getEventHandler(SimpleEventHandler.class));
-                twitchClient.joinChannel(BotConfig.CHANNEL_NAME);
+                twitchClient.joinChannel(BotConfig.getTwitchChannelName());
                 twitchClient.connect();
 
             });

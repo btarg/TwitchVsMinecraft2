@@ -68,8 +68,8 @@ public class BlacklistSystem {
             for (String str : blacklist) {
 
                 // Remove prefixes when writing to the file for consistency
-                if (str.startsWith(BotConfig.prefix)) {
-                    str = str.substring(BotConfig.prefix.length());
+                if (str.startsWith(BotConfig.getCommandPrefix())) {
+                    str = str.substring(BotConfig.getCommandPrefix().length());
                 }
 
                 writer.write(str + System.lineSeparator());
@@ -77,7 +77,7 @@ public class BlacklistSystem {
             writer.close();
 
         } catch (IOException e) {
-            Main.logger.error(new TranslatableComponent("exception.twitchmod.blacklist_load_exception", e));
+            Main.logger.error(new TranslatableComponent("exception.twitchmod.blacklist_load_exception", e).getString());
         }
 
     }
@@ -97,15 +97,15 @@ public class BlacklistSystem {
 
             // Remove prefixes from the start of commands in the blacklist
             for (int i = 0; i < blacklist.size(); i++) {
-                if (blacklist.get(i).startsWith(BotConfig.prefix)) {
+                if (blacklist.get(i).startsWith(BotConfig.getCommandPrefix())) {
 
-                    blacklist.set(i, blacklist.get(i).substring(BotConfig.prefix.length()));
+                    blacklist.set(i, blacklist.get(i).substring(BotConfig.getCommandPrefix().length()));
 
                 }
             }
 
         } catch (IOException e) {
-            Main.logger.error(new TranslatableComponent("exception.twitchmod.blacklist_load_exception", e));
+            Main.logger.error(new TranslatableComponent("exception.twitchmod.blacklist_load_exception", e).getString());
         }
 
         // Fix for blacklist being null - set to empty instead

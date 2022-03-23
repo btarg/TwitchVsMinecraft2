@@ -4,6 +4,7 @@ import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.bots.BotCommon;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
+import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
 import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import net.minecraft.ChatFormatting;
@@ -24,13 +25,11 @@ public class ChatPicker {
 
     public static ArrayList<String> chatBuffer = new ArrayList<>();
     public static ArrayList<String> chatSenderBuffer = new ArrayList<>();
-    public static boolean cooldownEnabled = false;
     public static boolean forceCommands = false;
     public static boolean instantCommands = false;
     public static boolean enabled = true;
     public static boolean logMessages = false;
     public static ArrayList<String> tempChatLog = new ArrayList<>();
-    public static int chatLogLength = 10;
     private static String lastCommand = null;
 
     /**
@@ -46,8 +45,8 @@ public class ChatPicker {
             return;
 
         // Remove the prefix
-        if (message.startsWith(BotConfig.prefix)) {
-            message = message.substring(BotConfig.prefix.length());
+        if (message.startsWith(BotConfig.getCommandPrefix())) {
+            message = message.substring(BotConfig.getCommandPrefix().length());
 
             if (!ChatCommands.commandMap.containsKey(message))
                 return;
@@ -59,7 +58,7 @@ public class ChatPicker {
             tempChatLog.add(timeStamp + sender + ": " + message);
 
             // Add messages to book when there are enough
-            if (tempChatLog.size() == chatLogLength) {
+            if (tempChatLog.size() == ConfigManager.BOOK_LENGTH.get()) {
 
                 // Add the chat messages to the book then stop recording chat
                 CommandHandlers.createBook(tempChatLog);
@@ -84,7 +83,7 @@ public class ChatPicker {
             Main.logger.info(new TranslatableComponent("exception.twitchmod.command_blacklisted", message));
             return;
         }
-        if (lastCommand != null && cooldownEnabled) {
+        if (lastCommand != null && ConfigManager.ENABLE_COOLDOWN.get()) {
 
             if (!message.equalsIgnoreCase(lastCommand)) {
 
@@ -118,12 +117,12 @@ public class ChatPicker {
         // Get all of the players from a list and set the player's username before executing.
         // This means we can have multiple players affected!
 
-        if (PlayerHelper.defaultServer.getPlayerList().getPlayers().size() < 2 || PlayerHelper.affectedPlayers.size() > 2) {
+        if (PlayerHelper.defaultServer.getPlayerList().getPlayers().size() < 2 || PlayerHelper.affectedPlayers.get().size() > 2) {
             return doCommand(message, sender);
         }
 
         try {
-            for (String playername : PlayerHelper.affectedPlayers) {
+            for (String playername : PlayerHelper.affectedPlayers.get()) {
 
                 PlayerHelper.setUsername(playername);
 
@@ -182,11 +181,11 @@ public class ChatPicker {
                 // Invoke command from command map
                 ChatCommands.commandMap.get(commandString).run();
 
-                if (BotConfig.showCommandsInChat) {
-                    if (BotConfig.showChatMessages) {
-                        CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.chat.command_chosen", BotConfig.prefix + message).withStyle(ChatFormatting.AQUA));
+                if (ConfigManager.SHOW_COMMANDS_IN_CHAT.get()) {
+                    if (ConfigManager.SHOW_CHAT_MESSAGES.get()) {
+                        CommandHandlers.broadcastMessage(new TranslatableComponent("gui.twitchmod.chat.command_chosen", BotConfig.getCommandPrefix() + message).withStyle(ChatFormatting.AQUA));
                     }
-                    BotCommon.sendBotMessage(I18n.get("gui.twitchmod.chat.command_chosen", BotConfig.prefix + message));
+                    BotCommon.sendBotMessage(I18n.get("gui.twitchmod.chat.command_chosen", BotConfig.getCommandPrefix() + message));
                 }
 
                 // Below will not be executed if the command does not run
@@ -242,7 +241,7 @@ public class ChatPicker {
                 // Choose another if the list is big enough
                 pickRandomChat();
             } else {
-                Main.logger.error(new TranslatableComponent("exception.twitchmod.command_failed"));
+                Main.logger.error(new TranslatableComponent("exception.twitchmod.command_failed").getString());
             }
         }
 

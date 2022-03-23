@@ -1,6 +1,7 @@
 package io.github.icrazyblaze.twitchmod.chat;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
+import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.ArrayList;
@@ -9,9 +10,11 @@ public class FrenzyVote {
 
     public static ArrayList<String> votedList = new ArrayList<>();
     public static int votes = 0;
-    public static int votesNeeded = 3;
+    public static int votesNeeded;
 
     public static void vote(String username) {
+
+        votesNeeded = ConfigManager.VOTES_NEEDED.get();
 
         if (!votedList.contains(username)) {
 

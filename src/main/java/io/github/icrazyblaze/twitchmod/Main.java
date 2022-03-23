@@ -6,16 +6,12 @@ import io.github.icrazyblaze.twitchmod.network.PacketHandler;
 import io.github.icrazyblaze.twitchmod.util.ForgeEventSubscriber;
 import io.github.icrazyblaze.twitchmod.util.timers.TimerSystem;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import static io.github.icrazyblaze.twitchmod.config.ConfigManager.COMMON_CONFIG;
 
 /**
  * @author RonaRage, AKA Btarg (https://github.com/iCrazyBlaze)
@@ -28,7 +24,7 @@ public final class Main {
 
     public Main() {
 
-        // Instantiate and subscribe our config instance
+        // Register config file
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigManager.COMMON_CONFIG);
 
         // Register event subscribers
@@ -46,13 +42,5 @@ public final class Main {
         ModProxy.initModProxies();
 
     }
-
-    @SubscribeEvent
-    public static void configLoaded(ModConfigEvent event) {
-        if (event.getConfig().getSpec() == COMMON_CONFIG) {
-            ConfigManager.updateFromConfig();
-        }
-    }
-
 
 }

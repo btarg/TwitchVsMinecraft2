@@ -2,7 +2,9 @@ package io.github.icrazyblaze.twitchmod.util.timers;
 
 import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
+import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.util.PlayerHelper;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -16,16 +18,17 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class TimerSystem {
 
     public static boolean enableTimers = true;
-    public static int chatSecondsTrigger = 30;
-    public static int chatSeconds = chatSecondsTrigger;
+    public static ForgeConfigSpec.IntValue chatSecondsTrigger = ConfigManager.CHOOSE_COMMAND_DELAY;
+    public static int chatSeconds = chatSecondsTrigger.get();
     public static int deathTimerSeconds = 60;
     public static boolean deathTimerEnabled = false;
     public static int frenzyTimerSeconds = 10;
     public static int peaceTimerSeconds = 30;
     public static boolean peaceTimerEnabled = false;
-    public static int messageSecondsTrigger = 240;
-    public static int messageSeconds = messageSecondsTrigger;
+    public static ForgeConfigSpec.IntValue messageSecondsTrigger = ConfigManager.CHOOSE_MESSAGE_DELAY;
+    public static int messageSeconds = messageSecondsTrigger.get();
     static int ticks = 0;
+
 
     @SubscribeEvent
     public static void tickTimer(TickEvent.ServerTickEvent event) {
@@ -51,7 +54,7 @@ public class TimerSystem {
             ChatPicker.pickRandomChat();
 
             // Reset timer
-            chatSeconds = chatSecondsTrigger;
+            chatSeconds = chatSecondsTrigger.get();
 
         }
 
@@ -86,9 +89,9 @@ public class TimerSystem {
         }
 
         // Choosing random messages to display in chat
-        if (messageSeconds < messageSecondsTrigger) {
+        if (messageSeconds < messageSecondsTrigger.get()) {
             messageSeconds++;
-        } else if (messageSeconds == messageSecondsTrigger) {
+        } else if (messageSeconds == messageSecondsTrigger.get()) {
 
             CommandHandlers.chooseRandomMessage();
             messageSeconds = 0;

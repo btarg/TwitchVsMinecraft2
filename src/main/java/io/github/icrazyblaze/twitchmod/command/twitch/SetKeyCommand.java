@@ -6,7 +6,6 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.util.files.SecretFileHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
@@ -43,7 +42,7 @@ public class SetKeyCommand implements Command<CommandSourceStack> {
         }
 
         // Update config
-        ConfigManager.updateFromConfig();
+        SecretFileHelper.setValuesFromFiles();
 
         context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.chat.ready_twitch").withStyle(ChatFormatting.GOLD), false);
         return SINGLE_SUCCESS;

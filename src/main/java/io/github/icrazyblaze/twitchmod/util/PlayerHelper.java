@@ -1,16 +1,18 @@
 package io.github.icrazyblaze.twitchmod.util;
 
 
+import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
 
 public class PlayerHelper {
 
     public static MinecraftServer defaultServer = null;
-    public static List<? extends String> affectedPlayers;
+    public static ForgeConfigSpec.ConfigValue<List<? extends String>> affectedPlayers = ConfigManager.PLAYERS_AFFECTED;
     private static String username = null;
 
     /**
@@ -20,6 +22,7 @@ public class PlayerHelper {
      */
     public static ServerPlayer player() {
 
+        // Search player list
         PlayerList playerList = defaultServer.getPlayerList();
         ServerPlayer player = playerList.getPlayerByName(getUsername());
 
@@ -33,6 +36,7 @@ public class PlayerHelper {
 
     private static ServerPlayer getDefaultPlayer() {
 
+        // Get the first player in the list
         PlayerList playerList = defaultServer.getPlayerList();
 
         if (playerList.getPlayerCount() == 0) {

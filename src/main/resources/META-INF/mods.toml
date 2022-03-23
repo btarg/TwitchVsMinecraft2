@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[39,)"
+loaderVersion = "[40,)"
 license = "GNU LGPLv3"
 issueTrackerURL = "http://github.com/iCrazyBlaze/TwitchVsMinecraft2/issues"
 
@@ -18,7 +18,7 @@ itemIcon = "minecraft:anvil"
 [[dependencies.twitchmod]]
 modId = "forge"
 mandatory = true
-versionRange = "[39,)"
+versionRange = "[40,)"
 ordering = "NONE"
 side = "BOTH"
 

@@ -4,6 +4,7 @@ import io.github.icrazyblaze.twitchmod.CommandHandlers;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.chat.ChatPickerHelper;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
+import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.util.CalculateMinecraftColor;
 import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import net.dv8tion.jda.api.JDA;
@@ -72,7 +73,7 @@ public class DiscordBot extends ListenerAdapter {
         String sender = event.getMember().getEffectiveName();
         String channel = event.getChannel().getName();
 
-        if (!BotConfig.DISCORD_CHANNELS.contains(channel)) {
+        if (!ConfigManager.DISCORD_CHANNELS.get().contains(channel)) {
             return;
         }
 
@@ -84,7 +85,7 @@ public class DiscordBot extends ListenerAdapter {
 
         boolean isAdmin = event.getMember().hasPermission(Permission.ADMINISTRATOR);
 
-        if ((!message.startsWith(BotConfig.prefix) || BotConfig.showCommandsInChat) && BotConfig.showChatMessages) {
+        if ((!message.startsWith(BotConfig.getCommandPrefix()) || ConfigManager.SHOW_COMMANDS_IN_CHAT.get()) && ConfigManager.SHOW_CHAT_MESSAGES.get()) {
 
             ChatFormatting format = CalculateMinecraftColor.findNearestMinecraftColor(userColor);
             List<String> roleNames = new ArrayList<>();
@@ -103,17 +104,17 @@ public class DiscordBot extends ListenerAdapter {
 
         }
 
-        if (message.equalsIgnoreCase(BotConfig.prefix + "help") || message.equalsIgnoreCase(BotConfig.prefix + "commands")) {
+        if (message.equalsIgnoreCase(BotConfig.getCommandPrefix() + "help") || message.equalsIgnoreCase(BotConfig.getCommandPrefix() + "commands")) {
 
             event.getChannel().sendMessage(I18n.get("gui.twitchmod.commands_link")).queue();
 
-        } else if (message.equalsIgnoreCase(BotConfig.prefix + "modlink")) {
+        } else if (message.equalsIgnoreCase(BotConfig.getCommandPrefix() + "modlink")) {
 
             event.getChannel().sendMessage(I18n.get("gui.twitchmod.mod_link")).queue();
 
-        } else if (message.startsWith(BotConfig.prefix + "blacklist")) {
+        } else if (message.startsWith(BotConfig.getCommandPrefix() + "blacklist")) {
 
-            message = message.substring(BotConfig.prefix.length());
+            message = message.substring(BotConfig.getCommandPrefix().length());
 
             if (isAdmin && message.contains(" ")) {
 
@@ -130,10 +131,10 @@ public class DiscordBot extends ListenerAdapter {
             }
             event.getChannel().sendMessage(I18n.get("gui.twitchmod.blacklisted_commands", BlacklistSystem.getBlacklist().toString())).queue();
 
-        } else if (message.equalsIgnoreCase(BotConfig.prefix + "disconnect") && isAdmin) {
+        } else if (message.equalsIgnoreCase(BotConfig.getCommandPrefix() + "disconnect") && isAdmin) {
             jda.shutdown();
 
-        } else if (message.startsWith(BotConfig.prefix) || ChatPicker.logMessages) {
+        } else if (message.startsWith(BotConfig.getCommandPrefix()) || ChatPicker.logMessages) {
 
             ChatPickerHelper.checkChatThreaded(message, sender);
 

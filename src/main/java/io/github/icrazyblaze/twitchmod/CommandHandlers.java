@@ -2,6 +2,7 @@ package io.github.icrazyblaze.twitchmod;
 
 import io.github.icrazyblaze.twitchmod.chat.ChatCommands;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
+import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.network.PacketHandler;
 import io.github.icrazyblaze.twitchmod.network.packet.MessageboxPacket;
 import io.github.icrazyblaze.twitchmod.util.EffectInstanceHelper;
@@ -45,6 +46,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.InfestedBlock;
+import net.minecraft.world.level.block.OreBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
@@ -53,7 +55,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -80,7 +81,6 @@ public class CommandHandlers {
     public static boolean burnVillagersOnInteract = false;
     public static boolean destroyWorkbenchesOnInteract = false;
     public static ArrayList<String> messagesList = new ArrayList<>();
-    public static boolean enableFrenzyMode = true;
     private static ResourceLocation[] lootArray = new ResourceLocation[0];
     private static boolean previousDeathTimerState = false;
 
@@ -219,7 +219,7 @@ public class CommandHandlers {
 
     public static void frenzyTimer(int seconds) {
 
-        if (ChatPicker.instantCommands || !enableFrenzyMode) {
+        if (ChatPicker.instantCommands || !ConfigManager.ENABLE_FRENZY.get()) {
             return;
         }
 
@@ -948,7 +948,7 @@ public class CommandHandlers {
 
         Block thisBlock = event.getState().getBlock();
 
-        if (Tags.Blocks.ORES.contains(thisBlock) && oresExplode && !event.getWorld().isClientSide()) {
+        if (thisBlock instanceof OreBlock && oresExplode && !event.getWorld().isClientSide()) {
 
             double dx = event.getPos().getX();
             double dy = event.getPos().getY();

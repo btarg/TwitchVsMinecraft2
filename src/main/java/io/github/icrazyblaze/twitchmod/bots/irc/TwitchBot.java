@@ -9,6 +9,7 @@ import io.github.icrazyblaze.twitchmod.Main;
 import io.github.icrazyblaze.twitchmod.chat.ChatPicker;
 import io.github.icrazyblaze.twitchmod.chat.ChatPickerHelper;
 import io.github.icrazyblaze.twitchmod.config.BotConfig;
+import io.github.icrazyblaze.twitchmod.config.ConfigManager;
 import io.github.icrazyblaze.twitchmod.util.CalculateMinecraftColor;
 import io.github.icrazyblaze.twitchmod.util.files.BlacklistSystem;
 import net.minecraft.ChatFormatting;
@@ -38,7 +39,7 @@ public class TwitchBot {
     public void onCheer(CheerEvent event) {
 
         // Come back when you're a little, hmmmmm, richer.
-        if (event.getBits() < BotConfig.minimumBitsAmount && BotConfig.requireBits) {
+        if (event.getBits() < ConfigManager.MINIMUM_BITS.get() && ConfigManager.REQUIRE_BITS.get()) {
             return;
         }
         handleMessage(event);
@@ -50,7 +51,7 @@ public class TwitchBot {
     public void onChannelMessage(ChannelMessageEvent event) {
 
         // Handle cheer messages in the onCheer method
-        if (BotConfig.requireBits) {
+        if (ConfigManager.REQUIRE_BITS.get()) {
             return;
         }
         handleMessage(event);
@@ -89,7 +90,7 @@ public class TwitchBot {
         String role = null;
 
 
-        if (BotConfig.showChatMessages) {
+        if (ConfigManager.SHOW_CHAT_MESSAGES.get()) {
 
             ChatPicker.forceCommands = false;
 
@@ -114,7 +115,7 @@ public class TwitchBot {
             }
 
 
-            if (!message.startsWith(BotConfig.prefix) || BotConfig.showCommandsInChat) {
+            if (!message.startsWith(BotConfig.getCommandPrefix()) || ConfigManager.SHOW_COMMANDS_IN_CHAT.get()) {
 
                 showText = new TranslatableComponent("gui.twitchmod.chat.prefix_twitch", new TextComponent("Twitch").withStyle(ChatFormatting.DARK_PURPLE), new TextComponent(sender).withStyle(format), message).withStyle(ChatFormatting.WHITE);
 
@@ -126,17 +127,17 @@ public class TwitchBot {
 
         }
 
-        if (message.equalsIgnoreCase(BotConfig.prefix + "help") || message.equalsIgnoreCase(BotConfig.prefix + "commands")) {
+        if (message.equalsIgnoreCase(BotConfig.getCommandPrefix() + "help") || message.equalsIgnoreCase(BotConfig.getCommandPrefix() + "commands")) {
 
-            chat.sendMessage(BotConfig.CHANNEL_NAME, I18n.get("gui.twitchmod.commands_link"));
+            chat.sendMessage(BotConfig.getTwitchChannelName(), I18n.get("gui.twitchmod.commands_link"));
 
-        } else if (message.equalsIgnoreCase(BotConfig.prefix + "modlink")) {
+        } else if (message.equalsIgnoreCase(BotConfig.getCommandPrefix() + "modlink")) {
 
-            chat.sendMessage(BotConfig.CHANNEL_NAME, I18n.get("gui.twitchmod.mod_link"));
+            chat.sendMessage(BotConfig.getTwitchChannelName(), I18n.get("gui.twitchmod.mod_link"));
 
-        } else if (message.startsWith(BotConfig.prefix + "blacklist")) {
+        } else if (message.startsWith(BotConfig.getCommandPrefix() + "blacklist")) {
 
-            message = message.substring(BotConfig.prefix.length());
+            message = message.substring(BotConfig.getCommandPrefix().length());
 
             if (Objects.equals(role, "Moderator") || Objects.equals(role, "Broadcaster") && message.contains(" ")) {
 
@@ -148,20 +149,20 @@ public class TwitchBot {
                     BlacklistSystem.removeFromBlacklist(cmd.substring(7));
                 } else if (cmd.equalsIgnoreCase("clear")) {
                     BlacklistSystem.clearBlacklist();
-                    chat.sendMessage(BotConfig.CHANNEL_NAME, I18n.get("gui.twitchmod.blacklist_cleared"));
+                    chat.sendMessage(BotConfig.getTwitchChannelName(), I18n.get("gui.twitchmod.blacklist_cleared"));
                 }
 
             }
-            chat.sendMessage(BotConfig.CHANNEL_NAME, I18n.get("gui.twitchmod.blacklisted_commands", BlacklistSystem.getBlacklist().toString()));
+            chat.sendMessage(BotConfig.getTwitchChannelName(), I18n.get("gui.twitchmod.blacklisted_commands", BlacklistSystem.getBlacklist().toString()));
 
-        } else if (message.equalsIgnoreCase(BotConfig.prefix + "disconnect")) {
+        } else if (message.equalsIgnoreCase(BotConfig.getCommandPrefix() + "disconnect")) {
             TwitchConnectionHelper.disconnectBot();
 
-        } else if (message.equalsIgnoreCase(BotConfig.prefix + "reconnect")) {
+        } else if (message.equalsIgnoreCase(BotConfig.getCommandPrefix() + "reconnect")) {
 
             TwitchConnectionHelper.login();
 
-        } else if (message.startsWith(BotConfig.prefix) || ChatPicker.logMessages) {
+        } else if (message.startsWith(BotConfig.getCommandPrefix()) || ChatPicker.logMessages) {
 
             ChatPickerHelper.checkChatThreaded(message, sender);
 

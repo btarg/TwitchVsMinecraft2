@@ -53,13 +53,13 @@ public class SecretFileHelper implements Serializable {
         try {
             BotConfig.TWITCH_KEY = getStringFromFile(path_twitch);
         } catch (Exception e) {
-            Main.logger.error(new TranslatableComponent("exception.twitchmod.login_not_found_twitch", e));
+            Main.logger.error(new TranslatableComponent("exception.twitchmod.login_not_found_twitch", e).getString());
         }
 
         try {
             BotConfig.DISCORD_TOKEN = getStringFromFile(path_discord);
         } catch (Exception e) {
-            Main.logger.error(new TranslatableComponent("exception.twitchmod.login_not_found_discord", e));
+            Main.logger.error(new TranslatableComponent("exception.twitchmod.login_not_found_discord", e).getString());
         }
 
     }

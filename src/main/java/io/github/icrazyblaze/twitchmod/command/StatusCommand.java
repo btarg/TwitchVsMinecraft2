@@ -30,8 +30,6 @@ public class StatusCommand implements Command<CommandSourceStack> {
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 
-        ConfigManager.updateFromConfig();
-
         // Display current status and uptime
         if (TwitchConnectionHelper.isConnected()) {
             context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.status.connected_twitch").withStyle(ChatFormatting.GREEN), false);
@@ -45,15 +43,15 @@ public class StatusCommand implements Command<CommandSourceStack> {
             context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.status.disconnected_discord").withStyle(ChatFormatting.RED), false);
         }
 
-        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.twitch_name", BotConfig.CHANNEL_NAME).withStyle(ChatFormatting.GOLD), false);
-        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.twitch_uptime", UptimeReader.getUptimeString(BotConfig.CHANNEL_NAME)).withStyle(ChatFormatting.GREEN), false);
-        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.discord_channels", BotConfig.DISCORD_CHANNELS.toString()).withStyle(ChatFormatting.BLUE), false);
-        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.players", PlayerHelper.affectedPlayers.toString()).withStyle(ChatFormatting.GOLD), false);
-        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.command_seconds", TimerSystem.chatSecondsTrigger).withStyle(ChatFormatting.DARK_PURPLE), false);
-        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.command_prefix", BotConfig.prefix).withStyle(ChatFormatting.DARK_PURPLE), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.twitch_name", BotConfig.getTwitchChannelName()).withStyle(ChatFormatting.GOLD), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.twitch_uptime", UptimeReader.getUptimeString(BotConfig.getTwitchChannelName())).withStyle(ChatFormatting.GREEN), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.discord_channels", ConfigManager.DISCORD_CHANNELS.get().toString()).withStyle(ChatFormatting.BLUE), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.players", PlayerHelper.affectedPlayers.get().toString()).withStyle(ChatFormatting.GOLD), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.command_seconds", TimerSystem.chatSecondsTrigger.get()).withStyle(ChatFormatting.DARK_PURPLE), false);
+        context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.command_prefix", BotConfig.getCommandPrefix()).withStyle(ChatFormatting.DARK_PURPLE), false);
 
-        if (BotConfig.requireBits) {
-            context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.chat.bits_required", BotConfig.minimumBitsAmount).withStyle(ChatFormatting.DARK_PURPLE), false);
+        if (ConfigManager.REQUIRE_BITS.get()) {
+            context.getSource().sendSuccess(new TranslatableComponent("gui.twitchmod.chat.bits_required", ConfigManager.MINIMUM_BITS.get()).withStyle(ChatFormatting.DARK_PURPLE), false);
         }
 
 

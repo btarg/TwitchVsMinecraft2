@@ -37,8 +37,8 @@ public class TestCommand implements Command<CommandSourceStack> {
         ChatPicker.forceCommands = BoolArgumentType.getBool(context, "runAndIgnoreBlacklist");
 
         // Remove prefix
-        if (message.startsWith(BotConfig.prefix)) {
-            message = message.substring(BotConfig.prefix.length());
+        if (message.startsWith(BotConfig.getCommandPrefix())) {
+            message = message.substring(BotConfig.getCommandPrefix().length());
         }
         ChatPicker.checkChat(message, "TestUser" + rand.nextInt(0, 100));
 
